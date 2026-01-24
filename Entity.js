@@ -15,6 +15,9 @@ class Entity {
         this.tags ??= {}
         this.description ??= "no description"
 
+        this.level ??= 0
+        this.cp ??= 0
+
         // this.position ??= false     // or string describing how/where the Noun is
         // this.img ??= false          // or image file name
         // this.location_id ??= 0      // the default location of all will be the game universe
@@ -22,45 +25,73 @@ class Entity {
         this.epithet ??= ''
         if( !('template' in param) ) {
             this.register()
-            // game.nouns[this.id] = this
         } else {
-            this.epithets ??= Noun.epithets         // exists in templates only, defaults to the Noun.epithets
+            this.epithets ??= Entity.epithets         // exists in templates only, defaults to the Noun.epithets
             game.templates[param.template] = this
         }
 
     }
 
-    static spawn(template, where, changes = {} ) {
-        // console.log("Noun.spawn")
-        if( !(template in game.templates) ) throw `no such template: ${template}`
+    // static spawn(template, where, changes = {} ) {
+    //     // console.log("Noun.spawn")
+    //     if( !(template in game.templates) ) throw `no such template: ${template}`
 
-        let noun = Object.create( Object.getPrototypeOf(game.templates[template]) )
+    //     let noun = Object.create( Object.getPrototypeOf(game.templates[template]) )
 
-        noun.set( game.templates[template] )
-        noun.register()
-        noun.set_location(where)
+    //     noun.set( game.templates[template] )
+    //     noun.register()
+    //     noun.set_location(where)
 
-        if( noun.epithets && !('name' in changes) ) {
-            noun.epithet = noun.epithets[ noun.id % noun.epithets.length  ]
-            delete noun.epithets
-        }
+    //     if( noun.epithets && !('name' in changes) ) {
+    //         noun.epithet = noun.epithets[ noun.id % noun.epithets.length  ]
+    //         delete noun.epithets
+    //     }
 
-        // noun.adjective = game.templates[template].adjectives[ noun.id % game.templates[template].adjectives.length ]
+    //     // noun.adjective = game.templates[template].adjectives[ noun.id % game.templates[template].adjectives.length ]
 
-        for( let i in changes )
-            noun[i] = changes[i]
+    //     for( let i in changes )
+    //         noun[i] = changes[i]
 
-        return noun
-    }
+    //     return noun
+    // }
 
     register() {
-        this.id = Noun.max_id++
-        game.nouns[this.id] = this
+        this.id = Entity.max_id++
+        game.entities[this.id] = this
     }
 
     set( changes ) {
         Object.assign( this, JSON.parse(JSON.stringify(changes)) )
         return this
+    }
+
+    get( x ) {
+        if( x in this )
+            return this[x]
+        throw `don't know how to get ${x}`
+    }
+
+
+    level_up( n = 1 ) {
+        for( let i=0; i<n; i++ ) {
+            this.level++
+            this.cp += CP_PER_LEVEL
+        }
+    }
+
+    change_stat(stat, delta) {
+        if( !(stat in STATS) ) throw `no such stat: ${stat}.`
+
+        if( delta == 1 ) {
+            this[stat] += 1
+            this.cp--
+        } else
+        if( delta == -1 ) {
+            this[stat] -= 1
+            this.cp++
+        } else
+            throw `invalid stat change`
+
     }
 
 }   // Entity
