@@ -1,28 +1,5 @@
-console.log('init')
 
 
-STATS = {
-    "tough": {},
-    "cool":  {},
-    "sharp": {},
-    "charm": {},
-}
-
-SKILLS = {
-    "melee": {},
-    "lockpicking": {},
-}
-
-CHECKS = {
-
-}
-
-BONUS = 3
-PENALTY = -BONUS
-CP_PER_LEVEL = 4
-
-
-/////////////////
 
 let barbakan = new Entity({
     name: "Barbakan",
@@ -32,8 +9,16 @@ let barbakan = new Entity({
     sharp:  1,
     charm:  3,
 
-})
+    traits: {
+        'absent-minded': true,
+        'bruiser': true,
+        'melee': true,
+    }
+
+}).level_up()
 
 
 
 ui.show_sheet(barbakan, {respec: true})
+
+let e = {}

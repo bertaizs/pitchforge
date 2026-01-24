@@ -18,6 +18,10 @@ class Entity {
         this.level ??= 0
         this.cp ??= 0
 
+        this.traits ??= {}
+
+        for( let i in STATS ) this[i] ??= 0
+
         // this.position ??= false     // or string describing how/where the Noun is
         // this.img ??= false          // or image file name
         // this.location_id ??= 0      // the default location of all will be the game universe
@@ -77,6 +81,7 @@ class Entity {
             this.level++
             this.cp += CP_PER_LEVEL
         }
+        return this
     }
 
     change_stat(stat, delta) {
@@ -91,7 +96,28 @@ class Entity {
             this.cp++
         } else
             throw `invalid stat change`
+    }
 
+    has_trait(t) {
+        return t in this.traits
+    }
+
+    get_stat( stat, explain = {} ) {
+        if( !(stat in STATS) ) throw `no such stat: ${stat}.`
+
+        let n = this[stat]
+        explain["base "+stat] = this[stat]
+
+        for( let t in TRAITS )
+            if( this.has_trait(t) ) {
+                if( stat in TRAITS[t] ) {
+                    explain[t] = TRAITS[t][stat] 
+                    n += TRAITS[t][stat]
+                }
+            }
+
+        explain[stat] = n
+        return n
     }
 
 }   // Entity

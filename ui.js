@@ -11,25 +11,47 @@ class UI {
         s+= entity.get('name')
         s+= ' ' +entity.get('epithet')
 
+        s+= `<div>level: ${entity.get('level')}</div>`
+
         s+= `<table>`
 
         for( let i in STATS ) {
-            s+= `<tr><td>${i}</td><td>${entity.get(i)}</td>`
+            s+= `<tr><td>${STATS[i].icon}${i}</td><td style="width: 2em; text-align: right;">${plusminus(entity.get_stat(i))}</td><td>&nbsp;</td>`
             if( 'respec' in params ) {
-                s+= `<td><a onclick="alert('+')">➕</a></td>`
-                s+= `<td><a onclick="alert('-')">➖</a></td>`
+                s+= `<td><a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a></td>`
+                s+= `<td><a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a></td>`
             }
+            s+= `<td><a onclick="ui.explanaition_click('${entity.id}','${i}')">❔</a></td>`
             s+= `</tr>`
         }
         s+= `</table>`
 
         s+= `<div>charapter points: ${entity.get('cp')}</div>`
 
+        if( ! isEmpty(entity.traits) ) {
+            s+= `<div>traits:<ul>`
+            for( let i in entity.traits )
+                s+= `<li>${i}</li>`
+            s+= `</ul></div>`
+        }
+
+        s+= `<div>&nbsp;</div>`
+
+        s+= `<div><a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a></div>`
+
+
         return s
     }
 
-    sheet_click( stat, plusminus, entity, params ) {
+    sheet_click( stat, plusminus, entity, params = {respec: true} ) {
+        entity = game.entity(entity)
         entity.change_stat( stat, plusminus )
+        ui.show_sheet( entity, params )
+    }
+
+    sheet_level_up( entity, params = {respec: true} ) {
+        entity = game.entity(entity)
+        entity.level_up( )
         ui.show_sheet( entity, params )
     }
 
@@ -37,6 +59,24 @@ class UI {
         document.getElementById('work').innerHTML = this.sheet(entity, params)
     }
 
+    explanaition(exp) {
+        let s = ``
+        s+= `<table>`
+        for( let i in exp ) {
+            s+= `\n<tr><td>${i}</td><td style="width: 2em; text-align: right;">${plusminus(exp[i])}</td>`
+        }
+        s+= `</table>`
+        return s
+    }
+    show_explanaition(exp) {
+        document.getElementById('expl').innerHTML = this.explanaition(exp)
+    }
+    explanaition_click( entity, stat ) {
+        entity = game.entity(entity)
+        let e = {}
+        let n = entity.get_stat(stat, e)
+        this.show_explanaition(e)
+    }
 
 }
 
