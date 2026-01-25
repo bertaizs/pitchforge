@@ -120,5 +120,9 @@ class Entity {
         return n
     }
 
+    get_trait_level( trait, explain ) {
+
+    }
+    
 }   // Entity
 
