@@ -26,7 +26,7 @@ function tags( str = "" ) {
 }
 
 function pick_one( fromArray ) {
-    if( fromArray.length==0 ) throw `cannot pick from empty array`    
+    if( fromArray.length==0 ) throw `cannot pick from empty array`
     return fromArray[random(fromArray.length)]
 }
 
@@ -40,3 +40,7 @@ function isEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
 
+function arrayify(x) {
+  if (Array.isArray(x)) return x
+  else return [x]
+}
