@@ -1,6 +1,5 @@
 
 
-
 let barbakan = new Entity({
     name: "Barbakan",
     epithet: "the bastion",

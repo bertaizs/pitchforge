@@ -2,9 +2,29 @@
 class UI {
 
     refresh() {
-
+      ui.show_main()
+      
     }
 
+    click_entity(id) {
+      let entity = game.entity(id)
+      // console.log( "clicked on: "+entity.get('name') )
+      this.show_sheet( entity, {respec: true} )
+    }
+    
+    entity_link(id) {
+      return `ui.click_entity(${id})`
+    }
+    
+    show_main() {
+      let s = ``
+      s+= `<ul>`
+      for( let i in game.entities )
+        s+= `<li><a onclick="${this.entity_link(game.entities[i].id)}">${game.entities[i].get('name')}</a></li>`
+      s+= `</ul>`
+      
+      document.getElementById('main').innerHTML = s
+    }
 
     sheet( entity, params = {} ) {
         let s = ``
@@ -80,6 +100,7 @@ class UI {
         let n = entity.get_stat(stat, e)
         this.show_explanaition(e)
     }
+    
 
 }
 
