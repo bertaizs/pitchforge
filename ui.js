@@ -2,7 +2,7 @@
 class UI {
 
     refresh() {
-        
+
     }
 
 
@@ -61,11 +61,14 @@ class UI {
 
     explanaition(exp) {
         let s = ``
+        let n = 0
         s+= `<table>`
         for( let i in exp ) {
-            s+= `\n<tr><td>${i}</td><td style="width: 2em; text-align: right;">${plusminus(exp[i])}</td>`
+            s+= `\n<tr><td>${exp[i].label}</td><td style="width: 2em; text-align: right;">${plusminus(exp[i].value)}</td>`
+            n+= exp[i].value
         }
         s+= `</table>`
+        s+= `<hr/>result: ${n}`
         return s
     }
     show_explanaition(exp) {
@@ -73,7 +76,7 @@ class UI {
     }
     explanaition_click( entity, stat ) {
         entity = game.entity(entity)
-        let e = {}
+        let e = []
         let n = entity.get_stat(stat, e)
         this.show_explanaition(e)
     }

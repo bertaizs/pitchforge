@@ -4,6 +4,11 @@ function random(n) {
     return Math.floor( Math.random()*n )
 }
 
+// rolls an n-sided die and returns the result
+function die_roll(n=6) {
+  return random(n)+1
+}
+
 // return a string with "+z" or "-z". 0 also becomes "+0"
 function plusminus(z) {
     if( z>=0 ) return "+"+z

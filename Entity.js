@@ -11,17 +11,8 @@ class Entity {
 
   static max_id = 0;
 
-  static epithets = [
-    "angry",
-    "vicious",
-    "bloodthirsty",
-    "scarred",
-    "dastardly",
-    "violent",
-    "raging",
-    "ruthless",
-    "muscular",
-  ];
+  static epithets = [ "angry", "vicious", "bloodthirsty", "scarred", "dastardly",
+    "violent", "raging", "ruthless", "muscular", ];
 
   constructor(value = {}, param = {}) {
     for (let i in value) this[i] = value[i];
@@ -105,7 +96,7 @@ class Entity {
     } else if (delta == -1) {
       this.cp += Entity.cost_of_stat_point(this[stat]);
       this[stat] -= 1;
-    } else throw `invalid stat change`;
+    } else throw `invalid stat change; not +1 or -1`;
   }
 
   // true if this Entity has the trait t
@@ -119,44 +110,81 @@ class Entity {
     this.traits[t] = true;
   }
 
-  get_stat(stat, explain = {}) {
+  // returns the value of stat (string), with an explanation
+  get_stat(stat, explain = []) {
     if (!(stat in STATS)) throw `no such stat: ${stat}.`;
 
     let n = this[stat];
-    explain["base " + stat] = this[stat];
+    explain.push({value: this[stat], label: "base "+stat})
 
     for (let t in TRAITS)
       if (this.has_trait(t)) {
         if (stat in TRAITS[t]) {
-          explain[t] = TRAITS[t][stat];
+          explain.push({value: TRAITS[t][stat], label: t})
           n += TRAITS[t][stat];
         }
       }
-
-    explain[stat] = n;
     return n;
   }
+  // same as get_stat, but receives an array as stats and returns the highest with its explanation
+  get_best_stat(stats, explain) {
+    let n = null
+    for( let i in stats ) {
+      let e = []
+      let r = this.get_stat( stats[i], e )
+      if( n==null || r>n ) {
+        n = r
+        explain.length = 0
+        for( let j=0; j<e.length; j++ )
+          explain[j] = e[j]
+      }
+    }
+    if( n==null ) throw "empty stats array in get_best_stat"
+    return n
+  }
 
-  test_performance(test, explain = {}, params = {}) {
+  performance(test, params = {}, explain = []) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
 
-    console.log(test);
+    // console.log(test);
 
-    let n = this.get_stat(test.stat, explain);
+    let n = this.get_best_stat(test.stat, explain);
 
+    // considering specializations
     let spec = false
     for( let i in test.spec )
       if( this.has_spec(test.spec[i]) )
         spec = test.spec[i]
     if( spec ) {
-      explain[`specialized (${spec})`] = Entity.stat_specialization_bonus(n)
+      explain.push({value: Entity.stat_specialization_bonus(n), label: `specialized (${spec})`})
       n += n
     }
 
-    // item ?
-    // randomize ?
+    // todo: consider items ?
+
+    // considering randomization: rolls two dice, substracts one from the other (todo: advantage / disadvantage)
+    if( 'randomize' in test ) {
+      let die_plus = die_roll()
+      let die_minus = die_roll()
+      explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})
+      n += die_plus-die_minus
+    }
+
+    // consider bonus/malus
+    if( 'bonus' in test ) {
+      explain.push({value: test.bonus, label: `bonus/malus`})
+      n += test.bonus
+    }
 
     return n;
   }
+
+  test( test, vs_value, params = {}, explain = [] ) {
+    let result = this.performance( test, params, explain )
+    explain.push({value: -vs_value, label: `vs`})
+    result -= vs_value
+    return result
+  }
+
 } // Entity
