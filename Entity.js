@@ -30,7 +30,7 @@ class Entity {
 
     // this.position ??= false     // or string describing how/where the Noun is
     // this.img ??= false          // or image file name
-    // this.location_id ??= 0      // the default location of all will be the game universe
+    this.location_id ??= 0      // the default location of all will be the game universe
     // this.exits ??= []
     this.epithet ??= "";
     if (!("template" in param)) {
@@ -63,10 +63,14 @@ class Entity {
 
   //     return noun
   // }
-
+  
   register() {
     this.id = Entity.max_id++;
     game.entities[this.id] = this;
+  }
+  
+  get_location() {
+    return game.entity(this.location_id)
   }
 
   set(changes) {
@@ -78,6 +82,9 @@ class Entity {
     if (x in this) return this[x];
     throw `don't know how to get ${x}`;
   }
+  
+  get_name() { return this.get('name') }
+  toString() { return this.get_name() }
 
   level_up(n = 1) {
     for (let i = 0; i < n; i++) {
@@ -143,12 +150,13 @@ class Entity {
     return n
   }
 
+  // returns performance of this Entity for a Test
+  // - can add additional parameters
+  // - explain is used for returning how it is calculated
   performance(test, params = {}, explain = []) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
-
-    // console.log(test);
-
+    
     let n = this.get_best_stat(test.stat, explain);
 
     // considering specializations
@@ -177,6 +185,7 @@ class Entity {
       n += test.bonus
     }
 
+    options.log_tests && console.log(`testing ${this} for ${test.get_name()}, result: ${n}`)
     return n;
   }
 
@@ -185,6 +194,41 @@ class Entity {
     explain.push({value: -vs_value, label: `vs`})
     result -= vs_value
     return result
+  }
+  
+  // executes a command of type Cmd, returns what happens as string
+  exec( cmd ) {
+    let result
+    let event = ""
+    let verb = game.verbs[cmd.verb]
+    
+    if( verb.test ) {
+      let e = [], e2 = []
+      result = this.performance(verb.test, {}, e)
+      options.log_test_results && console.log(`${this}'s performance: ${result}`)
+      
+      let vs_result
+      if( verb.difficulty ) {   // fixed difficulty
+        vs_result = verb.difficulty
+      } else
+      if( verb.op1 ) {          // versus test
+        vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )
+      }
+      options.log_test_results && console.log(`vs performance: ${vs_result}`)        
+      result -= vs_result
+    } else {
+      options.log_test_results && console.log(`no test -> auto success`) 
+      result = 1
+    }
+
+    if( result>=0 ) {
+      options.log_test_results && console.log( `success!`)
+      event = verb.on_success(this, cmd)
+    } else {
+      options.log_test_results && console.log( `fail.`)
+      event = verb.on_fail(this, cmd)
+    }
+    return event
   }
 
 } // Entity

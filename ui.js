@@ -100,6 +100,26 @@ class UI {
         let n = entity.get_stat(stat, e)
         this.show_explanaition(e)
     }
+
+    
+
+    select_entity(id) {
+      // console.log( id + " has been selected")
+      ui.show_sheet(game.entity(id), {respec: true})
+    }
+    
+    entity_list( entities, callback ) {
+      let s = ``
+      s+= `<select onchange="ui.${callback.name}(this.value);">`
+      // s+= `<option>none</option>`
+            
+      for( let i in entities ) {
+        s+= `<option value="${entities[i].id}" onselect="alert(${entities[i].id})">${entities[i].get('name')}</option>`
+      }
+      s+= `</select>`
+      
+      return s
+    }
     
 
 }

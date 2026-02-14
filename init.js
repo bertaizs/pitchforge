@@ -31,8 +31,10 @@ let gustav = new Entity({
 }).level_up()
 
 
+document.getElementById('cmd').innerHTML = `You are: ` +ui.entity_list( game.entities, ui.select_entity )
 
+ui.select_entity(barbakan)
 
-ui.show_sheet(gustav, {respec: true})
+// ui.show_sheet(gustav, {respec: true})
 
 let e = []
