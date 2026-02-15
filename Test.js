@@ -32,9 +32,9 @@ const TESTS = {
   charm: new Test({ stat: "charm" }),
   weird: new Test({ stat: "weird" }),
 
-  strike: new Test({stat: "tough", /* randomize: true */ }),
+  // strike: new Test({stat: "tough", /* randomize: true */ }),
   melee: new Test({stat: "tough"}),
-  defend: new Test({stat: "tough"}),
+  defense: new Test({stat: "tough"}),
   shoot: new Test({stat: ["tough", "cool"]}),
 
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),

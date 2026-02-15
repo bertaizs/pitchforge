@@ -23,10 +23,16 @@ class Entity {
 
     this.level ??= 0;
     this.cp ??= 0;
+    
+    this.tier ??= 0
 
     this.traits ??= {};
+    this.status ??= {}
 
     for (let i in STATS) this[i] ??= 0;
+
+    this.body ??= this.get('max_body')
+    this.spirit ??= this.get('max_spirit')
 
     // this.position ??= false     // or string describing how/where the Noun is
     // this.img ??= false          // or image file name
@@ -79,13 +85,75 @@ class Entity {
   }
 
   get(x) {
-    if (x in this) return this[x];
+    // these must have hardcoded values
+    // TODO: need to consider modifiers on traits, statuses, etc
+    if( x in STATS ) return this.get_stat(x)
+    if (x in this) return this[x];    
+    
+    // if not overridden, the default for the below is based on another attr
+    switch(x) {
+      case 'max_body': return this.get('tough')+3
+      case 'max_spirit': return this.get('charm')+3
+      case 'size': return this.get('tier')
+    }
+    
     throw `don't know how to get ${x}`;
   }
   
   get_name() { return this.get('name') }
   toString() { return this.get_name() }
 
+  rest() {
+    this.body = this.get('max_body')
+    this.spirit = this.get('max_spirit')
+  }
+  
+  add_status( status = {} ) {
+    if( !('name' in status) ) throw `status has no name`
+    status.magnitude ??= 1
+    status.timer ??= 1
+    
+    this.status[status.name] = status
+  }
+  
+  remove_status( name ) {
+    delete this.status[name]
+  }
+  
+  take_damage(param = {}) {
+    if( typeof param == 'number' )  param = {value: param}
+    
+    param.value ??= 2
+    param.type ??= 'body'
+    param.tier ??= this.get('tier')
+    
+    let tier_diff = param.tier - this.get('tier')
+    
+    let damage = Math.max(param.value + tier_diff, 0)
+    this[param.type] -= damage
+    
+    options.log_damage && console.log(`${this} takes ${damage} points of ${param.type} damage`)    
+    // TODO: check if this Entity goes down
+    return damage
+  }
+  
+  // clock ; this is called every turn
+  tick() {
+    for( let i in this.status ) {
+      if(this.status[i].timer) this.status[i].timer--
+      
+      if(this.status[i].timer===0) {
+        this.remove_status(i)        
+      } else {
+        if( i == 'poison' )
+          this.take_damage({value: this.status[i].magnitude, type: 'body'})
+      }
+      
+    }
+    
+  }
+  
+  
   level_up(n = 1) {
     for (let i = 0; i < n; i++) {
       this.level++;

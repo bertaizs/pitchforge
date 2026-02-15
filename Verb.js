@@ -68,9 +68,9 @@ new Verb({
 })
 
 new Verb({
-  name: 'strike',
-  test: 'strike',
-  test_vs: 'defend',
+  name: 'melee',
+  test: 'melee',
+  test_vs: 'defense',
   op1: true,
   on_success: function(who, cmd) {
     return("STRIKE!!!")

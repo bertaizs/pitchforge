@@ -3,7 +3,7 @@ class UI {
 
     refresh() {
       ui.show_main()
-      
+      ui.show_sheet(game.get_player())
     }
 
     click_entity(id) {
@@ -32,6 +32,11 @@ class UI {
         s+= ' ' +entity.get('epithet')
 
         s+= `<div>level: ${entity.get('level')}</div>`
+        
+        s += `<p>
+                body: ${entity.get('body')}/${entity.get('max_body')},
+                spirit: ${entity.get('spirit')}/${entity.get('max_spirit')}<br/>
+              </p>`
 
         s+= `<table>`
 
@@ -46,12 +51,21 @@ class UI {
         }
         s+= `</table>`
 
-        s+= `<div>charapter points: ${entity.get('cp')}</div>`
+        s+= `<div>character points: ${entity.get('cp')}</div>`
 
         if( ! isEmpty(entity.traits) ) {
             s+= `<div>traits:<ul>`
             for( let i in entity.traits )
                 s+= `<li>${i}</li>`
+            s+= `</ul></div>`
+        }
+
+        s+= `<div>&nbsp;</div>`
+
+        if( ! isEmpty(entity.status) ) {
+            s+= `<div>statuses:<ul>`
+            for( let i in entity.status )
+                s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
             s+= `</ul></div>`
         }
 
