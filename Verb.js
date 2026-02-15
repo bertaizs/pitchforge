@@ -73,9 +73,12 @@ new Verb({
   test_vs: 'defense',
   op1: true,
   on_success: function(who, cmd) {
+    cmd.op1.take_damage({value: 2})
+    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
     return("STRIKE!!!")
   },
   on_fail: function(who, cmd) {
+    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
     return("missed :(")
   },
 })

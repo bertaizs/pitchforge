@@ -108,14 +108,17 @@ class Entity {
     this.spirit = this.get('max_spirit')
   }
   
-  add_status( status = {} ) {
+  add_status( status = {}, params = {} ) {
     if( !('name' in status) ) throw `status has no name`
     status.magnitude ??= 1
     status.timer ??= 1
     
     if( status.name in this.status ) {
-      this.status[status.name].timer += status.timer
-      this.status[status.name].magnitude = Math.max(this.status[status.name].magnitude, status.magnitude )
+      if( params.stack_timer )
+        this.status[status.name].timer += status.timer
+      // this.status[status.name].magnitude = Math.max(this.status[status.name].magnitude, status.magnitude )
+      if( params.stack_magnitude )
+        this.status[status.name].magnitude += status.magnitude
     } else this.status[status.name] = status
     return this.status[status.name]
   }
