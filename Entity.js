@@ -113,7 +113,11 @@ class Entity {
     status.magnitude ??= 1
     status.timer ??= 1
     
-    this.status[status.name] = status
+    if( status.name in this.status ) {
+      this.status[status.name].timer += status.timer
+      this.status[status.name].magnitude = Math.max(this.status[status.name].magnitude, status.magnitude )
+    } else this.status[status.name] = status
+    return this.status[status.name]
   }
   
   remove_status( name ) {
