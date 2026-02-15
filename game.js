@@ -22,6 +22,17 @@ class Game {
     get_player() { return this.entities[this.player_id]}
     get_player_location() { return this.entities[0]}
     
+    // main clock beat of the game
+    tick() {
+      options.log_ticks && console.log(`tick!`)
+      for( let i in game.entities ) {
+        let e = game.entities[i]
+        options.log_entity_ticks && console.log(`tick: ${e}`)
+        e.tick()
+        
+      }
+    }
+    
 }
 
 var game = new Game()
