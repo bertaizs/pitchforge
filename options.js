@@ -12,4 +12,6 @@ options.log_damage = true
 options.log_ticks = true
 options.log_entity_ticks = true
 
+options.log_perception_on_charsheets = true
+
 options.debug = true    // debug mode

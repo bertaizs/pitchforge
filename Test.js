@@ -37,5 +37,6 @@ const TESTS = {
   defense: new Test({stat: "tough"}),
   aim: new Test({stat: ["tough", "cool"]}),
 
+  'perception': new Test({stat: "sharp", spec: 'perception'}),
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),
 };

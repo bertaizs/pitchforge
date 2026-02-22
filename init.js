@@ -3,6 +3,7 @@
 let barbakan = new Entity({
     name: "Barbakan",
     epithet: "the bastion",
+    description: `A sturdy dwarf.`,
     tough:  4,
     cool:   2,
     sharp:  1,
@@ -13,6 +14,21 @@ let barbakan = new Entity({
         'melee': true,
         'occultism': true,
         'hacking': true,
+    }
+}).level_up()
+
+let skanzen = new Entity({
+    name: "Skanzen",
+    epithet: "the cunning",
+    description: `A gaunt elf.`,
+    tough:  2,
+    cool:   3,
+    sharp:  3,
+    charm:  3,
+    traits: {
+        'melee': true,
+        'hacking': true,
+        'perception': true,
         'thievery': true,
         // 'stealth': true,
     }

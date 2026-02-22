@@ -75,14 +75,14 @@ new Verb({
 new Verb({
   name: 'look',         prep: 'at',
   type: 'misc',
-  test: 'sharp',
+  test: false,
+  // test: 'sharp',
+  // difficulty: 1,
   op1: true,
-  difficulty: 1,
   on_success: function(who, cmd) {
-    return(`${who} jumps into the air :)`)
-  },
-  on_fail: function(who, cmd) {
-    return `${who} is too weak to jump :(`
+    let perception = (who.id==cmd.op1.id ? Infinity : who.performance('perception') )
+    ui.show_sheet(cmd.op1, {perception: perception})
+    return(`displaying charsheet of ${cmd.op1}`)
   },
 })
 
