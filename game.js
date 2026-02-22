@@ -21,6 +21,18 @@ class Game {
     
     get_player() { return this.entities[this.player_id]}
     get_player_location() { return this.entities[0]}
+    select_player(e) {
+      e = this.entity(e)
+      this.player_id = e.id
+    }
+    
+    exec(cmd = ui.cmd) {
+      if( !(cmd instanceof Cmd) ) 
+        throw `game.exec not called with Cmd instance`
+      cmd.validate()  // throws an exception if cmd is not 'valid'
+      
+      this.get_player().exec(cmd)
+    }
     
     // main clock beat of the game
     tick() {
@@ -37,4 +49,4 @@ class Game {
 
 var game = new Game()
 
-game.universe = new Entity({name: "universe"})
+game.universe = new Entity({name: "universe", description: `The universe is an abstract entity you are not supposed to interact with directly; you should be seeing this ingame.`})

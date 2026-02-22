@@ -224,6 +224,10 @@ class Entity {
     if( n==null ) throw "empty stats array in get_best_stat"
     return n
   }
+  
+  get_verbs() {
+    return Object.keys( VERBS )
+  }
 
   // returns performance of this Entity for a Test
   // - can add additional parameters

@@ -31,13 +31,9 @@ let gustav = new Entity({
 }).level_up()
 
 
-let s = `You are: ` +ui.entity_list( game.entities, ui.select_entity )
-s+= ` <a onclick="ui.refresh()">refresh</a> |
-<a onclick="game.tick(); ui.refresh();">tick</a> `
-
-document.getElementById('cmd').innerHTML = s
 
 ui.select_entity(barbakan)
+// ui.refresh()
 
 // ui.show_sheet(gustav, {respec: true})
 

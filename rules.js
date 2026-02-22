@@ -2,20 +2,21 @@ console.log("init");
 
 const STATS = {
   tough: {
-    icon: "💪", // ⚔️
+    icon: "💪", // ⚔️ 🐉🦖🪨
   },
-  cool: {
+  cool: { // 🤹🎩🐈‍⬛
     icon: "❄️", // 😎
   },
-  sharp: {
+  sharp: { // ♟️🦑
     icon: "🧠",
   },
-  charm: {
+  charm: { // 🎵🎶🦄🧜‍♀️🧜
     icon: "🎼",
   },
-  weird: {
-    icon: "🦑",
-  },
+  // 🗡️👁️
+  // weird: {
+  //   icon: "🦑",
+  // },
 };
 
 SKILLS = {

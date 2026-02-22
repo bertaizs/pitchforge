@@ -1,26 +1,43 @@
 
 class UI {
+  
+    constructor() {
+      this.cmd = new Cmd({verb: 'look'}, {validate: false})
+    }
 
     refresh() {
       ui.show_main()
       ui.show_sheet(game.get_player())
+      ui.show_commands()
+      ui.display_cmd()
     }
 
     click_entity(id) {
       let entity = game.entity(id)
-      // console.log( "clicked on: "+entity.get('name') )
-      this.show_sheet( entity, {respec: true} )
+      options.log_clicks_on_entities && console.log( "clicked on Entity: "+entity.get('name') )
+      // this.show_sheet( entity, {respec: true} )
+      if( this.cmd.get_verb().op1 )
+        this.cmd.op1 = entity
+      ui.display_cmd()
     }
     
-    entity_link(id) {
+    entity_link(e) {
+      let id = game.entity(e).id
       return `ui.click_entity(${id})`
+    }
+    
+    print_entity(id) {
+      let e = game.entity(id)
+      return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get('name')}</a>`
     }
     
     show_main() {
       let s = ``
       s+= `<ul>`
-      for( let i in game.entities )
-        s+= `<li><a onclick="${this.entity_link(game.entities[i].id)}">${game.entities[i].get('name')}</a></li>`
+      // for( let i in game.entities )
+      //  s+= `<li>`+this.print_entity(game.entities[i].id)+`</li>\n`
+      for( const e of game.entities.filter(x=>x.id!=0) )
+        s+= `<li>${this.print_entity(e)}</li>\n`
       s+= `</ul>`
       
       document.getElementById('main').innerHTML = s
@@ -59,21 +76,17 @@ class UI {
                 s+= `<li>${i}</li>`
             s+= `</ul></div>`
         }
-
         s+= `<div>&nbsp;</div>`
-
+        
         if( ! isEmpty(entity.status) ) {
             s+= `<div>statuses:<ul>`
             for( let i in entity.status )
                 s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
             s+= `</ul></div>`
         }
-
         s+= `<div>&nbsp;</div>`
-
+        
         s+= `<div><a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a></div>`
-
-
         return s
     }
 
@@ -119,7 +132,9 @@ class UI {
 
     select_entity(id) {
       // console.log( id + " has been selected")
-      ui.show_sheet(game.entity(id), {respec: true})
+      game.player_id = game.entity(id).id
+      ui.refresh()
+      // ui.show_sheet(game.entity(id), {respec: true})
     }
     
     entity_list( entities, callback ) {
@@ -127,14 +142,96 @@ class UI {
       s+= `<select onchange="ui.${callback.name}(this.value);">`
       // s+= `<option>none</option>`
             
-      for( let i in entities ) {
-        s+= `<option value="${entities[i].id}" onselect="alert(${entities[i].id})">${entities[i].get('name')}</option>`
+      // for( let i in entities ) {
+      //   s+= `<option value="${entities[i].id}" onselect="alert(${entities[i].id})">${entities[i].get('name')}</option>`
+      // }
+      for( const e of entities.filter(x=>x.id!=0) ) {
+        s+= `<option value="${e.id}" >${e.get('name')}</option>`
       }
       s+= `</select>`
       
       return s
     }
     
+    click_verb(verb) {
+      options.log_clicks_on_verbs && console.log(`clicked verb: ${verb}`)
+      
+      this.cmd = new Cmd({verb: verb}, {validate: false})
+      ui.display_cmd()
+    }
+    
+    verb(v) {
+      let verb = VERBS[v]
+      let s = `<span>
+      <a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${verb.get_label()}</a>
+      </span>\n`
+      return s
+    }
+    
+    filtered_verbs(verbs, type, label = type) {
+      // let verbs = entity.get_verbs()
+      verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort()
+      let s = `<div>${label}: `
+      for( let i in verbs ) {
+        s+= this.verb(verbs[i])
+      }
+      s+= `</div>`
+      return s
+    }
+    
+    print_verbs(entity) {
+      entity = game.entity(entity)
+      let verbs = entity.get_verbs()
+      let s = ``
+      s+= this.filtered_verbs(verbs, 'combat')
+      s+= this.filtered_verbs(verbs, 'misc')
+      s+= this.filtered_verbs(verbs, 'inventory')
+      if( options.debug )
+        s+= this.filtered_verbs(verbs, 'debug')
+      return s
+    }
+    
+    display_cmd(cmd = this.cmd) {
+      let verb = cmd.get_verb()
+      // document.getElementById('who').innerHTML = game.get_player().get_name()
+      document.getElementById('who').innerHTML = ui.print_entity(game.get_player())
+      document.getElementById('verb').innerHTML = verb.get_name()
+      document.getElementById('prep').innerHTML = verb.get_prep()
+      document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
+      document.getElementById('sep').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
+      document.getElementById('op2').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
+      // console.log(cmd)
+    }
+    
+    show_commands() {
+      let s = ``
+      if( options.debug ) {
+        s+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
+        s+= ` <a onclick="ui.refresh()">refresh</a> |
+        <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
+      }
+      s+= `
+      <div>
+      (<span id="who" class="cmd">who</span>): 
+      
+      <span id="verb" class="cmd">verb</span>
+      <span id="prep" class="cmd" >preposition</span>
+      <span id="op1" class="cmd" >operand 1</span>
+      <span id="sep" class="cmd" >operand separator</span>
+      <span id="op2" class="cmd" >operand 1</span>
+      
+      &nbsp; <button class="btn" onclick="ui.exec()">go</button>
+      </div>
+      `
+      s+= this.print_verbs( game.get_player() )
+            
+      document.getElementById('cmd').innerHTML = s      
+    }
+    
+    exec(cmd = this.cmd) {
+      game.exec(cmd)
+      ui.refresh()
+    }
 
 }
 
