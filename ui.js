@@ -43,73 +43,78 @@ class UI {
       document.getElementById('main').innerHTML = s
     }
 
-    sheet( entity, params = {} ) {        
-        // the optional param 'perception' can limit what is displayed on the charsheet
-        let perception = ('perception' in params ? params.perception : Infinity )
-        options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
-        
-        let s = ``
-        // s+= entity.get('name')
-        s+= ui.print_entity(entity)
-        s+= ' ' +entity.get('epithet')
-        
-        s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
+    sheet( entity, params = {} ) {
+      entity = game.entity(entity)
+      
+      // the optional param 'perception' can limit what is displayed on the charsheet
+      let perception = ('perception' in params ? params.perception : Infinity )
+      options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
+      
+      let s = ``
+      // s+= entity.get('name')
+      s+= ui.print_entity(entity)
+      s+= ' ' +entity.get('epithet')
+      
+      s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
 
-        if( perception > 2) {
-          s+= `<div>level: ${entity.get('level')}</div>`          
-        }
-        
-        if( perception > 0) {
-          s += `<p>
-                  body: ${entity.get('body')}/${entity.get('max_body')},
-                  spirit: ${entity.get('spirit')}/${entity.get('max_spirit')}<br/>
-                </p>`          
-        }
+      if( perception > 2) {
+        s+= `<div>level: ${entity.get('level')}</div>`          
+      }
+      
+      if( perception > 0) {
+        s += `<p>
+                body: ${entity.get('body')}/${entity.get('max_body')},
+                spirit: ${entity.get('spirit')}/${entity.get('max_spirit')}<br/>
+              </p>`          
+      }
 
-        if( perception > 2){
-          s+= `<table>`
-          for( let i in STATS ) {
-              s+= `<tr><td>${STATS[i].icon}${i}</td><td style="width: 2em; text-align: right;">${plusminus(entity.get_stat(i))}</td><td>&nbsp;</td>`
-              if( 'respec' in params ) {
-                  s+= `<td><a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a></td>`
-                  s+= `<td><a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a></td>`
-              }
-              s+= `<td><a onclick="ui.explanaition_click('${entity.id}','${i}')">❔</a></td>`
-              s+= `</tr>`
-          }
-          s+= `</table>`          
+      if( perception > 2){
+        s+= `<table>`
+        for( let i in STATS ) {
+            s+= `<tr><td title="${STATS[i].text}">${STATS[i].icon}${i}</td><td style="width: 2em; text-align: right;">${plusminus(entity.get_stat(i))}</td><td>&nbsp;</td>`
+            if( 'respec' in params ) {
+                s+= `<td><a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a></td>`
+                s+= `<td><a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a></td>`
+            }
+            s+= `<td><a onclick="ui.explanaition_click('${entity.id}','${i}')">❔</a></td>`
+            s+= `</tr>`
         }
+        s+= `</table>`          
+      }
 
-        if( perception > 5 ) {
-          if( ! isEmpty(entity.traits) ) {
-              s+= `<div>&nbsp;</div>`  
-              s+= `<div>traits:<ul>`
-              for( let i in entity.traits )
-                  s+= `<li>${i}</li>`
-              s+= `</ul></div>`
-          }
-          s+= `<div>&nbsp;</div>`          
+      if( perception > 5 ) {
+        if( ! isEmpty(entity.traits) ) {
+            s+= `<div>&nbsp;</div>`  
+            s+= `<div>traits:<ul>`
+            for( let i in entity.traits )
+                s+= `<li>${i}</li>`
+            s+= `</ul></div>`
         }
-        
-        if( perception > 2 ) {
-          if( ! isEmpty(entity.status) ) {
-              s+= `<div>statuses:<ul>`
-              for( let i in entity.status )
-                  s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
-              s+= `</ul></div>`
-          }
-          // s+= `<div>&nbsp;</div>`
+        s+= `<div>&nbsp;</div>`          
+      }
+      
+      if( perception > 2 ) {
+        if( ! isEmpty(entity.status) ) {
+            s+= `<div>statuses:<ul>`
+            for( let i in entity.status )
+                s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
+            s+= `</ul></div>`
         }
-        
-        if( perception == Infinity ) {
-          s+= `<div>character points: ${entity.get('cp')}</div>`          
-        }
-        
-        if( options.debug ) {
-          s+= `\n&nbsp;<hr>`
-          s+= `<div><a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a></div>`          
-        }
-        return s
+        // s+= `<div>&nbsp;</div>`
+      }
+      
+      if( perception == Infinity ) {
+        s+= `<div>character points: ${entity.get('cp')}</div>`          
+      }
+      
+      if( options.debug ) {
+        s+= `\n&nbsp;<hr>`
+        s+= `<div>`
+        s+= `<a onclick="ui.show_sheet(${entity.id}, {respec: true})">✏️edit...</a> |`
+        s+= `<a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a> |`
+        s+= `</div>`
+      }
+      return s
     }
 
     sheet_click( stat, plusminus, entity, params = {respec: true} ) {
@@ -162,7 +167,7 @@ class UI {
     entity_list( entities, callback ) {
       let s = ``
       s+= `<select onchange="ui.${callback.name}(this.value);">`
-      // s+= `<option>none</option>`
+      s+= `<option>none</option>`
             
       // for( let i in entities ) {
       //   s+= `<option value="${entities[i].id}" onselect="alert(${entities[i].id})">${entities[i].get('name')}</option>`
