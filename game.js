@@ -51,16 +51,17 @@ class Game {
     }
     
     exec(cmd = ui.cmd) {
-      if( !(cmd instanceof Cmd) ) 
-        throw `game.exec not called with Cmd instance`
+      if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
       cmd.validate()  // throws an exception if cmd is not 'valid'
       
       options.log_commands && console.log(`executing: `, cmd)
       
+      // if any of the triggers match, execute the triggered actions
       for( let trigger of game.triggers.sort((x,y)=>(x.sortkey-y.sortkey)) ) {
         if( this.match(trigger.pattern, cmd) ) {
           options.log_matching && console.log(`match found: `, trigger.pattern, cmd)
-          trigger.action(cmd)
+          let quit = trigger.action(cmd)
+          if( quit ) return false
         }
       }
       

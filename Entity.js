@@ -107,6 +107,11 @@ class Entity {
     this.body = this.get('max_body')
     this.spirit = this.get('max_spirit')
   }
+
+  // recover() {
+  //   this.body = this.get('max_body')
+  //   this.spirit = this.get('max_spirit')
+  // }
   
   add_status( status = {}, params = {} ) {
     if( !('name' in status) ) throw `status has no name`
@@ -302,10 +307,10 @@ class Entity {
 
     if( result>=0 ) {
       options.log_test_results && console.log( `success!`)
-      event = verb.on_success(this, cmd)
+      event = verb.on_success(cmd)
     } else {
       options.log_test_results && console.log( `fail.`)
-      event = verb.on_fail(this, cmd)
+      event = verb.on_fail(cmd)
     }
     return event
   }

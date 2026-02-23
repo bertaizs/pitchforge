@@ -104,4 +104,5 @@ class Cmd {
         return true
     }
     
+    toString() {return JSON.stringify(this)}
 }

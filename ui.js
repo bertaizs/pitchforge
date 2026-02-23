@@ -3,6 +3,7 @@ class UI {
   
     constructor() {
       this.cmd = new Cmd({verb: 'look'}, {validate: false})
+      this.events = []
     }
 
     refresh() {
@@ -43,6 +44,8 @@ class UI {
       document.getElementById('main').innerHTML = s
     }
 
+    // returns the character sheet of the entity
+    print_sheet( entity, params = {} ) { return this.sheet(entity, params) }
     sheet( entity, params = {} ) {
       entity = game.entity(entity)
       
@@ -50,8 +53,7 @@ class UI {
       let perception = ('perception' in params ? params.perception : Infinity )
       options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
       
-      let s = ``
-      // s+= entity.get('name')
+      let s = `<div>`
       s+= ui.print_entity(entity)
       s+= ' ' +entity.get('epithet')
       
@@ -76,7 +78,7 @@ class UI {
                 s+= `<td><a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a></td>`
                 s+= `<td><a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a></td>`
             }
-            s+= `<td><a onclick="ui.explanaition_click('${entity.id}','${i}')">❔</a></td>`
+            s+= `<td><a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a></td>`
             s+= `</tr>`
         }
         s+= `</table>`          
@@ -100,7 +102,6 @@ class UI {
                 s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
             s+= `</ul></div>`
         }
-        // s+= `<div>&nbsp;</div>`
       }
       
       if( perception == Infinity ) {
@@ -114,6 +115,7 @@ class UI {
         s+= `<a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a> |`
         s+= `</div>`
       }
+      s+= `</div>`
       return s
     }
 
@@ -133,7 +135,7 @@ class UI {
         document.getElementById('work').innerHTML = this.sheet(entity, params)
     }
 
-    explanaition(exp) {
+    explanation(exp) {
         let s = ``
         let n = 0
         s+= `<table>`
@@ -145,17 +147,15 @@ class UI {
         s+= `<hr/>result: ${n}`
         return s
     }
-    show_explanaition(exp) {
-        document.getElementById('expl').innerHTML = this.explanaition(exp)
+    show_explanation(exp) {
+        document.getElementById('expl').innerHTML = this.explanation(exp)
     }
-    explanaition_click( entity, stat ) {
+    explanation_click( entity, stat ) {
         entity = game.entity(entity)
         let e = []
         let n = entity.get_stat(stat, e)
-        this.show_explanaition(e)
+        this.show_explanation(e)
     }
-
-    
 
     select_entity(id) {
       // console.log( id + " has been selected")
@@ -257,10 +257,41 @@ class UI {
       document.getElementById('cmd').innerHTML = s      
     }
     
+    add_event(event = {}) {
+      if( typeof event == 'string' )
+        event = {type: 'text', text: event}
+      
+      if( 'type' in event == false ) throw `adding event without a type ${event}`
+      this.events.push(event)
+    }
+    
+    // execute an event
+    // return as string anything to display
+    print_event(event = {}) {
+      if( 'type' in event == false ) throw `printing event without a type ${event}`
+      
+      if( event.type == 'text' ) {
+        return `<p>`+event.text+`</p>`
+      }
+      throw `don't know what to do with an event of type `+event.type
+    }
+    
+    // removes events from the queue and displays them
+    show_events() {
+      let s = ``
+      while( this.events.length>0 ) {
+        let event = this.events.shift()
+        s+= this.print_event(event)
+      }
+      document.getElementById('work').innerHTML = s
+    }
+    
     exec(cmd = this.cmd) {
       game.exec(cmd)
       ui.refresh()
+      ui.show_events()
     }
+        
 
 }
 

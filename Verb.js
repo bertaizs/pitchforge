@@ -51,11 +51,8 @@ new Verb({
   test: false,
   text: `Smile at someone or something. Does not do anything, testing only.`,
   debug: true,
-  on_success: function(who, cmd) {
-    return(`${who} smiles :)`)
-  },
-  on_fail: function(who, cmd) {
-    throw `smiles cannot fail!`
+  on_success: function(cmd) {
+    ui.add_event(`${cmd.who} smiles :)`)
   },
 })
 
@@ -64,11 +61,11 @@ new Verb({
   type: 'misc',
   test: 'tough',
   difficulty: 1,
-  on_success: function(who, cmd) {
-    return(`${who} jumps into the air :)`)
+  on_success: function(cmd) {
+    ui.add_event(`${cmd.who} jumps into the air :)`)
   },
-  on_fail: function(who, cmd) {
-    return `${who} is too weak to jump :(`
+  on_fail: function(cmd) {
+    ui.add_event( `${cmd.who} is too weak to jump :(` )
   },
 })
 
@@ -79,10 +76,11 @@ new Verb({
   // test: 'sharp',
   // difficulty: 1,
   op1: true,
-  on_success: function(who, cmd) {
-    let perception = (who.id==cmd.op1.id ? Infinity : who.performance('perception') )
-    ui.show_sheet(cmd.op1, {perception: perception})
-    return(`displaying charsheet of ${cmd.op1}`)
+  on_success: function(cmd) {
+    console.log(cmd)
+    let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
+    ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
+    // return(`displaying charsheet of ${cmd.op1}`)
   },
 })
 
@@ -92,9 +90,9 @@ new Verb({
   test: false,
   op1: true,
   debug: true,
-  on_success: function(who, cmd) {
-    ui.show_sheet(cmd.op1)
-    return(`displaying charsheet of ${cmd.op1}`)
+  on_success: function(cmd) {
+    ui.add_event( ui.print_sheet(cmd.op1) )
+    // return(`displaying charsheet of ${cmd.op1}`)
   },
 })
 
@@ -104,24 +102,11 @@ new Verb({
   test: false,
   op1: true,
   debug: true,
-  on_success: function(who, cmd) {
+  on_success: function(cmd) {
     game.select_player(cmd.op1)
-    return(`${who} has been selected as the active character`)
+    ui.add_event(`${cmd.op1} has been selected as the active character`)
   },
 })
-
-
-// new Verb({
-//   name: 'wrestle',
-//   type: 'combat',
-//   test: 'tough',
-//   on_success: function(who, cmd) {
-//     return("STRIKE!!!")
-//   },
-//   on_fail: function(who, cmd) {
-//     return("missed :(")
-//   },
-// })
 
 new Verb({
   name: 'melee',
@@ -129,31 +114,31 @@ new Verb({
   test: 'melee',
   test_vs: 'defense',
   op1: true,
-  on_success: function(who, cmd) {
-    cmd.op1.take_damage({value: 2})
+  on_success: function(cmd) {
+    let damage = cmd.op1.take_damage({value: 2})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    return("STRIKE!!!")
+    ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
   },
-  on_fail: function(who, cmd) {
+  on_fail: function(cmd) {
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    return("missed :(")
+    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses`)
   },
 })
 
-new Verb({
-  name: 'aim',
-  type: 'combat',
-  test: 'aim',
-  // test_vs: 'defense',
-  difficult: 3, // calc??
-  op1: true,
-  on_success: function(who, cmd) {
-    cmd.op1.take_damage({value: 2})
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    return("STRIKE!!!")
-  },
-  on_fail: function(who, cmd) {
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    return("missed :(")
-  },
-})
+// new Verb({
+//   name: 'aim',
+//   type: 'combat',
+//   test: 'aim',
+//   // test_vs: 'defense',
+//   difficult: 3, // calc??
+//   op1: true,
+//   on_success: function(who, cmd) {
+//     cmd.op1.take_damage({value: 2})
+//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+//     return("STRIKE!!!")
+//   },
+//   on_fail: function(who, cmd) {
+//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+//     return("missed :(")
+//   },
+// })

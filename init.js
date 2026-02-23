@@ -49,7 +49,8 @@ let gustav = new Entity({
 game.add_trigger(
   {who: barbakan, verb: 'look', op1: gustav},
   function(cmd) {
-    console.log(`Barbakan looks at Gustav, but Gustav stares blankly...`)
+    ui.add_event(`Barbakan looks at Gustav, but Gustav stares blankly...`)
+    return true
   }
 )
 
