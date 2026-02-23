@@ -46,6 +46,13 @@ let gustav = new Entity({
     }
 }).level_up()
 
+game.add_trigger(
+  {who: barbakan, verb: 'look', op1: gustav},
+  function(cmd) {
+    console.log(`Barbakan looks at Gustav, but Gustav stares blankly...`)
+  }
+)
+
 
 
 ui.select_entity(barbakan)

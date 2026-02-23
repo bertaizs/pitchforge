@@ -159,7 +159,8 @@ class UI {
 
     select_entity(id) {
       // console.log( id + " has been selected")
-      game.player_id = game.entity(id).id
+      // game.player_id = game.entity(id).id
+      game.select_player(id)
       ui.refresh()
       // ui.show_sheet(game.entity(id), {respec: true})
     }
