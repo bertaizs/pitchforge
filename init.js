@@ -19,14 +19,16 @@ let cottage_door = new Path({
   from: clearing, 
   to: cottage, 
   text: `a door leads into the cottage`,
-  reverse_text: `a door leads to the outside`,
+}, {
+  text: `a door leads to the outside`,  
 })
 
 let stairs_to_cellar = new Path({
   from: cottage, 
   to: cellar, 
   text: `stairs lead down to the cellar under the cottage`,
-  reverse_text: `stairs lead up to the cottage`,
+}, {
+  text: `stairs lead up to the cottage`,
 })
 
 let trapdoor_to_cellar = new Path({

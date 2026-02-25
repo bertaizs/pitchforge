@@ -34,6 +34,7 @@ class UI {
     
     click_path(path_id) {
       let path = game.paths[path_id]
+      options.log_clicks_on_paths && console.log(`clicked on path with id ${path_id}`)
       if(!path) throw `there is no path with id ${path_id}`
 
       // hack, should be done with commands!
@@ -65,7 +66,7 @@ class UI {
       
       s+= `<div>where can you go from here?</div>`
       s+= `<ul>`
-      for( const p of game.paths.filter(x=>( console.log(e) || x.has_endpoint(location) && x.can_be_seen_by(entity) )) )
+      for( const p of game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) )) )
         s+= `<li>${this.print_path(p)}</li>\n`
       s+= `</ul>`
       

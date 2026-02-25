@@ -1,7 +1,11 @@
+// a Path leads from one Entity to another
+// entities can pass through Paths
+// a Path is in one direction only, but one can easily create
+// another Path object in the reverse direction
 
 class Path {
   
-  constructor(value = {}) {
+  constructor(value = {}, reverse = {}) {
     for (let i in value) this[i] = value[i];
 
     if( !('from' in this) || !('to' in this) )
@@ -12,24 +16,38 @@ class Path {
     if( this.to instanceof Entity )     // this.to must also be an *id* of an entity
       this.to = this.to.id
     
-    this.twoway ??= true
-    
     this.text ??= `a path leads somewhere`
-    this.reverse_text ??= this.text
     
     this.perception_needed ??= -Infinity
     
     // register this Path into game.paths, this.id is the index
     this.id = game.paths.push(this)-1
+
+    // if reverse is provided, we create another Path in the opposite direction
+    // populating it based on the info in this overwritten by the reverse
+    if( ! isEmpty(reverse) ) {
+      // create reverse path
+      let rev = {}
+      for(let i in value)
+        rev[i] = value[i]
+      for( let i in reverse )
+        rev[i] = reverse[i]
+      rev.from = this.to
+      rev.to = this.from
+      
+      let reverse_path = new Path(rev, {})
+      this.reverse_id = reverse_path.id
+      reverse_path.reverse_id = this.id      
+    }
   }
   
   toString() {return JSON.stringify(this)}
   
+  get_reverse() { return game.paths[this.reverse_id] }
   
   has_endpoint(location) {
     location = game.entity(location)
-    return  this.from == location.id ||
-            this.to == location.id
+    return  this.from == location.id
   }
   
   // true if the entity can see the given path
@@ -47,29 +65,11 @@ class Path {
   
   move_through(entity, endpoint_id = false) {
     entity = game.entity(entity)
-    if(!endpoint_id)
-      endpoint_id = entity.get_location().id
     
     if(!this.can_pass_through(entity))
       throw `${entity} cannot pass through ${this}`
     
-    if( endpoint_id == this.from )
-      entity.move_to(this.to)
-    else
-    if( endpoint_id == this.to )
-      entity.move_to(this.from)
-    else
-      throw `cannot relate entity ${entity} to path ${this} so cannot pass through it`
+    entity.move_to(this.to)
   }
-  
-  // path endpoints have:
-  // - location id
-  // - perception requirement
-  // - knowledge requirement ???
-  // - text
-  // 
-  // the path can be
-  // - bidirectional or unidirectional
-  // - open or blocked
   
 }

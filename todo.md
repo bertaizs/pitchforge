@@ -5,8 +5,7 @@ todo
 
 * tags on entities
 
-* locations
- - paths, traversing
+// locations, paths
 
 * inventory
   + show on charsheets
