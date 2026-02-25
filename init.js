@@ -1,5 +1,46 @@
 
 
+let cellar = new Entity({
+  name: "cellar",
+  description: "A dark cellar, there are spiderwebs everywhere.",
+})
+
+let clearing = new Entity({
+  name: "clearing",
+  description: "A small clearing in the forest.",
+})
+
+let cottage = new Entity({
+  name: "wooden cottage",
+  description: "....",
+}).move_to(clearing)
+
+let cottage_door = new Path({
+  from: clearing, 
+  to: cottage, 
+  text: `a door leads into the cottage`,
+  reverse_text: `a door leads to the outside`,
+})
+
+let stairs_to_cellar = new Path({
+  from: cottage, 
+  to: cellar, 
+  text: `stairs lead down to the cellar under the cottage`,
+  reverse_text: `stairs lead up to the cottage`,
+})
+
+let trapdoor_to_cellar = new Path({
+  from: cottage, 
+  to: cellar, 
+  text: `there is a trapdoor on the cottage floor`,
+  twoway: false,
+  // reverse_text: `stairs lead up to the cottage`,
+})
+
+
+
+
+
 let barbakan = new Entity({
     name: "Barbakan",
     epithet: "the bastion",
@@ -15,7 +56,7 @@ let barbakan = new Entity({
         'occultism': true,
         'hacking': true,
     }
-}).level_up()
+}).level_up().move_to(clearing)
 
 let skanzen = new Entity({
     name: "Skanzen",
@@ -32,7 +73,7 @@ let skanzen = new Entity({
         'thievery': true,
         // 'stealth': true,
     }
-}).level_up()
+}).level_up().move_to(clearing)
 
 let gustav = new Entity({
     name: "Gustav",
@@ -44,7 +85,7 @@ let gustav = new Entity({
     cp: 10,
     traits: {
     }
-}).level_up()
+}).level_up().move_to(cottage)
 
 game.add_trigger(
   {who: barbakan, verb: 'look', op1: gustav},
@@ -56,7 +97,7 @@ game.add_trigger(
 
 
 
-ui.select_entity(barbakan)
+game.select_player(barbakan)
 // ui.refresh()
 
 // ui.show_sheet(gustav, {respec: true})

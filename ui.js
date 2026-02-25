@@ -32,21 +32,56 @@ class UI {
       return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get('name')}</a>`
     }
     
-    show_main() {
-      let s = ``
+    click_path(path_id) {
+      let path = game.paths[path_id]
+      if(!path) throw `there is no path with id ${path_id}`
+
+      // hack, should be done with commands!
+      path.move_through(game.get_player())
+      
+      ui.refresh()
+    }
+
+    print_path(path) {
+      // let e = game.entity(id)
+//      return `<a class="path" onclick="${ui.path_link(path)}">${p.text}</a>`
+      return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a>`
+    }
+    
+    // TODO: should call Entity on what the entity can see and return the results, and should only *process* those results here...
+    print_look_around(entity) {
+      entity = game.entity(entity)
+      let location = entity.get_location()
+      
+      let s = `<div>`
+      s+= `<div>${this.print_entity(location)}</div>`
+      s+= `<div>${location.get('description')}</div>`
+
+      s+= `<div>you see here:</div>`
       s+= `<ul>`
-      // for( let i in game.entities )
-      //  s+= `<li>`+this.print_entity(game.entities[i].id)+`</li>\n`
-      for( const e of game.entities.filter(x=>x.id!=0) )
+      for( const e of game.list_entities_at(location).filter(x=>x.id!=entity.id).sort() )
         s+= `<li>${this.print_entity(e)}</li>\n`
       s+= `</ul>`
       
+      s+= `<div>where can you go from here?</div>`
+      s+= `<ul>`
+      for( const p of game.paths.filter(x=>( console.log(e) || x.has_endpoint(location) && x.can_be_seen_by(entity) )) )
+        s+= `<li>${this.print_path(p)}</li>\n`
+      s+= `</ul>`
+      
+      s+= `</div>\n`
+      return s
+    }
+    
+    show_main() {
+      let s = ``      
+      s+= this.print_look_around(game.get_player())
       document.getElementById('main').innerHTML = s
     }
 
     // returns the character sheet of the entity
-    print_sheet( entity, params = {} ) { return this.sheet(entity, params) }
-    sheet( entity, params = {} ) {
+    sheet( entity, params = {} ) { return this.print_sheet(entity, params) }
+    print_sheet( entity, params = {} ) {
       entity = game.entity(entity)
       
       // the optional param 'perception' can limit what is displayed on the charsheet

@@ -9,6 +9,11 @@ a.entity {
     /*text-decoration: underline;*/
 }
 
+a.path {
+    color: blue;
+    text-decoration: underline;
+}
+
 /*span.cmd {*/
 .cmd {
     border: 1px solid purple;

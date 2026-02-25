@@ -5,6 +5,8 @@ class Game {
         this.entities = []
         this.templates = {}
         this.verbs = VERBS
+
+        this.paths = []
         
         this.triggers = []
         
@@ -19,6 +21,9 @@ class Game {
                 return this.entities[e]
         throw `no Entity with id: ${e}.`
     }
+    
+    list_entities() { return this.entities.slice(1) }
+    list_entities_at(loc) { return this.list_entities().filter(x=>(game.entity(loc).id==x.location_id)) }
     
     get_player() { return this.entities[this.player_id]}
     get_player_location() { return this.entities[0]}
@@ -84,4 +89,4 @@ class Game {
 
 var game = new Game()
 
-game.universe = new Entity({name: "universe", description: `The universe is an abstract entity you are not supposed to interact with directly; you should be seeing this ingame.`})
+game.universe = new Entity({name: "universe", description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`})

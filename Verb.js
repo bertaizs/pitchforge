@@ -109,6 +109,19 @@ new Verb({
 })
 
 new Verb({
+  name: 'move',    prep: 'to',
+  type: 'debug',
+  test: false,
+  op1: true,
+  debug: true,
+  on_success: function(cmd) {
+    cmd.who.move_to(cmd.op1)
+    ui.add_event(`${cmd.who} moves to ${cmd.op1}`)
+  },
+})
+
+
+new Verb({
   name: 'melee',
   type: 'combat',
   test: 'melee',

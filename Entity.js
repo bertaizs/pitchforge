@@ -19,7 +19,9 @@ class Entity {
 
     this.name ??= "nameless";
     this.tags ??= {};
-    this.description ??= "no description";
+    
+    this.description ??= "no description";    // can be seen when looking at the entity (or on charsheet)
+    this.interior ??= this.description;       // can be seen when inside the entity
 
     this.level ??= 0;
     this.cp ??= 0;
@@ -37,6 +39,8 @@ class Entity {
     // this.position ??= false     // or string describing how/where the Noun is
     // this.img ??= false          // or image file name
     this.location_id ??= 0      // the default location of all will be the game universe
+    this.position ??= false     // position within the location; string; depends on the location
+    
     // this.exits ??= []
     this.epithet ??= "";
     if (!("template" in param)) {
@@ -70,6 +74,8 @@ class Entity {
   //     return noun
   // }
   
+  
+  // add this Entity into game.entities
   register() {
     this.id = Entity.max_id++;
     game.entities[this.id] = this;
@@ -77,6 +83,13 @@ class Entity {
   
   get_location() {
     return game.entity(this.location_id)
+  }
+  
+  move_to(location, pos = false) {
+    location = game.entity(location)
+    this.location_id = location.id
+    this.position = pos
+    return this
   }
 
   set(changes) {
