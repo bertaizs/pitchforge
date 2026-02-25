@@ -138,6 +138,43 @@ new Verb({
   },
 })
 
+new Verb({
+  name: 'pick up',
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    cmd.op1.move_to(cmd.who)
+    ui.add_event(`${cmd.who} picks up ${cmd.op1}`)
+  },
+})
+
+new Verb({
+  name: 'drop',
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    cmd.op1.move_to(cmd.who.get_location())
+    ui.add_event(`${cmd.who} drops ${cmd.op1}`)
+  },
+})
+
+new Verb({
+  name: 'equip',  // as weapon
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    cmd.who.list_entities_here().map( x=>(x.position=false) ) // unequip all
+    cmd.op1.move_to(cmd.who, 'weapon') // pick up and equip
+    ui.add_event(`${cmd.who} now wields ${cmd.op1}`)
+  },
+})
+
+
+
+
 // new Verb({
 //   name: 'aim',
 //   type: 'combat',

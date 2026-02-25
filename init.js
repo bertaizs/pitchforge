@@ -45,6 +45,7 @@ let trapdoor_to_cellar = new Path({
 
 let barbakan = new Entity({
     name: "Barbakan",
+    tags: ['character', 'dwarf'],
     epithet: "the bastion",
     description: `A sturdy dwarf.`,
     tough:  4,
@@ -62,6 +63,7 @@ let barbakan = new Entity({
 
 let skanzen = new Entity({
     name: "Skanzen",
+    tags: ['character', 'elf'],
     epithet: "the cunning",
     description: `A gaunt elf.`,
     tough:  2,
@@ -79,6 +81,7 @@ let skanzen = new Entity({
 
 let gustav = new Entity({
     name: "Gustav",
+    tags: ['character', 'human'],
     epithet: "the blank page",
     tough:  0,
     cool:   0,
@@ -97,11 +100,25 @@ game.add_trigger(
   }
 )
 
+let sword = new Entity({
+    name: "sword",
+    tags: ['melee', 'weapon', 'item'],
+    description: `Just a simple sword.`,
+}).move_to(clearing)
+
+let pie = new Entity({
+    name: "pie",
+    tags: ['consumable', 'food', 'item'],
+    description: `A delicious pie.`,
+}).move_to(clearing)
+
+let lockpick = new Entity({
+    name: "lockpick",
+    tags: ['tool', 'lockpick', 'item'],
+    description: `Handy for opening locks.`,
+}).move_to(clearing)
 
 
 game.select_player(barbakan)
-// ui.refresh()
-
-// ui.show_sheet(gustav, {respec: true})
 
 let e = []

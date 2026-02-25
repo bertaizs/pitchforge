@@ -20,6 +20,8 @@ todo
 
 * going down if too much damage is taken
 
+* templates
+
 ## interface
 
 * images
@@ -30,3 +32,5 @@ todo
   + paths can have the same
   + descriptions can be different from the inside and the outside
   + clues can be different from the inside and the outside
+
+- double click for executing commands

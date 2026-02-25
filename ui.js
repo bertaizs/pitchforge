@@ -58,11 +58,20 @@ class UI {
       s+= `<div>${this.print_entity(location)}</div>`
       s+= `<div>${location.get('description')}</div>`
 
-      s+= `<div>you see here:</div>`
+      let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
+      
+      s+= `<div>you see the following characters:</div>`
       s+= `<ul>`
-      for( const e of game.list_entities_at(location).filter(x=>x.id!=entity.id).sort() )
+      for( const e of entities.filter(x=>x.is('character')) )
         s+= `<li>${this.print_entity(e)}</li>\n`
       s+= `</ul>`
+
+      s+= `<div>you see the following items:</div>`
+      s+= `<ul>`
+      for( const e of entities.filter(x=>x.is('item')) )
+        s+= `<li>${this.print_entity(e)}</li>\n`
+      s+= `</ul>`
+
       
       s+= `<div>where can you go from here?</div>`
       s+= `<ul>`
@@ -119,14 +128,33 @@ class UI {
         }
         s+= `</table>`          
       }
+      
+      // inventory
+      let inventory = entity.list_entities_here()
+      if( perception > -5 ) {
+        s+= `<p>equipment: `
+        s+= inventory.filter(x=>x.get('position')!=false).map( this.print_entity ).join(', ')
+        s+= `</p>`
+      }
+        
+      if( perception > 2 ) {
+        if( inventory.length>0 ) {
+          s+= `<p>inventory: `
+          s+= inventory.filter(x=>x.get('position')==false).map( this.print_entity ).join(', ')
+          s+= `</p>`
+        }
+      }
 
       if( perception > 5 ) {
         if( ! isEmpty(entity.traits) ) {
-            s+= `<div>&nbsp;</div>`  
-            s+= `<div>traits:<ul>`
-            for( let i in entity.traits )
-                s+= `<li>${i}</li>`
-            s+= `</ul></div>`
+          s+= `<p>traits: `
+          s+= Object.keys(entity.traits).join(', ')
+          s+= `</p>`          
+            // s+= `<div>&nbsp;</div>`  
+            // s+= `<div>traits:<ul>`
+            // for( let i in entity.traits )
+            //     s+= `<li>${i}</li>`
+            // s+= `</ul></div>`
         }
         s+= `<div>&nbsp;</div>`          
       }

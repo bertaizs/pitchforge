@@ -18,7 +18,7 @@ class Entity {
     for (let i in value) this[i] = value[i];
 
     this.name ??= "nameless";
-    this.tags ??= {};
+    this.tags ??= [];
     
     this.description ??= "no description";    // can be seen when looking at the entity (or on charsheet)
     this.interior ??= this.description;       // can be seen when inside the entity
@@ -85,6 +85,10 @@ class Entity {
     return game.entity(this.location_id)
   }
   
+  list_entities_here() {
+    return game.entities.filter(x=>(x.get_location().id==this.id))
+  }
+  
   move_to(location, pos = false) {
     location = game.entity(location)
     this.location_id = location.id
@@ -95,6 +99,10 @@ class Entity {
   set(changes) {
     Object.assign(this, JSON.parse(JSON.stringify(changes)));
     return this;
+  }
+  
+  is(what) {
+    return this.tags.includes(what)
   }
 
   get(x) {
