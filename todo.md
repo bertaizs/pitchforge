@@ -3,24 +3,16 @@ todo
 
 ## core
 
-* tags on entities
-
-// locations, paths
-
 * inventory
-  + show on charsheets
+  - fix how and when to show inventory and equipment on look/charsheets 
 
-* equipment (positions within locations)
-  + show on charsheets
-
+* templates
 
 * implement damage
   - armor, protection, etc
   - wounds
 
 * going down if too much damage is taken
-
-* templates
 
 ## interface
 

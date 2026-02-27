@@ -29,7 +29,9 @@ class Verb {
         this.test_vs ??= false // class: Test, of this.op1
         this.on_success ??= ()=>{ console.log(`empty on_success for ${this.name}`) }
         this.on_fail ??= ()=>{ console.log(`empty on_success for ${this.name}`) }
-    
+
+        this.sortkey ??= 10
+        
         // this.min_ops ??= 1
         // this.max_ops ??= 2
         // this.op_separator ??= ''
@@ -138,6 +140,9 @@ new Verb({
   },
 })
 
+//
+// *** inventory ***
+//
 new Verb({
   name: 'pick up',
   type: 'inventory',
@@ -147,6 +152,7 @@ new Verb({
     cmd.op1.move_to(cmd.who)
     ui.add_event(`${cmd.who} picks up ${cmd.op1}`)
   },
+  sortkey: 1,
 })
 
 new Verb({
@@ -158,6 +164,7 @@ new Verb({
     cmd.op1.move_to(cmd.who.get_location())
     ui.add_event(`${cmd.who} drops ${cmd.op1}`)
   },
+  sortkey: 2,
 })
 
 new Verb({
@@ -166,12 +173,39 @@ new Verb({
   test: false,
   op1: true,
   on_success: function(cmd) {
-    cmd.who.list_entities_here().map( x=>(x.position=false) ) // unequip all
-    cmd.op1.move_to(cmd.who, 'weapon') // pick up and equip
+    if( !cmd.who.has( cmd.op1) )
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1}`)
+    
+    let where = 'weapon'
+    cmd.who.list_entities_here()
+        .map( x=>{
+              if(x.position==where) {
+                ui.add_event(`${cmd.who} unequips ${x}`)
+                x.position=false
+              }
+        } ) // unequip all
+    cmd.op1.move_to(cmd.who, where) // pick up and equip
     ui.add_event(`${cmd.who} now wields ${cmd.op1}`)
   },
+  sortkey: 3,
 })
 
+new Verb({
+  name: 'unequip',  // as weapon
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( !cmd.who.has( cmd.op1) )
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1}`)
+    if( cmd.op1.get('position') == false )
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1} equipped`)
+    
+    cmd.op1.position = false
+    ui.add_event(`${cmd.who} unequips ${cmd.op1}`)
+  },
+  sortkey: 4,
+})
 
 
 

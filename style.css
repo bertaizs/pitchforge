@@ -1,7 +1,12 @@
-
+* {
+    font-family:cursive;
+}
 
 a.verb {
-    font-weight: bold;
+    color: green;
+    text-decoration: none;
+    font-size:large;
+    white-space: nowrap;
 }
 
 a.entity {

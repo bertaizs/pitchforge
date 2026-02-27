@@ -95,7 +95,35 @@ class Entity {
     this.position = pos
     return this
   }
+  
+  get_inventory() {
+    return game.list_entities_at(this)
+  }
+  
+  // true if this entity has the other entity/item
+  has( item ) {
+    item = game.entity(item)
+    return item.get_location().id == this.id
+  }
+  
+  // true if this entity has at least one entity/item whose name matches the given pattern
+  has_a( pattern ) {
+    for( let item of this.get_inventory() )
+      if( item.get_name().match(pattern) )
+        return true
+    return false
+  }
+  
+  pick_up( entity ) {
+    entity = game.entity(entity)
+    entity.move_to( this )
+  }
 
+  drop( entity ) {
+    entity = game.entity(entity)
+    entity.move_to( this.get_location() )
+  }
+  
   set(changes) {
     Object.assign(this, JSON.parse(JSON.stringify(changes)));
     return this;

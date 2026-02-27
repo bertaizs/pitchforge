@@ -261,11 +261,10 @@ class UI {
     }
     
     filtered_verbs(verbs, type, label = type) {
-      // let verbs = entity.get_verbs()
-      verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort()
+      verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
       let s = `<div>${label}: `
       for( let i in verbs ) {
-        s+= this.verb(verbs[i])
+        s+= `&nbsp;`+this.verb(verbs[i])+`&nbsp;`
       }
       s+= `</div>`
       return s
