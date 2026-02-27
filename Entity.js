@@ -41,6 +41,11 @@ class Entity {
     this.location_id ??= 0      // the default location of all will be the game universe
     this.position ??= false     // position within the location; string; depends on the location
     
+    if( this.location ) {
+      this.move_to(this.location, this.position)
+      delete this.location
+    }
+    
     // this.exits ??= []
     this.epithet ??= "";
     if (!("template" in param)) {
@@ -51,28 +56,29 @@ class Entity {
     }
   }
 
-  // static spawn(template, where, changes = {} ) {
-  //     // console.log("Noun.spawn")
-  //     if( !(template in game.templates) ) throw `no such template: ${template}`
+  static spawn(template, where, changes = {} ) {
+      if( !(template in game.templates) ) throw `no such template: ${template}`
+      
+      // creates the same object as the one in the template, also works if it is a class *based on* Entity
+      // this does not call its constructor, so we need to do those actions (set, register, moveto manually)
+      let entity = Object.create( Object.getPrototypeOf( game.templates[template]) )
+      entity.set( game.templates[template] )
+      entity.register()
+      entity.move_to(where)
 
-  //     let noun = Object.create( Object.getPrototypeOf(game.templates[template]) )
+      // if no epithet, then set one from the template
+      if( entity.epithets && !('name' in changes) ) {
+          entity.epithet = entity.epithets[ entity.id % entity.epithets.length  ]
+          delete entity.epithets
+      }
 
-  //     noun.set( game.templates[template] )
-  //     noun.register()
-  //     noun.set_location(where)
+      entity.set(changes)
+      
+      // for( let i in changes )
+      //     noun[i] = changes[i]
 
-  //     if( noun.epithets && !('name' in changes) ) {
-  //         noun.epithet = noun.epithets[ noun.id % noun.epithets.length  ]
-  //         delete noun.epithets
-  //     }
-
-  //     // noun.adjective = game.templates[template].adjectives[ noun.id % game.templates[template].adjectives.length ]
-
-  //     for( let i in changes )
-  //         noun[i] = changes[i]
-
-  //     return noun
-  // }
+      return entity
+  }
   
   
   // add this Entity into game.entities
@@ -122,6 +128,10 @@ class Entity {
   drop( entity ) {
     entity = game.entity(entity)
     entity.move_to( this.get_location() )
+  }
+  
+  equip( entity ) {
+    
   }
   
   set(changes) {

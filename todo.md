@@ -6,8 +6,6 @@ todo
 * inventory
   - fix how and when to show inventory and equipment on look/charsheets 
 
-* templates
-
 * implement damage
   - armor, protection, etc
   - wounds

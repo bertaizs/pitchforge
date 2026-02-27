@@ -122,3 +122,18 @@ let lockpick = new Entity({
 game.select_player(barbakan)
 
 let e = []
+
+
+
+let ghoul_template = new Entity({
+    name: "ghoul",
+    tags: ['returned', 'character'],
+    // epithet: "the bastion",
+    description: `A stinking undead.`,
+    tough:  2,
+    cool:   -1,
+    sharp:  -1,
+    charm:  -1,
+    traits: {
+    }
+}, {template: 'ghoul'}).move_to(clearing)
