@@ -20,8 +20,11 @@ class Entity {
     this.name ??= "nameless";
     this.tags ??= [];
     
-    this.description ??= "no description";    // can be seen when looking at the entity (or on charsheet)
+    this.description ??= false;    // can be seen when looking at the entity (or on charsheet)
     this.interior ??= this.description;       // can be seen when inside the entity
+    
+    this.icon ??= false,
+    this.interior_icon ??= this.icon,
 
     this.level ??= 0;
     this.cp ??= 0;

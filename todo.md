@@ -9,14 +9,19 @@ todo
 * what is displayed where
   - ministatus (icon, name, body, spirit (if down) )
   - selected char's inventory under command bar
+  - comma separated list of items, chars, etc
 
 * implement damage
   - armor, protection, etc
   - wounds
+  - attacks should consider threat
 
 ## interface
 
 * images
+  - entity images
+    - external / internal
+  - combat icons
 
 
 ## nice to have

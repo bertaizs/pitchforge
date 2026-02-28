@@ -1,6 +1,8 @@
 
 var options = {}
 
+options.pictures_location = 'pics/'
+
 options.log_clicks_on_verbs = true
 options.log_clicks_on_entities = true
 options.log_clicks_on_paths = false

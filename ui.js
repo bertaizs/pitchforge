@@ -102,6 +102,10 @@ class UI {
       s+= ui.print_entity(entity)
       s+= ' ' +entity.get('epithet')
       
+      if( entity.get('icon') ) {
+        s+= `<img class='entity_image' src="${options.pictures_location}/${entity.get('icon')}"/>`
+      }
+      
       s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
 
       if( perception > 2) {
@@ -262,11 +266,12 @@ class UI {
     
     filtered_verbs(verbs, type, label = type) {
       verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
-      let s = `<div>${label}: `
+      let s = `<tr><td class="minilabel">${label}</td><td>`
       for( let i in verbs ) {
-        s+= `&nbsp;`+this.verb(verbs[i])+`&nbsp;`
+        s+= ``+this.verb(verbs[i])+`&nbsp;`
       }
-      s+= `</div>`
+      s+= `</td>`
+      s+= `</tr>`
       return s
     }
     
@@ -279,6 +284,25 @@ class UI {
       s+= this.filtered_verbs(verbs, 'inventory')
       if( options.debug )
         s+= this.filtered_verbs(verbs, 'debug')
+      return s
+    }
+    
+    print_equipment(char) {
+      let equipment = char.list_entities_here().filter(x=>x.get('position'))
+      let s = `<tr><td class="minilabel">equipment</td><td>`
+      for( let item of equipment )
+        s+= this.print_entity(item)
+      s+= `</td></tr>`
+      return s
+    }
+    
+    print_inventory(char) {
+      let items = char.list_entities_here().filter(x=>x.get('position')==false)
+      let s = `<tr><td class="minilabel">inventory</td><td>`
+      for( let item of items )
+        s+= this.print_entity(item)+" &nbsp; "
+      // s+= equipment.join(", ")
+      s+= `</td></tr>`
       return s
     }
     
@@ -315,8 +339,12 @@ class UI {
       &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button>
       </div>
       `
+      
+      s+= `<table>`
       s+= this.print_verbs( game.get_player() )
-            
+      s+= this.print_equipment( game.get_player() )
+      s+= this.print_inventory( game.get_player() )
+      s+= `</table>`
       document.getElementById('cmd').innerHTML = s      
     }
     

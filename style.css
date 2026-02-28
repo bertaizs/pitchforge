@@ -57,3 +57,43 @@ a.path {
     inset -2px -2px 3px rgb(255 255 255 / 0.6),
     inset 2px 2px 3px rgb(0 0 0 / 0.6);
 }
+
+
+.minilabel {
+    color: gray;
+    border-right: 1px solid gray;
+    width: 6em;
+}
+
+
+table { 
+    border-spacing: 0px;
+    border-collapse: separate;
+}
+
+td, th { /* table cells */
+    padding: 0px;
+}
+
+img.combat_icon {
+    border-radius: 50%;
+    /* filter: blur(1px); */
+    width: 50px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+}
+
+
+img.entity_image {
+    width: 300px;
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    /* border-style:ridge; */
+    border-radius: 10px;
+    /* -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    -o-filter: blur(20px);
+    -ms-filter: blur(20px);
+    filter: blur(2px); */
+}
