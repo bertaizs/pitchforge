@@ -139,8 +139,25 @@ class Entity {
     return this;
   }
   
+  set_tag(tag) { this.tags.push(tag) }
+  remove_tag(tag) { this.tags = this.tags.filter(x=>x!=tag)}
+  
   is(what) {
     return this.tags.includes(what)
+  }
+  
+  is_creature() {
+    return !this.is_item()
+    // return ( this.is('character') || this.is('beast') || 
+    //          this.is('returned') || this.is('construct') ) 
+    //         && (!this.is('remains'))
+  }
+  is_character() { return this.is_creature() }
+  
+  is_location() {}
+  
+  is_item() {
+    return this.is('item') || this.is('remains')
   }
 
   get(x) {
@@ -191,6 +208,13 @@ class Entity {
     delete this.status[name]
   }
   
+  go_down() {
+    ui.add_event(`${this} goes down`)
+    this.remove_tag('character')
+    this.set_tag('remains')
+    this.name += "'s remains"
+  }
+  
   take_damage(param = {}) {
     if( typeof param == 'number' )  param = {value: param}
     
@@ -201,7 +225,11 @@ class Entity {
     let tier_diff = param.tier - this.get('tier')
     
     let damage = Math.max(param.value + tier_diff, 0)
+    ui.add_event(`${this} takes ${damage} points of damage`)
     this[param.type] -= damage
+    
+    if( this[param.type] < 0 )
+      this.go_down()
     
     options.log_damage && console.log(`${this} takes ${damage} points of ${param.type} damage`)    
     // TODO: check if this Entity goes down

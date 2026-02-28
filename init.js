@@ -50,7 +50,7 @@ let barbakan = new Entity({
     description: `A sturdy dwarf.`,
     tough:  4,
     cool:   2,
-    sharp:  1,
+    sharp:  9,
     charm:  3,
     traits: {
         // 'absent-minded': true,
@@ -99,6 +99,20 @@ game.add_trigger(
     return true
   }
 )
+
+let orc = new Entity({
+    name: "orc",
+    tags: ['character', 'orc'],
+    // epithet: "",
+    tough:  4,
+    cool:   2,
+    sharp:  0,
+    charm:  1,
+    traits: {},
+    location: clearing,
+})
+
+
 
 let sword = new Entity({
     name: "sword",

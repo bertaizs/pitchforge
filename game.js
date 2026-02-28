@@ -89,4 +89,8 @@ class Game {
 
 var game = new Game()
 
-game.universe = new Entity({name: "universe", description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`})
+game.universe = new Entity({
+  name: "universe", 
+  tags: ['location'],
+  description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
+)

@@ -6,11 +6,13 @@ todo
 * inventory
   - fix how and when to show inventory and equipment on look/charsheets 
 
+* what is displayed where
+  - ministatus (icon, name, body, spirit (if down) )
+  - selected char's inventory under command bar
+
 * implement damage
   - armor, protection, etc
   - wounds
-
-* going down if too much damage is taken
 
 ## interface
 

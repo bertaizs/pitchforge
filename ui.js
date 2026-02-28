@@ -62,13 +62,13 @@ class UI {
       
       s+= `<div>you see the following characters:</div>`
       s+= `<ul>`
-      for( const e of entities.filter(x=>x.is('character')) )
+      for( const e of entities.filter(x=>x.is_creature()) )
         s+= `<li>${this.print_entity(e)}</li>\n`
       s+= `</ul>`
 
       s+= `<div>you see the following items:</div>`
       s+= `<ul>`
-      for( const e of entities.filter(x=>x.is('item')) )
+      for( const e of entities.filter(x=>x.is_item()) )
         s+= `<li>${this.print_entity(e)}</li>\n`
       s+= `</ul>`
 
