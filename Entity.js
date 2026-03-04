@@ -21,7 +21,7 @@ class Entity {
     this.tags ??= [];
     
     this.description ??= false;    // can be seen when looking at the entity (or on charsheet)
-    this.interior ??= this.description;       // can be seen when inside the entity
+    this.interior_description ??= this.description;       // can be seen when inside the entity
     
     this.icon ??= false,
     this.interior_icon ??= this.icon,
@@ -105,8 +105,21 @@ class Entity {
     return this
   }
   
+  add( entity, pos = false ) {
+    entity.move_to(this, pos)
+    return this
+  }
+  
   get_inventory() {
     return game.list_entities_at(this)
+  }
+  
+  get_equipped_items() {
+    return this.list_entities_here().filter(x=>x.get('position')).sort()    
+  }
+
+  get_nonequipped_items() {
+    return this.list_entities_here().filter(x=>x.get('position')==false).sort()  
   }
   
   // true if this entity has the other entity/item

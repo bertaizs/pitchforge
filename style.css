@@ -21,7 +21,7 @@ a.path {
 
 /*span.cmd {*/
 .cmd {
-    border: 1px solid purple;
+    /*border: 1px solid purple;*/
     font-weight: bold;
 }
 
@@ -59,16 +59,41 @@ a.path {
 }
 
 
-.minilabel {
+.table_left {
     color: gray;
-    border-right: 1px solid gray;
+    /*border-right: 1px solid gray;*/
     width: 6em;
+    padding-bottom: 8px;
+    /*border: 1px solid green;*/
+}
+
+.table_right {
+    min-width: 6em;
+    padding-bottom: 8px;
+    /*padding-left: 8px;*/
+    /*border: 1px solid blue;*/
+}
+
+.table_nopadding {
+    padding-bottom: 0px;
+}
+
+.description {
+    min-width: 12em;
+}
+
+.numfield {
+    width: 2em;
+    /*background: yellow;*/
+    text-align: right;
+    display: inline-block;
 }
 
 
 table { 
     border-spacing: 0px;
     border-collapse: separate;
+    /*width: 100%;*/
 }
 
 td, th { /* table cells */

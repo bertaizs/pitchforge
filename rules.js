@@ -23,12 +23,19 @@ const STATS = {
   // },
 };
 
-// body: 💖, spirit: ⚡
+const POINTS = {
+  body: {
+    icon: "💖",
+  },
+  spirit: {
+    icon: "⚡",
+  },
+}
 
-SKILLS = {
-  melee: {},
-  lockpicking: {},
-};
+// SKILLS = {
+//   melee: {},
+//   lockpicking: {},
+// };
 
 const BONUS = 3;
 const PENALTY = -BONUS;

@@ -1,17 +1,42 @@
 
 class UI {
   
-    constructor() {
-      this.cmd = new Cmd({verb: 'look'}, {validate: false})
-      this.events = []
-    }
+  static icon(text) {
+    if( text in STATS ) return STATS[text].icon
+    if( text in POINTS ) return POINTS[text].icon
+    return ''
+  }
+  
+  static help_text(text) {
+    if( text in STATS ) return STATS[text].text
+    if( text in POINTS ) return POINTS[text].text
+    return ""
+  }
+  
+  static wicon(text) {
+    return UI.icon(text)+text
+  }
+  
+  static keyword(text) {
+    let s = ``
+    let help = UI.help_text(text)
+    s+= `<span${help ? ' title="'+help+'"' : ''}>${UI.wicon(text)}</span>`
+    return s
+  }
+ 
+  static numfield(text) { return `<span class="numfield">${text}</span>` }
+  
+  constructor() {
+    this.cmd = new Cmd({verb: 'look'}, {validate: false})
+    this.events = []
+  }
 
-    refresh() {
-      ui.show_main()
-      // ui.show_sheet(game.get_player())
-      ui.show_commands()
-      ui.display_cmd()
-    }
+  refresh() {
+    ui.show_main()
+    // ui.show_sheet(game.get_player())
+    ui.show_commands()
+    ui.display_cmd()
+  }
 
     click_entity(id) {
       let entity = game.entity(id)
@@ -49,48 +74,48 @@ class UI {
       return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a>`
     }
     
-    // TODO: should call Entity on what the entity can see and return the results, and should only *process* those results here...
+    
+    // returns what the player entity sees when looking around in a location
+    // - shows the location's interior (description & icon)
+    // - show ministatus of characters & items ()
+    // TODO: should call the active/player Entity on what the entity can see and return the results, and should only *process* those results here...
     print_look_around(entity) {
       entity = game.entity(entity)
       let location = entity.get_location()
-      
-      let s = `<div>`
-      s+= `<div>${this.print_entity(location)}</div>`
-      s+= `<div>${location.get('description')}</div>`
-
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
-      
-      s+= `<div>you see the following characters:</div>`
-      s+= `<ul>`
-      for( const e of entities.filter(x=>x.is_creature()) )
-        s+= `<li>${this.print_entity(e)}</li>\n`
-      s+= `</ul>`
 
-      s+= `<div>you see the following items:</div>`
-      s+= `<ul>`
-      for( const e of entities.filter(x=>x.is_item()) )
-        s+= `<li>${this.print_entity(e)}</li>\n`
-      s+= `</ul>`
+      let s = `<table><tr><td style="width: 10em;">`      
+      s+= `<div>${this.print_entity(location)}</div>`
+      if( location.get('interior_icon') ) {
+        s+= `<img class='entity_image' src="${options.pictures_location}/${location.get('interior_icon')}"></img>`
+      }
+      s+= `<div class="description">${location.get('interior_description')}</div>`
+      
+      s+= `<table>`      
+        s+= this.print_list(
+          entities.filter(x=>x.is_creature()),
+          {label: "others"}
+        )
+  
+        s+= this.print_list(
+          entities.filter(x=>x.is_item()),
+          {label: "items"}
+        )
+  
+        s+= this.print_list(
+          game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) )),
+          {label: "exists", display: this.print_path, separator: `<br/>`, prefix: "➡️ " }
+        )
+      s+= `</table>`
 
-      
-      s+= `<div>where can you go from here?</div>`
-      s+= `<ul>`
-      for( const p of game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) )) )
-        s+= `<li>${this.print_path(p)}</li>\n`
-      s+= `</ul>`
-      
-      s+= `</div>\n`
+      s+= `</td></tr></table>\n`
       return s
-    }
-    
-    show_main() {
-      let s = ``      
-      s+= this.print_look_around(game.get_player())
-      document.getElementById('main').innerHTML = s
-    }
+    } // print_look_around
 
     // returns the character sheet of the entity
-    sheet( entity, params = {} ) { return this.print_sheet(entity, params) }
+    // this is also what you see if you LOOK at the entity (from outside)
+    print_look_at_entity( entity, params = {} ) { return this.print_sheet(entity, params) }
+    // sheet( entity, params = {} ) { return this.print_sheet(entity, params) }
     print_sheet( entity, params = {} ) {
       entity = game.entity(entity)
       
@@ -107,77 +132,84 @@ class UI {
       }
       
       s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
-
-      if( perception > 2) {
-        s+= `<div>level: ${entity.get('level')}</div>`          
+      
+      // from here on, the sheet is viewed in a table
+      s+= `<table>`      
+      if( perception > 2 && entity.is_creature() ) {
+        s+= this.print_list(
+          [entity.get('level')],
+          {label: "level", display: UI.numfield }
+        )
+      }
+      if( perception > 0 && entity.is_creature() ) {
+        s+= this.print_list(
+          [`${UI.numfield(entity.get('body'))}/${entity.get('max_body')}`],
+          {label: UI.keyword('body'), display: (x)=>x,
+           left_class: "table_left table_nopadding", right_class: "table_right table_nopadding" }
+        )
+        s+= this.print_list(
+          [`${UI.numfield(entity.get('spirit'))}/${entity.get('max_spirit')}`],
+          {label: UI.keyword('spirit'), display: (x)=>x }
+        )
+        // s+= `<tr><td>...</td><td>...</td></tr>`
       }
       
-      if( perception > 0) {
-        s += `<p>
-                body: ${entity.get('body')}/${entity.get('max_body')},
-                spirit: ${entity.get('spirit')}/${entity.get('max_spirit')}<br/>
-              </p>`          
-      }
-
-      if( perception > 2){
-        s+= `<table>`
+      // STATS
+      if( perception > 2 && entity.is_creature()) {
         for( let i in STATS ) {
-            s+= `<tr><td title="${STATS[i].text}">${STATS[i].icon}${i}</td><td style="width: 2em; text-align: right;">${plusminus(entity.get_stat(i))}</td><td>&nbsp;</td>`
+            s+= `<tr><td class="table_left">${UI.keyword(i)}</td><td class="table_right"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
             if( 'respec' in params ) {
-                s+= `<td><a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a></td>`
-                s+= `<td><a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a></td>`
+                s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `
+                s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
             }
-            s+= `<td><a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a></td>`
+            s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
+            s+= `</td>`
             s+= `</tr>`
         }
-        s+= `</table>`          
-      }
-      
-      // inventory
-      let inventory = entity.list_entities_here()
-      if( perception > -5 ) {
-        s+= `<p>equipment: `
-        s+= inventory.filter(x=>x.get('position')!=false).map( this.print_entity ).join(', ')
-        s+= `</p>`
-      }
-        
-      if( perception > 2 ) {
-        if( inventory.length>0 ) {
-          s+= `<p>inventory: `
-          s+= inventory.filter(x=>x.get('position')==false).map( this.print_entity ).join(', ')
-          s+= `</p>`
-        }
       }
 
-      if( perception > 5 ) {
-        if( ! isEmpty(entity.traits) ) {
-          s+= `<p>traits: `
-          s+= Object.keys(entity.traits).join(', ')
-          s+= `</p>`          
-            // s+= `<div>&nbsp;</div>`  
-            // s+= `<div>traits:<ul>`
-            // for( let i in entity.traits )
-            //     s+= `<li>${i}</li>`
-            // s+= `</ul></div>`
-        }
-        s+= `<div>&nbsp;</div>`          
+      // EQUIPMENT & INVENTORY
+      if( perception > 0 && entity.is_creature() ) {
+        let equipped = entity.get_equipped_items()
+        if( equipped.length>0 )
+          s+= this.print_list( equipped, {label: "equipment"} )
+        
+        let nonequipped = entity.get_nonequipped_items()
+        if( nonequipped.length>0 )
+          s+= this.print_list( nonequipped, {label: "inventory"} )
       }
       
-      if( perception > 2 ) {
-        if( ! isEmpty(entity.status) ) {
-            s+= `<div>statuses:<ul>`
-            for( let i in entity.status )
-                s+= `<li>${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})</li>`
-            s+= `</ul></div>`
-        }
+      // TRAITS
+      if( (perception > 2 && entity.is_creature()) || entity.is_item() ) {
+        let traits = entity.get('traits')
+        if( !isEmpty(traits) )
+          s+= this.print_list(
+            Object.keys(traits),
+            {label: "traits", display: (x)=>x }
+          )        
       }
       
+      // STATUSES
+      if( perception > 2 && entity.is_creature()) {
+        let status = entity.get('status')
+        s+= this.print_list(
+          Object.keys(status),
+          {label: UI.keyword('statuses'), display: (i)=>`${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})`,
+            separator: `<br/>`, }
+        )
+      }
+
+      // CHARACTER POINTS
       if( perception == Infinity ) {
-        s+= `<div>character points: ${entity.get('cp')}</div>`          
+        s+= this.print_list(
+          [entity.get('cp')],
+          {label: UI.keyword('character points'), display: UI.numfield }
+        )
       }
+      s+= `</table>`
       
       if( options.debug ) {
-        s+= `\n&nbsp;<hr>`
+        s+= `\n<hr>`
         s+= `<div>`
         s+= `<a onclick="ui.show_sheet(${entity.id}, {respec: true})">✏️edit...</a> |`
         s+= `<a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a> |`
@@ -185,6 +217,12 @@ class UI {
       }
       s+= `</div>`
       return s
+    } // print_sheet
+    
+    show_main() {
+      let s = ``      
+      s+= this.print_look_around(game.get_player())
+      document.getElementById('main').innerHTML = s
     }
 
     sheet_click( stat, plusminus, entity, params = {respec: true} ) {
@@ -200,7 +238,7 @@ class UI {
     }
 
     show_sheet( entity, params = {} ) {
-        document.getElementById('work').innerHTML = this.sheet(entity, params)
+        document.getElementById('work').innerHTML = this.print_sheet(entity, params)
     }
 
     explanation(exp) {
@@ -237,21 +275,15 @@ class UI {
       let s = ``
       s+= `<select onchange="ui.${callback.name}(this.value);">`
       s+= `<option>none</option>`
-            
-      // for( let i in entities ) {
-      //   s+= `<option value="${entities[i].id}" onselect="alert(${entities[i].id})">${entities[i].get('name')}</option>`
-      // }
       for( const e of entities.filter(x=>x.id!=0) ) {
         s+= `<option value="${e.id}" >${e.get('name')}</option>`
       }
       s+= `</select>`
-      
       return s
     }
     
     click_verb(verb) {
       options.log_clicks_on_verbs && console.log(`clicked verb: ${verb}`)
-      
       this.cmd = new Cmd({verb: verb}, {validate: false})
       ui.display_cmd()
     }
@@ -287,21 +319,31 @@ class UI {
       return s
     }
     
-    print_equipment(char) {
-      let equipment = char.list_entities_here().filter(x=>x.get('position'))
-      let s = `<tr><td class="minilabel">equipment</td><td>`
-      for( let item of equipment )
-        s+= this.print_entity(item)
-      s+= `</td></tr>`
-      return s
-    }
-    
-    print_inventory(char) {
-      let items = char.list_entities_here().filter(x=>x.get('position')==false)
-      let s = `<tr><td class="minilabel">inventory</td><td>`
-      for( let item of items )
-        s+= this.print_entity(item)+" &nbsp; "
-      // s+= equipment.join(", ")
+    print_list(list = [], params = {}) {
+      params.label ??= "no label"
+      // params.separator ??= " &nbsp; "
+      params.separator ??= ", "
+      params.left_class ??= "table_left"
+      params.right_class ??= "table_right"
+      params.prefix ??= ""
+      
+      let s = `<tr><td class="${params.left_class}">${params.label}</td><td class="${params.right_class}">`
+      let first = true
+      for( let item of list ) {
+        if( first ) {
+          first = false
+        } else
+          s+= params.separator
+
+        s+= params.prefix
+        if( 'display' in params ) {
+          s+= params.display(item)          
+        } 
+        else if( item instanceof Entity ) {
+          s+= this.print_entity(item)
+        } 
+        else throw `no way to display list`
+      }
       s+= `</td></tr>`
       return s
     }
@@ -342,8 +384,11 @@ class UI {
       
       s+= `<table>`
       s+= this.print_verbs( game.get_player() )
-      s+= this.print_equipment( game.get_player() )
-      s+= this.print_inventory( game.get_player() )
+      // s+= this.print_equipment( game.get_player() )
+      s+= this.print_list( game.get_player().get_equipped_items(),
+                          {label: "equipment"} )
+      s+= this.print_list( game.get_player().get_nonequipped_items(),
+                          {label: "inventory"} )
       s+= `</table>`
       document.getElementById('cmd').innerHTML = s      
     }

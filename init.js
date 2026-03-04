@@ -8,11 +8,15 @@ let cellar = new Entity({
 let clearing = new Entity({
   name: "clearing",
   description: "A small clearing in the forest.",
+  icon: 'clearing.png',
 })
 
 let cottage = new Entity({
   name: "wooden cottage",
-  description: "....",
+  description: "a cozy looking wooden cottage",
+  icon: 'cottage_outside.png',
+  interior_description: "it is really cozy inside",
+  interior_icon: 'cottage_inside.png',
 }).move_to(clearing)
 
 let cottage_door = new Path({
