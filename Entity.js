@@ -224,6 +224,17 @@ class Entity {
     delete this.status[name]
   }
   
+  get_status( name ) {
+    if( name in this.status )
+      return this.status[name]
+    else 
+      return false
+  }
+  
+  add_wound( n ) {
+    return this.add_status({name: 'wound', magnitude: n, timer: false})
+  }
+  
   go_down() {
     ui.add_event(`${this} goes down`)
     this.remove_tag('character')
@@ -306,7 +317,7 @@ class Entity {
 
     let n = this[stat];
     explain.push({value: this[stat], label: "base "+stat})
-
+    
     for (let t in TRAITS)
       if (this.has_trait(t)) {
         if (stat in TRAITS[t]) {
@@ -314,6 +325,13 @@ class Entity {
           n += TRAITS[t][stat];
         }
       }
+      
+    let wound = this.get_status('wound')
+    if( wound ) {
+      n -= wound.magnitude
+      explain.push({value: -wound.magnitude, label: "wound"})      
+    }
+
     return n;
   }
   // same as get_stat, but receives an array as stats and returns the highest with its explanation
