@@ -122,6 +122,9 @@ new Verb({
   },
 })
 
+//
+// COMBAT
+// 
 
 new Verb({
   name: 'melee',
@@ -130,9 +133,10 @@ new Verb({
   test_vs: 'defense',
   op1: true,
   on_success: function(cmd) {
+    // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
+    ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
     let damage = cmd.op1.take_damage({value: 2})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
   },
   on_fail: function(cmd) {
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})

@@ -157,7 +157,7 @@ class UI {
       // STATS
       if( perception > 2 && entity.is_creature()) {
         for( let i in STATS ) {
-            s+= `<tr><td class="table_left">${UI.keyword(i)}</td><td class="table_right"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
+            s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
             if( 'respec' in params ) {
                 s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `
                 s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
@@ -166,6 +166,20 @@ class UI {
             s+= `</td>`
             s+= `</tr>`
         }
+        s+= `<tr><td>&nbsp;</td></tr>`
+      }
+      
+      // COMBAT
+      let COMBAT = {'melee': true, 'defense': true, 'aim': true, 'target': true }
+      if( perception > 2 && entity.is_creature()) {
+        for( let i in COMBAT ) {
+            s+= `<tr><td class="table_left table_nopadding">${i}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.performance(i))}</span> `
+            // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
+            // TODO: fix explanation click
+            s+= `</td>`
+            s+= `</tr>`
+        }
+        s+= `<tr><td>&nbsp;</td></tr>`
       }
 
       // EQUIPMENT & INVENTORY

@@ -34,8 +34,9 @@ const TESTS = {
 
   // strike: new Test({stat: "tough", /* randomize: true */ }),
   melee: new Test({stat: "tough"}),
-  defense: new Test({stat: "tough"}),
+  defense: new Test({stat: "tough", status: {"threat": -1} }),
   aim: new Test({stat: ["tough", "cool"]}),
+  target: new Test({stat: "cool", status: {"threat": -1} }),
 
   'perception': new Test({stat: "sharp", spec: 'perception'}),
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),

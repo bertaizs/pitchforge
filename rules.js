@@ -41,6 +41,8 @@ const BONUS = 3;
 const PENALTY = -BONUS;
 const CP_PER_LEVEL = 4;
 
+const LETHAL_WOUND = 6
+
 const TRAITS = {
   melee: {
     stat: "tough",

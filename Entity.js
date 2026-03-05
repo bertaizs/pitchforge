@@ -232,33 +232,44 @@ class Entity {
   }
   
   add_wound( n ) {
+    ui.add_event(`${this} is wounded (${n}).`)
+    if( n>=LETHAL_WOUND )
+      this.go_down()
     return this.add_status({name: 'wound', magnitude: n, timer: false})
   }
   
   go_down() {
-    ui.add_event(`${this} goes down`)
-    this.remove_tag('character')
-    this.set_tag('remains')
-    this.name += "'s remains"
+    ui.add_event(`${this} goes down.`)
+    if( this.is_character() ) {
+      this.remove_tag('character')
+      this.set_tag('remains')
+      this.name += "'s remains"      
+    }
   }
   
   take_damage(param = {}) {
     if( typeof param == 'number' )  param = {value: param}
-    
     param.value ??= 2
     param.type ??= 'body'
     param.tier ??= this.get('tier')
     
+    // damage reduced by difference between damage tier vs target's tier
     let tier_diff = param.tier - this.get('tier')
-    
     let damage = Math.max(param.value + tier_diff, 0)
-    ui.add_event(`${this} takes ${damage} points of damage`)
+    ui.add_event(`${this} takes ${damage} points of damage.`)
     this[param.type] -= damage
+    options.log_damage && console.log(`${this} takes ${damage} points of ${param.type} damage`)    
     
-    if( this[param.type] < 0 )
+    // checking if damage causes a wound
+    // the wound may make the entity go_down
+    let wound = Math.max(damage - 1, 0)
+    if( wound>0 )
+      this.add_wound(wound)
+    
+    // if any of the points are reduced to zero, the entity shall go_down
+    if( this[param.type] <= 0 )
       this.go_down()
     
-    options.log_damage && console.log(`${this} takes ${damage} points of ${param.type} damage`)    
     // TODO: check if this Entity goes down
     return damage
   }
@@ -363,6 +374,7 @@ class Entity {
     test = new Test( test, params )
     
     let n = this.get_best_stat(test.stat, explain);
+    // console.log(explain)
 
     // considering specializations
     let spec = false
@@ -372,6 +384,17 @@ class Entity {
     if( spec ) {
       explain.push({value: Entity.stat_specialization_bonus(n), label: `specialized (${spec})`})
       n += n
+    }
+    
+    // considering if certain statuses affect the test negatively
+    for( let i in test.status ) {
+      let status = this.get_status(i)
+      // console.log("*", test.status, test.status[i])
+      if( status ) {
+        let diff = status.magnitude * test.status[i]
+        n += diff
+        explain.push({value: diff, label: `${status.name}: ${diff}`})
+      }
     }
 
     // todo: consider items ?
