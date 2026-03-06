@@ -310,14 +310,20 @@ class UI {
       return s
     }
     
-    filtered_verbs(verbs, type, label = type) {
+    filtered_verbs(verbs, type, params = {}) {
+      params.optional ??= false
+      params.label ??= type
       verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
-      let s = `<tr><td class="table_left">${label}</td><td>`
-      for( let i in verbs ) {
-        s+= ``+this.verb(verbs[i])+`&nbsp;`
+
+      let s = ``
+      if( !params.optional || verbs.length>0 ) {
+        s+= `<tr><td class="table_left">${params.label}</td><td>`
+        for( let i in verbs ) {
+          s+= ``+this.verb(verbs[i])+`&nbsp;`
+        }
+        s+= `</td>`
+        s+= `</tr>`        
       }
-      s+= `</td>`
-      s+= `</tr>`
       return s
     }
     
@@ -328,6 +334,7 @@ class UI {
       s+= this.filtered_verbs(verbs, 'combat')
       s+= this.filtered_verbs(verbs, 'misc')
       s+= this.filtered_verbs(verbs, 'inventory')
+      s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
       if( options.debug )
         s+= this.filtered_verbs(verbs, 'debug')
       return s

@@ -38,6 +38,9 @@ const TESTS = {
   aim: new Test({stat: ["tough", "cool"]}),
   target: new Test({stat: "cool", status: {"threat": -1} }),
 
-  'perception': new Test({stat: "sharp", spec: 'perception'}),
+  perception: new Test({stat: "sharp", spec: 'perception'}),
+  
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),
+  pickpocket: new Test({stat: "cool", spec: 'thievery'}),
+
 };

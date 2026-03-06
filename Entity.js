@@ -165,7 +165,9 @@ class Entity {
   is_creature() { return this.is('character') }
   is_character() { return this.is_creature() }
   
-  is_location() {}
+  is_location() {
+    return this.is('location') || (!this.is_character() && !this.is_item())
+  }
   
   is_item() {
     return this.is('item') || this.is('remains')
@@ -443,7 +445,13 @@ class Entity {
       
       let vs_result
       if( verb.difficulty ) {   // fixed difficulty
-        vs_result = verb.difficulty
+        if( typeof verb.difficulty == 'number' )
+          vs_result = verb.difficulty
+        else
+        if( typeof verb.difficulty == 'function' )
+          vs_result = verb.difficulty(cmd)
+        else
+          throw `don't know how to process difficulty: ${verb.difficulty}`
       } else
       if( verb.op1 ) {          // versus test
         vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )

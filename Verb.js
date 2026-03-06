@@ -48,11 +48,14 @@ class Verb {
     get_text() { return this.text }
 }
 
+//
+// verbs to be used for DEBUG purposes only, not in a real game
+// 
 new Verb({
   name: 'smile',
   type: 'debug',
   test: false,
-  text: `Smile at someone or something. Does not do anything, testing only.`,
+  text: `Smile. Does not do anything, testing only.`,
   debug: true,
   on_success: function(cmd) {
     ui.add_event(`${cmd.who} smiles. :)`)
@@ -153,8 +156,12 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if(cmd.op1.is_item()) {
-      cmd.op1.move_to(cmd.who)
-      ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)      
+      if( cmd.op1.get_location().id == cmd.who.get_location().id ) {
+        cmd.op1.move_to(cmd.who)
+        ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
+      }
+      else
+        ui.add_event(`${cmd.who} cannot pick up ${cmd.op1} as it is not on the ground.`)
     } 
     else
       ui.add_event(`${cmd.who} cannot pick up ${cmd.op1}.`)
@@ -234,6 +241,35 @@ new Verb({
     ui.add_event(`This does not seem to work.`)
   },
   sortkey: 6,
+})
+
+
+new Verb({
+  name: 'steal',
+  type: 'thievery',
+  test: 'pickpocket',
+  op1: true,
+  
+  difficulty: function(cmd) {
+    let owner = cmd.op1.get_location()
+    return owner.performance('perception')
+  },
+  on_success: function(cmd) {
+    if(cmd.op1.is_item()) {
+      let owner = cmd.op1.get_location()
+      cmd.op1.move_to(cmd.who)
+      ui.add_event(`${cmd.who} has stolen ${cmd.op1} from ${owner}.`)      
+    } 
+    else
+      ui.add_event(`${cmd.who} cannot steal ${cmd.op1}, items can be stolen only.`)
+  },
+  on_fail: function(cmd) {
+    let owner = cmd.op1.get_location()
+    // cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+    ui.add_event(`${owner} noticed that ${cmd.who} was trying to steal ${cmd.op1}!`)
+    ui.add_event(`${owner} is angry!`)
+  },
+  sortkey: 1,
 })
 
 
