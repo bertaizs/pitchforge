@@ -1,12 +1,18 @@
 console.log("start:the orc and the pie")
+game.set_title("The orc and the pie (a very simple but classic adventure)")
+
 
 game.enable_verbs_only(['melee', 'pick up', 'drop', 'use', 'consume', 'look'])
 
 
 let room = new Entity({
-  name: "somewhere",
+  name: "in the middle of somewhere",
   icon: 'gray_background.png',
-  description: "You are in a room in some dungeon in some fantasy world. Actually, it is not really important where you are, just play the game.<br/>There is no exit; don't even try to go anywhere.",
+  description: `You are in some fantasy world. It is not really important where you are, you can be in a dungeon, in a room, a top of a mountain or wherever you want. Just play the game.
+  
+  <br/>There is no exit; don't even try to go anywhere.
+  
+  <p>Hint: You are supposed to kill the orc to eat the pie.</p>`,
 })
 
 let pie = new Entity({
@@ -19,6 +25,7 @@ let pie = new Entity({
 let orc = new Entity({
     name: "orc",
     tags: ['character', 'orc'],
+    level: 1,
     description: `A bloodthirsty orc. It is thirsty for blood, but it is not hungry. Still, it has a pie. A yummy-yummy pie. This is an orc so it does not want to share.`,
     // epithet: "",
     icon: 'orc1.jpeg',
@@ -34,6 +41,7 @@ let orc = new Entity({
 let player = new Entity({
     name: "Player",
     tags: ['player', 'character'],
+    level: 1,
     icon: 'unknown_trenchcoat.png',
     description: `You are the player of this small game. It does not really matter who you are, what matters is that you are hungry. You want to eat a pie...`,
     tough:  10,
@@ -43,5 +51,46 @@ let player = new Entity({
     traits: {},
     location: room
 })
+
+game.add_trigger(
+  {who: player, verb: /consume/, op1: orc},
+  function(cmd) {
+    ui.add_event(`No, it is not the orc you are supposed to eat. (Try eating the pie instead.)`)
+    return true
+  }
+)
+
+game.add_trigger(
+  {who: player, verb: /use/, op1: orc},
+  function(cmd) {
+    ui.add_event(`How exactly are you planning to use the orc?`)
+    return true
+  }
+)
+
+game.add_trigger(
+  {who: player, verb: /pick up|look/, op1: pie},
+  function(cmd) {
+    if( orc.is_up() ) {
+      ui.add_event(`The orc does not let you close to the pie!`)
+      return true
+    }
+    return false
+  } 
+)
+
+game.add_trigger(
+  {who: player, verb: /(use|consume)/, op1: pie},
+  function(cmd) {
+    if( orc.is_up() ) {
+      ui.add_event(`The orc does not let you eat the pie. You need to get rid of the orc first!`)
+      return true
+    }
+    else {
+      ui.add_event(`Congratulations, you have eaten the pie and completed this game! 😁`)
+      return true
+    }      
+  }
+)
 
 game.select_player(player)

@@ -162,12 +162,7 @@ class Entity {
     return this.tags.includes(what)
   }
   
-  is_creature() {
-    return !this.is_item()
-    // return ( this.is('character') || this.is('beast') || 
-    //          this.is('returned') || this.is('construct') ) 
-    //         && (!this.is('remains'))
-  }
+  is_creature() { return this.is('character') }
   is_character() { return this.is_creature() }
   
   is_location() {}
@@ -175,6 +170,8 @@ class Entity {
   is_item() {
     return this.is('item') || this.is('remains')
   }
+  
+  is_up() { return this.is_character() }
 
   get(x) {
     // these must have hardcoded values

@@ -152,8 +152,12 @@ new Verb({
   test: false,
   op1: true,
   on_success: function(cmd) {
-    cmd.op1.move_to(cmd.who)
-    ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
+    if(cmd.op1.is_item()) {
+      cmd.op1.move_to(cmd.who)
+      ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)      
+    } 
+    else
+      ui.add_event(`${cmd.who} cannot pick up ${cmd.op1}.`)
   },
   sortkey: 1,
 })

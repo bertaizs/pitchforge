@@ -312,7 +312,7 @@ class UI {
     
     filtered_verbs(verbs, type, label = type) {
       verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
-      let s = `<tr><td class="minilabel">${label}</td><td>`
+      let s = `<tr><td class="table_left">${label}</td><td>`
       for( let i in verbs ) {
         s+= ``+this.verb(verbs[i])+`&nbsp;`
       }
@@ -360,6 +360,11 @@ class UI {
       }
       s+= `</td></tr>`
       return s
+    }
+    
+    set_title(title) {
+      document.title = title
+      document.getElementById('title').innerHTML = title
     }
     
     display_cmd(cmd = this.cmd) {

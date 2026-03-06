@@ -1,9 +1,16 @@
 * {
     font-family:cursive;
+    background-color: black;
+    color: gray;
+}
+
+#title {
+    /*color: white;*/
+    font-weight: bold;
 }
 
 a.verb {
-    color: green;
+    color: lightgreen;
     text-decoration: none;
     font-size:large;
     white-space: nowrap;
@@ -60,7 +67,7 @@ a.path {
 
 
 .table_left {
-    color: gray;
+    color: darkslategray;
     /*border-right: 1px solid gray;*/
     width: 6em;
     padding-bottom: 8px;

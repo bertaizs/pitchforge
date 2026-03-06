@@ -54,6 +54,11 @@ class Game {
     this.disable_all_verbs()
     this.enable_verbs(verbs)
   }
+  
+  set_title(title) { 
+    ui.set_title(title)
+    console.log("starting: "+title)
+  }
     
   add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
     if( 'verb' in pattern == false ) throw `no verb in pattern: ${pattern}`
