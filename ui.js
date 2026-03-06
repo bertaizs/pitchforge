@@ -54,7 +54,7 @@ class UI {
     
     print_entity(id) {
       let e = game.entity(id)
-      return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get('name')}</a>`
+      return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get_name()}</a>`
     }
     
     click_path(path_id) {
@@ -125,7 +125,7 @@ class UI {
       
       let s = `<div>`
       s+= ui.print_entity(entity)
-      s+= ' ' +entity.get('epithet')
+      // s+= ' ' +entity.get('epithet')
       
       if( entity.get('icon') ) {
         s+= `<img class='entity_image' src="${options.pictures_location}/${entity.get('icon')}"/>`

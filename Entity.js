@@ -192,7 +192,16 @@ class Entity {
     throw `don't know how to get ${x}`;
   }
   
-  get_name() { return this.get('name') }
+  get_name(with_epithet = true) { 
+    let epithet = this.get('epithet')
+    if( !with_epithet || !epithet )
+      return this.get('name')
+    
+    if( epithet.match(/~/) )
+      return epithet.replace('~', this.get('name'))
+    else
+      return epithet+" "+this.get('name')
+  }
   toString() { return this.get_name() }
 
   rest() {

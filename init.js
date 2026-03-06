@@ -50,7 +50,7 @@ let trapdoor_to_cellar = new Path({
 let barbakan = new Entity({
     name: "Barbakan",
     tags: ['character', 'dwarf'],
-    epithet: "the bastion",
+    epithet: "~ the bastion",
     icon: 'barbakan.jpeg',
     description: `A sturdy dwarf.`,
     tough:  4,
@@ -69,7 +69,7 @@ let barbakan = new Entity({
 let skanzen = new Entity({
     name: "Skanzen",
     tags: ['character', 'elf'],
-    epithet: "the cunning",
+    // epithet: "the cunning",
     description: `A gaunt elf.`,
     tough:  2,
     cool:   3,
@@ -87,7 +87,7 @@ let skanzen = new Entity({
 let gustav = new Entity({
     name: "Gustav",
     tags: ['character', 'human'],
-    epithet: "the blank page",
+    epithet: "~ the blank page",
     tough:  0,
     cool:   0,
     sharp:  0,
@@ -117,7 +117,6 @@ let orc = new Entity({
     traits: {},
     location: clearing,
 })
-
 
 
 let sword = new Entity({
@@ -156,4 +155,8 @@ let ghoul_template = new Entity({
     charm:  -1,
     traits: {
     }
-}, {template: 'ghoul'}).move_to(clearing)
+}, {template: 'ghoul'} )
+
+let ghoul = Entity.spawn('ghoul', cellar)
+// Entity.spawn('ghoul', clearing)
+// Entity.spawn('ghoul', clearing)
