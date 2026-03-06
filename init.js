@@ -1,5 +1,7 @@
 
 
+
+
 let cellar = new Entity({
   name: "cellar",
   description: "A dark cellar, there are spiderwebs everywhere.",
@@ -147,7 +149,7 @@ let e = []
 let ghoul_template = new Entity({
     name: "ghoul",
     tags: ['returned', 'character'],
-    // epithet: "the bastion",
+    epithets: Entity.enemy_epithets,
     description: `A stinking undead.`,
     tough:  2,
     cool:   -1,
@@ -157,6 +159,49 @@ let ghoul_template = new Entity({
     }
 }, {template: 'ghoul'} )
 
+new Entity({
+    name: "lockpick",
+    tags: ['tool', 'lockpick', 'item'],
+    description: `Handy for opening locks.`,
+}, {template: 'lockpick'} )
+
+new Entity({
+    name: "red stapler",
+    tags: ['tool', 'item'],
+    description: `It is red.`,
+}, {template: 'red stapler'} )
+
+new Entity({
+    name: "doctor's bag",
+    tags: ['tool', 'item'],
+    description: `Belongs to a doctor.`,
+}, {template: "doctor's bag"} )
+
+new Entity({
+    name: "magnifying glass",
+    tags: ['tool', 'item'],
+    description: `Makes things bigger.`,
+}, {template: "magnifying glass"} )
+
 let ghoul = Entity.spawn('ghoul', cellar)
 // Entity.spawn('ghoul', clearing)
 // Entity.spawn('ghoul', clearing)
+
+
+
+let player = new Entity({
+    name: "Player",
+    tags: ['player', 'character'],
+    level: 1,
+    icon: 'unknown_trenchcoat.png',
+    description: `You are the player of this small game. It does not really matter who you are, what matters is that you are hungry. You want to eat a pie...`,
+    tough:  0,
+    cool:   0,
+    sharp:  0,
+    charm:  0,
+    traits: {},
+    location: game.chargen,
+})
+
+game.select_player(player)
+game.set_start_location(clearing)

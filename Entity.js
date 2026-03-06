@@ -11,7 +11,7 @@ class Entity {
 
   static max_id = 0;
 
-  static epithets = [ "angry", "vicious", "bloodthirsty", "scarred", "dastardly",
+  static enemy_epithets = [ "angry", "vicious", "bloodthirsty", "scarred", "dastardly",
     "violent", "raging", "ruthless", "muscular", ];
 
   constructor(value = {}, param = {}) {
@@ -54,12 +54,12 @@ class Entity {
     if (!("template" in param)) {
       this.register();
     } else {
-      this.epithets ??= Entity.epithets; // exists in templates only, defaults to the Noun.epithets
+      this.epithets ??= []; // exists in templates only, defaults to the Noun.epithets
       game.templates[param.template] = this;
     }
   }
 
-  static spawn(template, where, changes = {} ) {
+  static spawn(template, where = false, changes = {} ) {
       if( !(template in game.templates) ) throw `no such template: ${template}`
       
       // creates the same object as the one in the template, also works if it is a class *based on* Entity
@@ -67,7 +67,8 @@ class Entity {
       let entity = Object.create( Object.getPrototypeOf( game.templates[template]) )
       entity.set( game.templates[template] )
       entity.register()
-      entity.move_to(where)
+      if( where )
+        entity.move_to(where) // otherwise game.universe
 
       // if no epithet, then set one from the template
       if( entity.epithets && !('name' in changes) ) {
@@ -202,7 +203,15 @@ class Entity {
       return epithet+" "+this.get('name')
   }
   toString() { return this.get_name() }
+  
+  get_description() {
+    return this.get('description')
+  }
 
+  get_interior_description() {
+    return this.get('interior_description')
+  }
+  
   rest() {
     this.body = this.get('max_body')
     this.spirit = this.get('max_spirit')
@@ -327,7 +336,25 @@ class Entity {
 
   // this Entity gains new trait t
   gain_trait(t) {
-    this.traits[t] = true;
+    this.traits[t] = true
+    return this
+  }
+  
+  gain( background = {} ) {
+    background.traits ??= []
+    background.inventory ??= []
+    
+    for( let i of background.traits )
+      this.gain_trait( i )
+    for( let i of background.inventory )
+      this.add( Entity.spawn(i) )
+    for( let i in STATS )
+      if( i in background )
+        this[i] += background[i]
+    if( 'cp' in background )
+      this.cp += background.cp
+
+    return this
   }
 
   // returns the value of stat (string), with an explanation

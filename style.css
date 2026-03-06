@@ -113,12 +113,14 @@ img.combat_icon {
     width: 50px;
     vertical-align: middle;
     margin-bottom: 3px;
+    display: inline-block;
 }
 
 
 img.entity_image {
     width: 300px;
-    float: left;
+    /*float: left;*/
+    display: inline-block;
     margin-right: 5px;
     margin-bottom: 10px;
     /* border-style:ridge; */

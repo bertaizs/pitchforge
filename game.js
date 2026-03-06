@@ -26,7 +26,7 @@ class Game {
   list_entities_at(loc) { return this.list_entities().filter(x=>(game.entity(loc).id==x.location_id)) }
   
   get_player() { return this.entities[this.player_id]}
-  get_player_location() { return this.entities[0]}
+  get_player_location() { return this.get_player().get_location() }
   select_player(e) {
     e = this.entity(e)
     this.player_id = e.id
@@ -58,6 +58,11 @@ class Game {
   set_title(title) { 
     ui.set_title(title)
     console.log("starting: "+title)
+  }
+  
+  set_start_location( location ) {
+    location = this.entity(location)
+    this.chargen.onward = location
   }
     
   add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
@@ -121,3 +126,48 @@ game.universe = new Entity({
   tags: ['location'],
   description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
 )
+
+game.chargen = new Entity({
+  name: "character generation",
+  tags: ['abstract', 'location'],
+  icon: 'chargen2.png',
+  // description: ,
+  
+  get_interior_description: function() {
+    return ui.chargen_sheet()
+  },
+  
+  character_icons: ['male0.png', 'female_trenchcoat4.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', ],
+  
+  character_backgrounds: {
+    private_eye: {
+      label: `private eye`,
+      inventory: ['magnifying glass'],
+      traits: ['perception', 'melee'],
+      // sharp: 1,
+      // charm: 2,
+    },
+    doctor: {
+      label: `doctor`,
+      traits: ['medicine'],
+      inventory: ["doctor's bag"],
+    },
+    office_worker: {
+      label: `office worker`,
+      inventory: ['red stapler']
+    },
+    sandwichman: {
+      label: `sandwichman`,
+      cp: 3,
+    },
+  },
+  
+  
+  start: function() {
+    let them = game.get_player()
+    them.name = document.getElementById('chr_name').value
+    them.move_to(this.onward)
+    ui.refresh()
+  },
+  onward: game.universe,
+})

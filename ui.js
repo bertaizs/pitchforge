@@ -84,14 +84,17 @@ class UI {
       let location = entity.get_location()
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
 
-      let s = `<table><tr><td style="width: 100%;">`      
+      // style="width: 100%;"
+      let s = `<table><tr><td style="vertical-align: top;">`
+        if( location.get('interior_icon') ) {
+          s+= `<img class='entity_image' src="${options.pictures_location}/${location.get('interior_icon')}"></img>`
+        }
+      s+= `</td><td style="vertical-align: top;">`
       s+= `<div>${this.print_entity(location)}</div>`
-      if( location.get('interior_icon') ) {
-        s+= `<img class='entity_image' src="${options.pictures_location}/${location.get('interior_icon')}"></img>`
-      }
-      s+= `<div class="description">${location.get('interior_description')}</div>`
+      s+= `<div class="description">${location.get_interior_description()}</div>`
       
-      s+= `<table>`      
+      if( ! entity.get_location().is('abstract') ) {
+        s+= `<table>`
         s+= this.print_list(
           entities.filter(x=>x.is_creature()),
           {label: "others"}
@@ -105,12 +108,31 @@ class UI {
         s+= this.print_list(
           game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) )),
           {label: "exists", display: this.print_path, separator: `<br/>`, prefix: "➡️ " }
-        )
-      s+= `</table>`
+        )          
+        s+= `</table>`
+      }
 
       s+= `</td></tr></table>\n`
       return s
     } // print_look_around
+    
+    
+    print_sheet_stats( entity, params ) {
+      let s = ``
+      for( let i in STATS ) {
+          s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
+          if( 'respec' in params ) {
+              s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `
+              s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
+          }
+          s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
+          s+= `</td>`
+          s+= `</tr>`
+      }
+      s+= `<tr><td>&nbsp;</td></tr>`
+      return s
+    }
+    
 
     // returns the character sheet of the entity
     // this is also what you see if you LOOK at the entity (from outside)
@@ -123,14 +145,14 @@ class UI {
       let perception = ('perception' in params ? params.perception : Infinity )
       options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
       
-      let s = `<div>`
-      s+= ui.print_entity(entity)
-      // s+= ' ' +entity.get('epithet')
-      
+      let s = `<table><tr><td style="vertical-align: top;">`
       if( entity.get('icon') ) {
         s+= `<img class='entity_image' src="${options.pictures_location}/${entity.get('icon')}"/>`
       }
+      s+= `</td><td style="vertical-align: top;">`
       
+      // let s = `<div>`
+      s+= ui.print_entity(entity)
       s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
       
       // from here on, the sheet is viewed in a table
@@ -156,21 +178,13 @@ class UI {
       
       // STATS
       if( perception > 2 && entity.is_creature()) {
-        for( let i in STATS ) {
-            s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
-            if( 'respec' in params ) {
-                s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `
-                s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
-            }
-            s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
-            s+= `</td>`
-            s+= `</tr>`
-        }
-        s+= `<tr><td>&nbsp;</td></tr>`
+        s+= ui.print_sheet_stats(entity, params)
       }
       
       // COMBAT
-      let COMBAT = {'melee': true, 'defense': true, 'aim': true, 'target': true }
+      let COMBAT = {'melee': true, 'defense': true, 
+                // 'aim': true, 'target': true
+      }
       if( perception > 2 && entity.is_creature()) {
         for( let i in COMBAT ) {
             s+= `<tr><td class="table_left table_nopadding">${i}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.performance(i))}</span> `
@@ -229,7 +243,7 @@ class UI {
         s+= `<a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a> |`
         s+= `</div>`
       }
-      s+= `</div>`
+      s+= `</td></tr></table`
       return s
     } // print_sheet
     
@@ -287,7 +301,7 @@ class UI {
     
     entity_list( entities, callback ) {
       let s = ``
-      s+= `<select onchange="ui.${callback.name}(this.value);">`
+      s+= `<select onchange="ui.${callback.name}(this.value);" name="entity_picker">`
       s+= `<option>none</option>`
       for( const e of entities.filter(x=>x.id!=0) ) {
         s+= `<option value="${e.id}" >${e.get('name')}</option>`
@@ -375,15 +389,15 @@ class UI {
     }
     
     display_cmd(cmd = this.cmd) {
-      let verb = cmd.get_verb()
-      // document.getElementById('who').innerHTML = game.get_player().get_name()
-      document.getElementById('who').innerHTML = ui.print_entity(game.get_player())
-      document.getElementById('verb').innerHTML = verb.get_name()
-      document.getElementById('prep').innerHTML = verb.get_prep()
-      document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
-      document.getElementById('sep').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
-      document.getElementById('op2').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
-      // console.log(cmd)
+      if( !game.get_player().get_location().is('abstract') ) {
+        let verb = cmd.get_verb()
+        document.getElementById('who').innerHTML = ui.print_entity(game.get_player())
+        document.getElementById('verb').innerHTML = verb.get_name()
+        document.getElementById('prep').innerHTML = verb.get_prep()
+        document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
+        document.getElementById('sep').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
+        document.getElementById('op2').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )        
+      }
     }
     
     show_commands() {
@@ -393,31 +407,96 @@ class UI {
         s+= ` <a onclick="ui.refresh()">refresh</a> |
         <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
       }
-      s+= `
-      <div>
-      (<span id="who" class="cmd">who</span>): 
       
-      <span id="verb" class="cmd">verb</span>
-      <span id="prep" class="cmd" >preposition</span>
-      <span id="op1" class="cmd" >operand 1</span>
-      <span id="sep" class="cmd" >operand separator</span>
-      <span id="op2" class="cmd" >operand 1</span>
-      
-      &nbsp; <button class="btn" onclick="ui.exec()">go</button>
-      &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button>
-      </div>
-      `
-      
-      s+= `<table>`
-      s+= this.print_verbs( game.get_player() )
-      // s+= this.print_equipment( game.get_player() )
-      s+= this.print_list( game.get_player().get_equipped_items(),
-                          {label: "equipment"} )
-      s+= this.print_list( game.get_player().get_nonequipped_items(),
-                          {label: "inventory"} )
-      s+= `</table>`
+      if( ! game.get_player().get_location().is('abstract') ) {
+        s+= `
+        <div>
+        (<span id="who" class="cmd">who</span>): 
+        
+        <span id="verb" class="cmd">verb</span>
+        <span id="prep" class="cmd" >preposition</span>
+        <span id="op1" class="cmd" >operand 1</span>
+        <span id="sep" class="cmd" >operand separator</span>
+        <span id="op2" class="cmd" >operand 1</span>
+        
+        &nbsp; <button class="btn" onclick="ui.exec()">go</button>
+        &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button>
+        </div>
+        `
+        
+        s+= `<table>`
+        s+= this.print_verbs( game.get_player() )
+        // s+= this.print_equipment( game.get_player() )
+        s+= this.print_list( game.get_player().get_equipped_items(),
+                            {label: "equipment"} )
+        s+= this.print_list( game.get_player().get_nonequipped_items(),
+                            {label: "inventory"} )
+        s+= `</table>` 
+      }      
       document.getElementById('cmd').innerHTML = s      
     }
+    
+    print_background( background ) {
+      let s = ``
+      if( background.traits ) {
+        s+= background.traits.length>1 ? "traits: " : "trait: "
+        s+= background.traits.join(", ")
+      }
+      if( background.inventory ) {
+        if( s ) s+= " and "
+        s+= background.inventory.length>1 ? "items: " : "item: "
+        s+= background.inventory.join(", ")
+      }
+      let others = Object.keys( STATS ).concat( ["cp"] )
+      for( let x of others ) 
+        if( x in background ) {
+          if( s ) s+= " and "
+          s+= x+": "+plusminus(background[x])
+        }
+      return s
+    }
+    
+    chargen_sheet(chargen = game.chargen) {
+      console.log(chargen)
+      let s = ``
+      s+= `<p>You think, therefore you are. 
+      You float between worlds, beyond time and space, 
+      voices echo in your mind when you start zooming on someone, somewhere.
+      Who are you?</p>
+      
+      <p>You know the answer. You are
+      <input type="text" id="chr_name" value="mysterious stranger"/>.
+      </p>`
+      
+      s+= `<p>If you look into a mirror, you would see something like:</p>`
+      s+= `<img id="chr_icon" src="${options.pictures_location}/${game.get_player().icon}" class="entity_image" 
+          style=""/>`
+      s+= `<br/>`
+      for( let img of chargen.character_icons ) {
+        console.log(img)
+        s+= `<img src="${options.pictures_location}/${img}" class="entity_image" style="width: 50px;"
+              onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}' "/>`
+      }
+
+      `<p>Through many years of sacrifice, you have learned to become
+      <select
+        
+      </p>`
+      
+      // s+= `<table>`
+      // s+= ui.print_sheet_stats( game.get_player(), {respec: true} )
+      // s+= this.print_list(
+      //   [game.get_player().get('cp')],
+      //   {label: UI.keyword('character points'), display: UI.numfield }
+      // )
+      // s+= `</table>`
+      
+      s+= `
+      <p><a class="path" onclick="game.chargen.start()">➡️onward!</a></p>
+      `
+      return s
+    }
+    
     
     add_event(event = {}) {
       if( typeof event == 'string' )
