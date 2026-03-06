@@ -1,4 +1,3 @@
-console.log("start:the orc and the pie")
 game.set_title("The orc and the pie (a very simple but classic adventure)")
 
 
