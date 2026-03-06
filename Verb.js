@@ -32,12 +32,13 @@ class Verb {
 
         this.sortkey ??= 10
         
+        this.enabled ??= true
+        
         // this.min_ops ??= 1
         // this.max_ops ??= 2
         // this.op_separator ??= ''
         // this.tab ??= 'inventory'
 
-        // game.verbs[this.name] = this
         VERBS[this.name] = this
     }
 
@@ -54,7 +55,7 @@ new Verb({
   text: `Smile at someone or something. Does not do anything, testing only.`,
   debug: true,
   on_success: function(cmd) {
-    ui.add_event(`${cmd.who} smiles :)`)
+    ui.add_event(`${cmd.who} smiles. :)`)
   },
 })
 
@@ -64,10 +65,10 @@ new Verb({
   test: 'tough',
   difficulty: 1,
   on_success: function(cmd) {
-    ui.add_event(`${cmd.who} jumps into the air :)`)
+    ui.add_event(`${cmd.who} jumps into the air. :)`)
   },
   on_fail: function(cmd) {
-    ui.add_event( `${cmd.who} is too weak to jump :(` )
+    ui.add_event( `${cmd.who} is too weak to jump. :(` )
   },
 })
 
@@ -82,7 +83,6 @@ new Verb({
     console.log(cmd)
     let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
     ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
-    // return(`displaying charsheet of ${cmd.op1}`)
   },
 })
 
@@ -94,7 +94,6 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     ui.add_event( ui.print_sheet(cmd.op1) )
-    // return(`displaying charsheet of ${cmd.op1}`)
   },
 })
 
@@ -106,7 +105,7 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     game.select_player(cmd.op1)
-    ui.add_event(`${cmd.op1} has been selected as the active character`)
+    ui.add_event(`${cmd.op1} has been selected as the active character.`)
   },
 })
 
@@ -118,7 +117,7 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     cmd.who.move_to(cmd.op1)
-    ui.add_event(`${cmd.who} moves to ${cmd.op1}`)
+    ui.add_event(`${cmd.who} moves to ${cmd.op1}.`)
   },
 })
 
@@ -140,7 +139,7 @@ new Verb({
   },
   on_fail: function(cmd) {
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses`)
+    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
   },
 })
 
@@ -154,7 +153,7 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     cmd.op1.move_to(cmd.who)
-    ui.add_event(`${cmd.who} picks up ${cmd.op1}`)
+    ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
   },
   sortkey: 1,
 })
@@ -166,7 +165,7 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     cmd.op1.move_to(cmd.who.get_location())
-    ui.add_event(`${cmd.who} drops ${cmd.op1}`)
+    ui.add_event(`${cmd.who} drops ${cmd.op1}.`)
   },
   sortkey: 2,
 })
@@ -178,18 +177,18 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.who.has( cmd.op1) )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1}`)
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
     
     let where = 'weapon'
     cmd.who.list_entities_here()
         .map( x=>{
               if(x.position==where) {
-                ui.add_event(`${cmd.who} unequips ${x}`)
+                ui.add_event(`${cmd.who} unequips ${x}.`)
                 x.position=false
               }
         } ) // unequip all
     cmd.op1.move_to(cmd.who, where) // pick up and equip
-    ui.add_event(`${cmd.who} now wields ${cmd.op1}`)
+    ui.add_event(`${cmd.who} now wields ${cmd.op1}.`)
   },
   sortkey: 3,
 })
@@ -201,16 +200,37 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.who.has( cmd.op1) )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1}`)
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
     if( cmd.op1.get('position') == false )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1} equipped`)
+      return ui.add_event(`${cmd.who} does not have ${cmd.op1} equipped.`)
     
     cmd.op1.position = false
-    ui.add_event(`${cmd.who} unequips ${cmd.op1}`)
+    ui.add_event(`${cmd.who} unequips ${cmd.op1}.`)
   },
   sortkey: 4,
 })
 
+new Verb({
+  name: 'use',
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    ui.add_event(`This does not seem to work.`)
+  },
+  sortkey: 5,
+})
+
+new Verb({
+  name: 'consume',
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    ui.add_event(`This does not seem to work.`)
+  },
+  sortkey: 6,
+})
 
 
 // new Verb({

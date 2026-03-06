@@ -32,6 +32,28 @@ class Game {
     this.player_id = e.id
     ui.cmd.who = e
   }
+  
+  // disable all verbs in the game; none will work
+  // only debug verbs will remain, as they are for debugging
+  disable_all_verbs() {
+    for( let i in VERBS )
+      if( VERBS[i].type != 'debug' )
+        VERBS[i].enabled = false
+    
+    // Object.keys( VERBS ).map( function(x) { if(VERBS[x].type=='debug') VERBS[x].enabled = false } )
+  }
+  
+  // receives a list of strings, all these verbs will be enabled
+  enable_verbs( verbs ) {
+    for( let v of verbs ) 
+      VERBS[v].enabled = true
+  }
+  
+  // receives a list of strings, only these verbs will be enabled, everything else will be disabled
+  enable_verbs_only( verbs ) {
+    this.disable_all_verbs()
+    this.enable_verbs(verbs)
+  }
     
   add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
     if( 'verb' in pattern == false ) throw `no verb in pattern: ${pattern}`

@@ -84,7 +84,7 @@ class UI {
       let location = entity.get_location()
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
 
-      let s = `<table><tr><td style="width: 10em;">`      
+      let s = `<table><tr><td style="width: 100%;">`      
       s+= `<div>${this.print_entity(location)}</div>`
       if( location.get('interior_icon') ) {
         s+= `<img class='entity_image' src="${options.pictures_location}/${location.get('interior_icon')}"></img>`

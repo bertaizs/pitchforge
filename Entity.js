@@ -372,7 +372,7 @@ class Entity {
   }
   
   get_verbs() {
-    return Object.keys( VERBS )
+    return Object.keys( VERBS ).filter(x=>VERBS[x].enabled)
   }
 
   // returns performance of this Entity for a Test
