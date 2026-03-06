@@ -166,6 +166,7 @@ game.chargen = new Entity({
   start: function() {
     let them = game.get_player()
     them.name = document.getElementById('chr_name').value
+    them.gain( game.chargen.character_backgrounds[document.getElementById('chr_background').value] )
     them.move_to(this.onward)
     ui.refresh()
   },

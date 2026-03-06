@@ -453,6 +453,21 @@ class UI {
           if( s ) s+= " and "
           s+= x+": "+plusminus(background[x])
         }
+      return "starts with "+s
+    }
+    
+    selector( id, options = {}, params = {} ) {
+      params.label ??= (x)=>x
+      // params.background_info ??= ()=>{
+      //     document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.chargen.character_backgrounds[this.value])+')'
+      // }
+        
+      let s = ``
+      s+= `<select id="${id}" onchange="document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.chargen.character_backgrounds[this.value])+')'">`
+      // s+= `<select id="${id}" onchange="${params}">`
+      for( let o in options )
+        s+= `<option value="${o}">${params.label(o, options)}</option>`
+      s+= `</select>`
       return s
     }
     
@@ -478,10 +493,11 @@ class UI {
               onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}' "/>`
       }
 
-      `<p>Through many years of sacrifice, you have learned to become
-      <select
-        
-      </p>`
+      s+= `<p>Through many years of sacrifice, you have learned to become `
+      s+= this.selector( 'chr_background', game.chargen.character_backgrounds, {label: (x,y)=>(console.log(x,y) || y[x].label || x)} )
+      s+= `.`
+      s+= `<div id="chr_background_info"></div>`
+      s+= `</p>`
       
       // s+= `<table>`
       // s+= ui.print_sheet_stats( game.get_player(), {respec: true} )
