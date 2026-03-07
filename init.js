@@ -169,7 +169,7 @@ new Entity({
 new Entity({
     name: "red stapler",
     tags: ['tool', 'item'],
-    description: `It is red.`,
+    description: `It is <font style="color: red;">red</font>.`,
 }, {template: 'red stapler'} )
 
 new Entity({
