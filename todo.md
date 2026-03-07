@@ -8,20 +8,25 @@ start the vampire's mansion
 
 ## core
 
-* implement damage - properly
-  - armor, protection, etc
-  - another same wound makes it worse
-
-* resting and recovery
+* second operand of verbs
+  - entity operands? e.g. "use"
+  - use selector for text operands
 
 * equipment
   - handle other equipment too, not just weapons
+  - implement damage, armor, protection, etc
 
-* second operand of verbs
+## rules
+
+? spec required --> full value if spec, otherwise penalty
+spec not required --> spec not taken into account? minor bonus only?
 
 ## interface
 
 * hide explanation on new click
+* properly explain performance too, not just stats
+
+* consistent coloring of charsheet text
 
 ## nice to have
 

@@ -244,8 +244,12 @@ class UI {
         let status = entity.get('status')
         s+= this.print_list(
           Object.keys(status),
-          {label: UI.keyword('statuses'), display: (i)=>`${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})`,
-            separator: `<br/>`, }
+          {label: UI.keyword('statuses'), 
+           // display: (i)=>`${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})`,
+           display: (i)=>{ return i+ 
+                            (entity.status[i].magnitude!=1 ? " (level "+entity.status[i].magnitude+")" : "")+ 
+                            (entity.status[i].timer ? " for "+entity.status[i].timer+" rounds" : "") },
+                          separator: `<br/>`, }
         )
       }
 
@@ -417,7 +421,7 @@ class UI {
     display_cmd(cmd = this.cmd) {
       if( !game.get_player().get_location().is('abstract') ) {
         let verb = cmd.get_verb()
-        document.getElementById('who').innerHTML = ui.print_entity(game.get_player())
+        document.getElementById('who').innerHTML = ui.print_entity_ministatus(game.get_player())
         document.getElementById('verb').innerHTML = verb.get_name()
         document.getElementById('prep').innerHTML = verb.get_prep()
         document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
@@ -437,7 +441,7 @@ class UI {
       if( ! game.get_player().get_location().is('abstract') ) {
         s+= `
         <div>
-        (<span id="who" class="cmd">who</span>): 
+        <span id="who" class="cmd">who</span>: 
         
         <span id="verb" class="cmd">verb</span>
         <span id="prep" class="cmd" >preposition</span>
@@ -537,6 +541,7 @@ class UI {
         event = {type: 'text', text: event}
       
       if( 'type' in event == false ) throw `adding event without a type ${event}`
+      options.log_events && console.log(event)
       this.events.push(event)
     }
     

@@ -23,5 +23,6 @@ options.log_matching_details = false  // log each comparison
 options.log_matching_details2 = false // inner details of comparison
 
 options.log_commands = true
+options.log_events = true       // also log anything outputted as an event
 
 options.debug = true    // debug mode

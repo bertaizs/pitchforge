@@ -84,11 +84,27 @@ new Verb({
   // difficulty: 1,
   op1: true,
   on_success: function(cmd) {
-    console.log(cmd)
+    // console.log(cmd)
     let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
     ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
   },
 })
+
+new Verb({
+  name: 'recover',         // prep: 'at',
+  text: `Recover lost body and spirit points and remove all threat from yourself. Does not heal your wounds.`,
+  type: 'misc',
+  test: false,
+  // test: 'sharp',
+  // difficulty: 1,
+  // op1: true,
+  on_success: function(cmd) {
+    // todo: should not be immediate
+    ui.add_event( `${cmd.who} takes a breather...` )
+    cmd.who.recover()
+  },
+})
+
 
 new Verb({
   name: 'charsheet',    prep: 'of',

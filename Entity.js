@@ -217,22 +217,24 @@ class Entity {
     this.spirit = this.get('max_spirit')
   }
 
-  // recover() {
-  //   this.body = this.get('max_body')
-  //   this.spirit = this.get('max_spirit')
-  // }
+  recover() {
+    this.body = this.get('max_body')
+    this.spirit = this.get('max_spirit')
+    this.remove_status('threat')
+  }
   
   add_status( status = {}, params = {} ) {
     if( !('name' in status) ) throw `status has no name`
     status.magnitude ??= 1
     status.timer ??= 1
     
-    if( status.name in this.status ) {
-      if( params.stack_timer )
+    if( status.name in this.status ) {  // if already has this status
+      if( params.stack_timer )      // timer is added to existing
         this.status[status.name].timer += status.timer
-      // this.status[status.name].magnitude = Math.max(this.status[status.name].magnitude, status.magnitude )
-      if( params.stack_magnitude )
+      if( params.stack_magnitude )  // magnitude is added to existing
         this.status[status.name].magnitude += status.magnitude
+      else                          // higher magnitude is taken
+        this.status[status.name].magnitude = Math.max(this.status[status.name].magnitude, status.magnitude)
     } else this.status[status.name] = status
     return this.status[status.name]
   }
@@ -249,6 +251,8 @@ class Entity {
   }
   
   add_wound( n ) {
+    if( this.get_status('wound').magnitude == n )
+      n+= 1   // if already had a wound with this magnitude, the wound gets worse    
     ui.add_event(`${this} is wounded (${n}).`)
     if( n>=LETHAL_WOUND )
       this.go_down()
