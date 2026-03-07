@@ -77,6 +77,7 @@ new Verb({
 
 new Verb({
   name: 'look',         prep: 'at',
+  text: `Examine someone or something, potentially learn about its strengths and weaknesses.`,
   type: 'misc',
   test: false,
   // test: 'sharp',

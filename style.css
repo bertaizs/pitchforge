@@ -107,6 +107,23 @@ td, th { /* table cells */
     padding: 0px;
 }
 
+
+img.entity_image {
+    width: 300px;
+    /*float: left;*/
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 10px;
+     /*border-style:ridge; */
+    border-radius: 10px;
+    /* -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    -o-filter: blur(20px);
+    -ms-filter: blur(20px);
+    filter: blur(2px); */
+}
+
+
 img.combat_icon {
     border-radius: 50%;
     /* filter: blur(1px); */
@@ -116,18 +133,8 @@ img.combat_icon {
     display: inline-block;
 }
 
-
-img.entity_image {
-    width: 300px;
-    /*float: left;*/
-    display: inline-block;
-    margin-right: 5px;
-    margin-bottom: 10px;
-    /* border-style:ridge; */
-    border-radius: 10px;
-    /* -webkit-filter: blur(20px);
-    -moz-filter: blur(20px);
-    -o-filter: blur(20px);
-    -ms-filter: blur(20px);
-    filter: blur(2px); */
+.ministatus {
+    white-space: nowrap;
+    padding-left: 5px;
+    /*display:inline-block;*/
 }

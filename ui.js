@@ -57,6 +57,25 @@ class UI {
       return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get_name()}</a>`
     }
     
+    print_entity_ministatus(entity, params = {}) {
+      entity = game.entity(entity)
+      params.icon ??= true
+      params.stats ??= true
+      
+      let s = ``
+      s+= `<span class="ministatus">`
+      if( params.icon && entity.get('icon') )
+        s+= `<img src='${options.pictures_location}/${entity.get('icon')}' class="combat_icon" /> `
+      
+      s+= ui.print_entity(entity)
+      
+      if( params.stats ) {
+        s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
+      }
+      s+= `</span>`
+      return s
+    }
+    
     click_path(path_id) {
       let path = game.paths[path_id]
       options.log_clicks_on_paths && console.log(`clicked on path with id ${path_id}`)
@@ -97,12 +116,12 @@ class UI {
         s+= `<table>`
         s+= this.print_list(
           entities.filter(x=>x.is_creature()),
-          {label: "others"}
+          {label: "others", not_if_empty: true, display: ui.print_entity_ministatus}
         )
   
         s+= this.print_list(
           entities.filter(x=>x.is_item()),
-          {label: "items"}
+          {label: "items", not_if_empty: true}
         )
   
         s+= this.print_list(
@@ -361,6 +380,10 @@ class UI {
       params.left_class ??= "table_left"
       params.right_class ??= "table_right"
       params.prefix ??= ""
+      params.not_if_empty ??= false
+      
+      if( params.not_if_empty && list.length==0 )
+        return ""
       
       let s = `<tr><td class="${params.left_class}">${params.label}</td><td class="${params.right_class}">`
       let first = true
@@ -457,14 +480,9 @@ class UI {
     }
     
     selector( id, options = {}, params = {} ) {
-      params.label ??= (x)=>x
-      // params.background_info ??= ()=>{
-      //     document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.chargen.character_backgrounds[this.value])+')'
-      // }
-        
+      params.label ??= (x)=>x        
       let s = ``
       s+= `<select id="${id}" onchange="document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.chargen.character_backgrounds[this.value])+')'">`
-      // s+= `<select id="${id}" onchange="${params}">`
       for( let o in options )
         s+= `<option value="${o}">${params.label(o, options)}</option>`
       s+= `</select>`
@@ -472,7 +490,6 @@ class UI {
     }
     
     chargen_sheet(chargen = game.chargen) {
-      console.log(chargen)
       let s = ``
       s+= `<p>You think, therefore you are. 
       You float between worlds, beyond time and space, 
@@ -488,13 +505,12 @@ class UI {
           style=""/>`
       s+= `<br/>`
       for( let img of chargen.character_icons ) {
-        console.log(img)
         s+= `<img src="${options.pictures_location}/${img}" class="entity_image" style="width: 50px;"
               onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}' "/>`
       }
 
       s+= `<p>Through many years of sacrifice, you have learned to become `
-      s+= this.selector( 'chr_background', game.chargen.character_backgrounds, {label: (x,y)=>(console.log(x,y) || y[x].label || x)} )
+      s+= this.selector( 'chr_background', game.chargen.character_backgrounds, {label: (x,y)=>(y[x].label || x)} )
       s+= `.`
       s+= `<div id="chr_background_info"></div>`
       s+= `</p>`
