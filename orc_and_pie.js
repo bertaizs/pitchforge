@@ -16,7 +16,7 @@ let room = new Entity({
 
 let pie = new Entity({
     name: "pie",
-    icon: 'pie.jpg',
+    icon: 'pie.png',
     tags: ['consumable', 'food', 'item'],
     description: `A delicious pie.`,
 }).move_to(room)
@@ -33,6 +33,7 @@ let orc = new Entity({
     sharp:  1,
     charm:  1,
     max_body: 1,
+    max_spirit: 1,
     traits: {},
     location: room,
 })
@@ -41,7 +42,8 @@ let player = new Entity({
     name: "Player",
     tags: ['player', 'character'],
     level: 1,
-    icon: 'unknown_trenchcoat.png',
+    icon: 'hero.png',
+    // icon: 'unknown_trenchcoat.png',
     description: `You are the player of this small game. It does not really matter who you are, what matters is that you are hungry. You want to eat a pie...`,
     tough:  10,
     cool:   10,
@@ -86,7 +88,11 @@ game.add_trigger(
       return true
     }
     else {
-      ui.add_event(`Congratulations, you have eaten the pie and completed this game! 😁`)
+      // console.log(op1)
+      cmd.op1.move_to(game.universe)
+      let text = `Congratulations, you have eaten the pie and completed this game! 😁`
+      ui.add_event(text)
+      room.interior_description = text
       return true
     }      
   }

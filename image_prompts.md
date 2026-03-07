@@ -2,3 +2,5 @@ draw a cartoonish figure wearing a yellowish raincoat, the figure shall be facin
 
 the image shall have a square format
 the background shall be abstract, blurry gray, so that no props are visible
+
+there shall be no text or no cartoon bubbles on the image

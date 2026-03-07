@@ -1,21 +1,18 @@
 todo
 ====
 
+## adventure
+
+start the vampire's mansion
+
+
 ## core
 
-* what is displayed where
-  - ministatus (icon, name, body, spirit (if down) )
-
-* implement damage
+* implement damage - properly
   - armor, protection, etc
+  - another same wound makes it worse
 
-* character generator
-  - abstract location
-    + do not display verbs
-    + no exists
-  - select image
-  - set name
-  - distribute cps
+* resting and recovery
 
 * equipment
   - handle other equipment too, not just weapons
@@ -24,20 +21,18 @@ todo
 
 ## interface
 
-* images
-  - combat icons
-
+* hide explanation on new click
 
 ## nice to have
+
+* character generator
+  - add hobby
+
 
 - Clues!!
 - Entities to have multiple levels of description, revealed based on perception; can provide #knowledge
   + paths can have the same
   + descriptions can be different from the inside and the outside
   + clues can be different from the inside and the outside
-
-- double click for executing commands
-
-- epiteths: both 'Ragnar the great' and 'great Ragnar'
 
 - not all movement links should be underlined, but specific words only

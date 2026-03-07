@@ -124,12 +124,14 @@ let orc = new Entity({
 let sword = new Entity({
     name: "sword",
     tags: ['melee', 'weapon', 'item'],
+    icon: 'sword.png',
     description: `Just a simple sword.`,
 }).move_to(clearing)
 
 let pie = new Entity({
     name: "pie",
     tags: ['consumable', 'food', 'item'],
+    icon: 'pie.png',
     description: `A delicious pie.`,
 }).move_to(clearing)
 
@@ -169,6 +171,7 @@ new Entity({
 new Entity({
     name: "red stapler",
     tags: ['tool', 'item'],
+    icon: 'red_stapler.png',
     description: `It is <font style="color: red;">red</font>.`,
 }, {template: 'red stapler'} )
 
@@ -181,6 +184,7 @@ new Entity({
 new Entity({
     name: "magnifying glass",
     tags: ['tool', 'item'],
+    icon: 'magnifying_glass.png',
     description: `Makes things bigger.`,
 }, {template: "magnifying glass"} )
 

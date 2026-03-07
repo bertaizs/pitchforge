@@ -69,8 +69,11 @@ class UI {
       
       s+= ui.print_entity(entity)
       
-      if( params.stats ) {
-        s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
+      if( params.stats && entity.is_character() ) {
+        // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
+        s+= " "+UI.icon('body')+entity.get('body')
+        s+= " "
+        s+= " "+UI.icon('spirit')+entity.get('spirit')
       }
       s+= `</span>`
       return s
@@ -121,7 +124,7 @@ class UI {
   
         s+= this.print_list(
           entities.filter(x=>x.is_item()),
-          {label: "items", not_if_empty: true}
+          {label: "items", not_if_empty: true, display: ui.print_entity_ministatus}
         )
   
         s+= this.print_list(
@@ -182,7 +185,7 @@ class UI {
           {label: "level", display: UI.numfield }
         )
       }
-      if( perception > 0 && entity.is_creature() ) {
+      if( perception >= 0 && entity.is_creature() ) {
         s+= this.print_list(
           [`${UI.numfield(entity.get('body'))}/${entity.get('max_body')}`],
           {label: UI.keyword('body'), display: (x)=>x,
@@ -219,11 +222,11 @@ class UI {
       if( perception > 0 && entity.is_creature() ) {
         let equipped = entity.get_equipped_items()
         if( equipped.length>0 )
-          s+= this.print_list( equipped, {label: "equipment"} )
+          s+= this.print_list( equipped, {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus} )
         
         let nonequipped = entity.get_nonequipped_items()
         if( nonequipped.length>0 )
-          s+= this.print_list( nonequipped, {label: "inventory"} )
+          s+= this.print_list( nonequipped, {label: "inventory", not_if_empty: false, display: ui.print_entity_ministatus} )
       }
       
       // TRAITS
@@ -451,9 +454,9 @@ class UI {
         s+= this.print_verbs( game.get_player() )
         // s+= this.print_equipment( game.get_player() )
         s+= this.print_list( game.get_player().get_equipped_items(),
-                            {label: "equipment"} )
+                            {label: "equipment", not_if_empty: false, display: ui.print_entity_ministatus} )
         s+= this.print_list( game.get_player().get_nonequipped_items(),
-                            {label: "inventory"} )
+                            {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
         s+= `</table>` 
       }      
       document.getElementById('cmd').innerHTML = s      
@@ -529,7 +532,6 @@ class UI {
       return s
     }
     
-    
     add_event(event = {}) {
       if( typeof event == 'string' )
         event = {type: 'text', text: event}
@@ -557,6 +559,11 @@ class UI {
         s+= this.print_event(event)
       }
       document.getElementById('work').innerHTML = s
+    }
+    
+    click_somewhere() {
+      // if( document.getElementById('expl').innerHTML!="" ) 
+      //   document.getElementById('expl').innerHTML = ""
     }
     
     exec(cmd = this.cmd) {
