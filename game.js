@@ -140,22 +140,20 @@ game.chargen = new Entity({
   character_icons: ['male0.png', 'female_trenchcoat4.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', ],
   
   character_backgrounds: {
-    private_eye: {
-      label: `private eye`,
-      inventory: ['magnifying glass'],
-      traits: ['perception', 'melee'],
-      // sharp: 1,
-      // charm: 2,
-    },
-    doctor: {
-      label: `doctor`,
-      traits: ['medicine'],
-      inventory: ["doctor's bag"],
-    },
-    office_worker: {
-      label: `office worker`,
-      inventory: ['red stapler']
-    },
+    // private_eye: {
+    //   label: `private eye`,
+    //   inventory: ['magnifying glass'],
+    //   traits: ['perception', 'melee'],
+    // },
+    // doctor: {
+    //   label: `doctor`,
+    //   traits: ['medicine'],
+    //   inventory: ["doctor's bag"],
+    // },
+    // office_worker: {
+    //   label: `office worker`,
+    //   inventory: ['red stapler']
+    // },
     sandwichman: {
       label: `sandwichman`,
       cp: 3,
