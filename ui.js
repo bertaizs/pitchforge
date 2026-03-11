@@ -220,7 +220,7 @@ class UI {
       }
 
       // EQUIPMENT & INVENTORY
-      if( perception > 0 && entity.is_creature() ) {
+      if( perception > 0 && entity.is_creature() || entity.is_open_container() ) {
         let equipped = entity.get_equipped_items()
         if( equipped.length>0 )
           s+= this.print_list( equipped, {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus} )
@@ -552,7 +552,7 @@ class UI {
       if( 'type' in event == false ) throw `printing event without a type ${event}`
       
       if( event.type == 'text' ) {
-        return `<p>`+event.text+`</p>`
+        return `<p>`+sentence(event.text)+`</p>`
       }
       throw `don't know what to do with an event of type `+event.type
     }

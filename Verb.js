@@ -176,8 +176,10 @@ new Verb({
   test: false,
   op1: true,
   on_success: function(cmd) {
-    if(cmd.op1.is_item()) {
-      if( cmd.op1.get_location().id == cmd.who.get_location().id ) {
+    if(cmd.op1.is_takeable()) { // can only pick up what is 'takeable'
+      // and either in the same location as the player or in an open container (anywhere?)
+      if( (cmd.op1.get_location().id == cmd.who.get_location().id) || 
+          cmd.who.get_location().is_open_container() ) {
         cmd.op1.move_to(cmd.who)
         ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
       }
@@ -276,7 +278,7 @@ new Verb({
     return owner.performance('perception')
   },
   on_success: function(cmd) {
-    if(cmd.op1.is_item()) {
+    if(cmd.op1.is_takeable()) {
       let owner = cmd.op1.get_location()
       cmd.op1.move_to(cmd.who)
       ui.add_event(`${cmd.who} has stolen ${cmd.op1} from ${owner}.`)      

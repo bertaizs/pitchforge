@@ -171,7 +171,15 @@ class Entity {
   }
   
   is_item() {
-    return this.is('item') || this.is('remains')
+    return this.is('item') || this.is('remains') || this.is('prop')
+  }
+  
+  is_takeable() {
+    return this.is('item')
+  }
+  
+  is_open_container() {
+    return this.is('open') && this.is('container')
   }
   
   is_up() { return this.is_character() }

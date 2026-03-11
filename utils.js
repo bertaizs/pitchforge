@@ -36,8 +36,6 @@ function pick_one( fromArray ) {
 }
 
 function sentence( str, str2 = "" ) {
-    // if( !str.match(/[.!]$/) )
-    //     str = str+"."
     return str.charAt(0).toUpperCase() + str.slice(1) + " " + str2;
 }
 

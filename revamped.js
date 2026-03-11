@@ -103,6 +103,15 @@ let well = new Entity({
   `,
 })
 
+let bushes = new Entity({
+  name: "In the Bushes",
+  icon: 'forest.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Behind the bushes lies a dead body.</p>
+  `,
+})
+
   new Path({
     from: gloomy_forest, 
     to: clearing_edge, 
@@ -158,6 +167,14 @@ let well = new Entity({
     text: `back to the mansion`,  
   })
 
+  new Path({
+    from: clearing_edge, 
+    to: bushes, 
+    text: `follow the trail into the bushes`,
+  }, {
+    text: `back to the clearing`,
+  })
+
 
 
 
@@ -203,3 +220,65 @@ new Entity({
     icon: 'magnifying_glass.png',
     description: `Makes things bigger.`,
 }, {template: "magnifying glass"} )
+
+new Entity({
+    name: "axe",
+    tags: ['melee', 'weapon', 'tool', 'item'],
+    icon: 'axe.png',
+    description: `Chop-chop.`,
+}, {template: 'axe'} )
+
+new Entity({
+    name: "knife",
+    tags: ['melee', 'weapon', 'tool', 'item'],
+    // icon: 'axe.png',
+    description: `A sharp knife.`,
+}, {template: 'knife'} )
+
+//
+// ENTITIES
+// 
+// 
+
+Entity.spawn( 'ghoul', mansion_front )
+
+Entity.spawn( 'ghoul', mansion_back )
+Entity.spawn( 'ghoul', mansion_back )
+
+
+let vampire_eyes = new Entity({
+    name: "red eyes",
+    description: `You feel lost in the mesmerizing <font style="color: red;">red eyes</font> of the vampire.`,
+})
+
+let vampire = new Entity({
+    name: "vampire",
+    tags: ['undead', 'character'],
+    icon: 'unknown_raincoat2.png',
+    // icon: 'unknown_trenchcoat.png',
+    description: `A creature of darkness with ${ui.print_entity(vampire_eyes)}; this beast returned from the grave to drain your blood.`,
+    tough:  10,
+    cool:   10,
+    sharp:  6,
+    charm:  8,
+    traits: {},
+    location: mansion_back,
+    // location: player_ship,
+})
+
+let dead_woodsman = new Entity({
+    name: "dead woodsman",
+    tags: ['prop', 'remains', 'container', 'open'],
+    description: `The dead and partially eaten body of a woodsman.`,
+    location: bushes,
+})
+
+let woodsmans_axe = Entity.spawn( 'axe', bushes )
+let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
+
+
+
+
+//
+// TRIGGERS
+//
