@@ -204,7 +204,8 @@ class UI {
       }
       
       // COMBAT
-      let COMBAT = {'melee': true, 'defense': true, 
+      let COMBAT = {'attack': true, 'defense': true, 
+                // 'melee': true,
                 // 'aim': true, 'target': true
       }
       if( perception > 2 && entity.is_creature()) {

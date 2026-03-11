@@ -62,7 +62,7 @@ let barbakan = new Entity({
     traits: {
         // 'absent-minded': true,
         'bruiser': true,
-        'melee': true,
+        // 'melee': true,
         'occultism': true,
         'hacking': true,
     }
@@ -78,7 +78,7 @@ let skanzen = new Entity({
     sharp:  3,
     charm:  3,
     traits: {
-        'melee': true,
+        // 'melee': true,
         'hacking': true,
         'perception': true,
         'thievery': true,

@@ -44,9 +44,9 @@ const CP_PER_LEVEL = 4;
 const LETHAL_WOUND = 6
 
 const TRAITS = {
-  melee: {
-    stat: "tough",
-  },
+  // melee: {
+  //   stat: "tough",
+  // },
 
   lockpicking: {
     stat: "cool",

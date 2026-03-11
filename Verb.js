@@ -146,12 +146,16 @@ new Verb({
 // 
 
 new Verb({
-  name: 'melee',
+  name: 'attack',
   type: 'combat',
-  test: 'melee',
+  test: 'attack',
   test_vs: 'defense',
   op1: true,
   on_success: function(cmd) {
+    if( !cmd.op1.is_character() ) {
+      return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
+    }
+    
     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
     ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
     let damage = cmd.op1.take_damage({value: 2})

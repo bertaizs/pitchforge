@@ -1,7 +1,7 @@
 game.set_title("The orc and the pie (a very simple but classic adventure)")
 
 
-game.enable_verbs_only(['melee', 'pick up', 'drop', 'use', 'consume', 'look'])
+game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'look'])
 
 
 let room = new Entity({
