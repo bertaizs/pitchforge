@@ -82,7 +82,7 @@ let mansion_back = new Entity({
   icon: 'mansion_back.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing behind the dilapidated mansion.</p>
+  `<p>You are standing behind the dilapidated ${ui.print_entity(mansion)}.</p>
   `,
 })
 
@@ -91,7 +91,7 @@ let mansion_left = new Entity({
   icon: 'mansion_left.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing on the left side of the dilapidated mansion.</p>
+  `<p>You are standing on the left side of the dilapidated ${ui.print_entity(mansion)}.</p>
   `,
 })
 
@@ -100,7 +100,7 @@ let mansion_right = new Entity({
   icon: 'mansion_right.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing on the right side of the dilapidated mansion.</p>
+  `<p>You are standing on the right side of the dilapidated ${ui.print_entity(mansion)}.</p>
   `,
 })
 
@@ -128,6 +128,24 @@ let bushes = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>Behind the bushes lies a dead body.</p>
+  `,
+})
+
+let garage = new Entity({
+  name: "Garage",
+  // icon: 'forest.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Inside the garage behind the mansion.</p>
+  `,
+})
+
+let shed = new Entity({
+  name: "Shed",
+  icon: 'shed.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Inside the wooden shed behind the mansion.</p>
   `,
 })
 
@@ -201,6 +219,23 @@ let bushes = new Entity({
   }, {
     text: `climb down to the ground`,  
   })
+
+  new Path({
+    from: mansion_back, 
+    to: garage, 
+    text: `enter the garage`,
+  }, {
+    text: `leave through the garage door`,  
+  })
+
+  new Path({
+    from: mansion_back, 
+    to: shed, 
+    text: `enter the shed`,
+  }, {
+    text: `leave the shed`,  
+  })
+
 
   
 // inside
@@ -304,8 +339,6 @@ let ladies_bedroom = new Entity({
   `<p>This bedroom could have belonged to a young lady.</p>
   `,
 })
-
-
 
   new Path({
     from: mansion_front, 
@@ -443,8 +476,9 @@ new Entity({
 new Entity({
     name: "knife",
     tags: ['melee', 'weapon', 'tool', 'item'],
-    // icon: 'axe.png',
-    description: `A sharp knife.`,
+    epithet: ["sharp", "rusty", "old"],
+    icon: 'knife.png',
+    description: `A simple knife.`,
 }, {template: 'knife'} )
 
 //
@@ -460,6 +494,7 @@ Entity.spawn( 'ghoul', mansion_back )
 Entity.spawn( 'ghoul', mansion_back )
 
 Entity.spawn( 'knife', kitchen )
+Entity.spawn( 'knife', shed )
 Entity.spawn( 'magnifying glass', study )
 Entity.spawn( "doctor's bag", master_bedroom )
 
@@ -484,6 +519,13 @@ new Entity({
     Location: ladies_bedroom,
 })
 
+new Entity({
+    tags: ['item'],
+    name: "ladder",
+    icon: 'ladder.png',
+    description: `Someone has committed horrible things to this doll.`,
+    Location: mansion_right,
+})
 
 
 let vampire_eyes = new Entity({
@@ -528,7 +570,7 @@ let dead_woodsman = new Entity({
     location: bushes,
 })
 
-let woodsmans_axe = Entity.spawn( 'axe', bushes )
+let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
 
 

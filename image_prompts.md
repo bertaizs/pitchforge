@@ -1,9 +1,10 @@
 draw a cartoonish figure wearing a yellowish raincoat, the figure shall be facing the camera, but the face shall not be visible as the raincoat's hood should cover the face. There should be no hat or fedora under the raincoat. It should not be possible to determine if the figure is male or female.
 
 The image shall be cartoonish style, with noir vibes.
-the image shall have a square format
-the background shall be abstract, blurry gray, so that no props are visible
-there shall be no text or no cartoon bubbles on the image
+The image shall have a square format.
+The background shall be abstract, blurry gray, so that no props are visible.
+There shall be no text or no cartoon bubbles on the image.
+There shall be not labels, signs or text on the image anywhere.
 
 
 Draw a cartoonish picture of a gloomy forest. The atmosphere should be dark, but we should be able to see what is going on. There should be a film noir-esque vibe, but no city props, this is a forest. This is going to be an opening picture of a video game where the main character had been wandering in that forest for hours or days
@@ -22,3 +23,8 @@ Draw a cartoonish picture of a vampire, he is going to be the main adversary in 
 
 Draw an image of the interior of the mansion, from what one sees when entering via the main door. The door opens to the main hall, there is a mess, broken furniture and part of the broken roof or collapsed parts and junk. The architecture of the mansion is not in a very bad shape, but the furniture has suffered a lot. 
 There is a staircase going going upstairs to a gallery. Downstairs, there is a broken double door leading to the dining room. There is a smaller, closed door leading to the cellar. There are two other doors, one is closed, but the other room has collapsed and it is not possible to enter from the rubble.
+
+
+draw the interor of a wooden shed outside the mansion. It should have differnet tools, inside: rake, spade, axe, etc.
+remove all text from the image (from the bag)
+the shed is leaning to the stone wall of the mansion, so the left wall is made of stone, the right wall and the wall in front of the viewer is wood only. The roof is more simple, it just leans to the stone wall.
