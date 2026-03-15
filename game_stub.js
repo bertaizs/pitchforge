@@ -7,11 +7,12 @@ game.set_title("First Strike")
 // define the start location
 let player_ship = new Entity({
   name: "The Black Sheep",
+  tags: ['start', 'location'],
   icon: 'gray_background.png',
   description: `<p></p>`,
   interior_description: `<p>int</p>`,
 })
-game.set_start_location(player_ship)
+// game.set_start_location(player_ship)
 
 // define the player entity
 // - if you want to start with character creation, set location to game.chargen
@@ -33,4 +34,4 @@ let player = new Entity({
 })
 
 // mark the character to be the player
-game.select_player(player)
+// game.select_player(player)

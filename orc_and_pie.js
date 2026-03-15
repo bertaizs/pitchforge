@@ -6,6 +6,7 @@ game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'look'])
 
 let room = new Entity({
   name: "in the middle of somewhere",
+  tags: ['start', 'location'],
   icon: 'gray_background.png',
   description: `You are in some fantasy world. It is not really important where you are, you can be in a dungeon, in a room, a top of a mountain or wherever you want. Just play the game.
   
@@ -98,4 +99,4 @@ game.add_trigger(
   }
 )
 
-game.select_player(player)
+// game.select_player(player)

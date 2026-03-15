@@ -48,15 +48,20 @@ class Entity {
       this.move_to(this.location, this.position)
       delete this.location
     }
-    
+        
     // this.exits ??= []
     this.epithet ??= "";
     if (!("template" in param)) {
-      this.register();
+      this.register();  // add as an Entity to the game
     } else {
-      this.epithets ??= []; // exists in templates only, defaults to the Noun.epithets
-      game.templates[param.template] = this;
+      // this.epithets ??= []; // exists in templates only, defaults to the Noun.epithets
+      game.templates[param.template] = this;  // add as a template with the given name
     }
+
+    if( this.is('player') )
+      game.select_player(this)
+    if( this.is_location() && this.is('start') )
+      game.set_start_location(this)
   }
 
   static spawn(template, where = false, changes = {} ) {
@@ -170,7 +175,7 @@ class Entity {
   is_creature() { return this.is('character') }
   is_character() { return this.is_creature() }
   
-  is_location() {
+  is_location() { // if not specified otherwise, an Entity is a location
     return this.is('location') || (!this.is_character() && !this.is_item())
   }
   

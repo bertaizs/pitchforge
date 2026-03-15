@@ -7,6 +7,7 @@ game.set_title("Secrets of the Mansion - Revamped")
 // define the start location
 let gloomy_forest = new Entity({
   name: "Gloomy Forest",
+  tags: ['start', 'location'],
   icon: 'forest.png',
   // description: `<p></p>`,
   interior_description: 
@@ -20,7 +21,7 @@ let gloomy_forest = new Entity({
   <p>You know one thing: you need to get out of here. Quickly.</p>
   `,
 })
-game.set_start_location(gloomy_forest)
+// game.set_start_location(gloomy_forest)
 
 // define the player entity
 // - if you want to start with character creation, set location to game.chargen
@@ -42,7 +43,7 @@ let player = new Entity({
 })
 
 // mark the character to be the player
-game.select_player(player)
+// game.select_player(player)
 
 //
 // LOCATIONS AND PATHS
