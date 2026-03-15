@@ -70,10 +70,14 @@ class Entity {
       if( where )
         entity.move_to(where) // otherwise game.universe
 
-      // if no epithet, then set one from the template
-      if( entity.epithets && !('name' in changes) ) {
-          entity.epithet = entity.epithets[ entity.id % entity.epithets.length  ]
-          delete entity.epithets
+      // if epithet is an array, pick one!
+      if( entity.epithet instanceof Array ) {
+          entity.epithet = entity.epithet[ entity.id % entity.epithet.length  ]
+      }
+
+      // if icon is an array, pick one!
+      if( entity.icon instanceof Array ) {
+        entity.icon = entity.icon[ entity.id % entity.icon.length  ]
       }
 
       entity.set(changes)

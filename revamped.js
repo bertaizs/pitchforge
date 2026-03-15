@@ -395,8 +395,9 @@ let ladies_bedroom = new Entity({
 let ghoul_template = new Entity({
     name: "ghoul",
     tags: ['returned', 'character'],
-    epithets: Entity.enemy_epithets,
-    icon: 'ghoul.png',
+    // epithets: Entity.enemy_epithets,
+    epithet: Entity.enemy_epithets,
+    icon: ['ghoul.png', 'ghoul2.png', 'ghoul3.png', 'ghoul4.png', 'ghoul5.png'],
     description: `A stinking undead creature.`,
     tough:  2,
     cool:   -1,
