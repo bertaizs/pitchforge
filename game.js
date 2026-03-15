@@ -137,7 +137,7 @@ game.chargen = new Entity({
     return ui.chargen_sheet()
   },
   
-  character_icons: ['male0.png', 'female_trenchcoat4.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', ],
+  character_icons: ['male0.png', 'male1.png', 'male2.png', 'female_trenchcoat4.png', 'female2.png', 'female3.png', 'female_trenchcoat2.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', ],
   
   character_backgrounds: {
     private_eye: {

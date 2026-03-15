@@ -25,6 +25,6 @@ Draw an image of the interior of the mansion, from what one sees when entering v
 There is a staircase going going upstairs to a gallery. Downstairs, there is a broken double door leading to the dining room. There is a smaller, closed door leading to the cellar. There are two other doors, one is closed, but the other room has collapsed and it is not possible to enter from the rubble.
 
 
-draw the interor of a wooden shed outside the mansion. It should have differnet tools, inside: rake, spade, axe, etc.
+draw the interior of a wooden shed outside the mansion. It should have differnet tools, inside: rake, spade, axe, etc.
 remove all text from the image (from the bag)
 the shed is leaning to the stone wall of the mansion, so the left wall is made of stone, the right wall and the wall in front of the viewer is wood only. The roof is more simple, it just leans to the stone wall.

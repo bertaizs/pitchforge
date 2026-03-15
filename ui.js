@@ -379,8 +379,12 @@ class UI {
       s+= this.filtered_verbs(verbs, 'misc')
       s+= this.filtered_verbs(verbs, 'inventory')
       s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
-      if( options.debug )
-        s+= this.filtered_verbs(verbs, 'debug')
+      if( options.debug ) {
+        let d = `<table><tr>`
+        d+= this.filtered_verbs(verbs, 'debug')
+        d+= `</tr></table>`
+        document.getElementById('debug').innerHTML += d
+      }
       return s
     }
     
@@ -437,9 +441,11 @@ class UI {
     show_commands() {
       let s = ``
       if( options.debug ) {
-        s+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
-        s+= ` <a onclick="ui.refresh()">refresh</a> |
+        let d = ``
+        d+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
+        d+= ` <a onclick="ui.refresh()">refresh</a> |
         <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
+        document.getElementById('debug').innerHTML = d
       }
       
       if( ! game.get_player().get_location().is('abstract') ) {
@@ -452,8 +458,8 @@ class UI {
         <span id="op1" class="cmd" >operand 1</span>
         <span id="sep" class="cmd" >operand separator</span>
         <span id="op2" class="cmd" >operand 1</span>
-        
-        &nbsp; <button class="btn" onclick="ui.exec()">go</button>
+
+        &nbsp; <button class="btn" onclick="ui.exec()">⏎</button>
         &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button>
         </div>
         `
@@ -507,7 +513,7 @@ class UI {
       voices echo in your mind when you start zooming on someone, somewhere.
       Who are you?</p>
       
-      <p>You know the answer. You are
+      <p>You know the answer. You are called 
       <input type="text" id="chr_name" value="mysterious stranger"/>.
       </p>`
       
@@ -568,11 +574,16 @@ class UI {
         s+= this.print_event(event)
       }
       document.getElementById('work').innerHTML = s
+      
     }
     
     click_somewhere() {
       // if( document.getElementById('expl').innerHTML!="" ) 
       //   document.getElementById('expl').innerHTML = ""
+    }
+    
+    scrollTo(html_id = 'output') {
+      window.scrollTo(document.getElementById(html_id).getBoundingClientRect() )
     }
     
     exec(cmd = this.cmd) {

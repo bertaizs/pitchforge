@@ -503,21 +503,21 @@ new Entity({
     tags: ['item'],
     name: "horribly mutilated teddy bear",
     description: `This teddy bear has parts missing, and its fillings it is all over the place. Poor thing must have gone through terrible times. You cannot bear such a horrible sight!`,
-    Location: ladies_bedroom,
+    location: ladies_bedroom,
 })
 
 new Entity({
     tags: ['item'],
     name: "headless unicorn",
     description: `Sure, the head is missing, but it was definitely a unicorn.`,
-    Location: ladies_bedroom,
+    location: ladies_bedroom,
 })
 
 new Entity({
     tags: ['item'],
     name: "broken doll",
     description: `Someone has committed horrible things to this doll.`,
-    Location: ladies_bedroom,
+    location: ladies_bedroom,
 })
 
 new Entity({
@@ -525,7 +525,7 @@ new Entity({
     name: "ladder",
     icon: 'ladder.png',
     description: `Someone has committed horrible things to this doll.`,
-    Location: mansion_right,
+    location: mansion_right,
 })
 
 

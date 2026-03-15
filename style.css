@@ -17,12 +17,15 @@ a.verb {
 }
 
 a.entity {
-    color: blue;
+    color: lightgreen;
     /*text-decoration: underline;*/
 }
 
 a.path {
-    color: blue;
+    color: lightgreen;
+    /*text-decoration: dotted underline;*/
+}
+a.path:hover {
     text-decoration: underline;
 }
 

@@ -1,12 +1,14 @@
 todo
 ====
 
-## adventure
-
-start the vampire's mansion
-
-
 ## core
+
+* make movement also a command!
+* figure how things are displayed
+  - charsheet - not a command; same goes for: options, etc
+  - scroll view accordingly
+
+* position for props/entities
 
 * second operand of verbs
   - entity operands? e.g. "use"
@@ -32,7 +34,6 @@ spec not required --> spec not taken into account? minor bonus only?
 
 * character generator
   - add hobby
-
 
 - Clues!!
 - Entities to have multiple levels of description, revealed based on perception; can provide #knowledge
