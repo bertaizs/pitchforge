@@ -175,6 +175,9 @@ class UI {
       
       // let s = `<div>`
       s+= ui.print_entity(entity)
+      if( options.show_tags ) {
+        s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
+      }
       s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
       
       // from here on, the sheet is viewed in a table
