@@ -476,6 +476,12 @@ new Entity({
     Location: ladies_bedroom,
 })
 
+new Entity({
+    tags: ['item'],
+    name: "broken doll",
+    description: `Someone has committed horrible things to this doll.`,
+    Location: ladies_bedroom,
+})
 
 
 
