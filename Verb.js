@@ -179,7 +179,7 @@ new Verb({
     if(cmd.op1.is_takeable()) { // can only pick up what is 'takeable'
       // and either in the same location as the player or in an open container (anywhere?)
       if( (cmd.op1.get_location().id == cmd.who.get_location().id) || 
-          cmd.who.get_location().is_open_container() ) {
+          cmd.op1.get_location().is_open_container() ) {
         cmd.op1.move_to(cmd.who)
         ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
       }
