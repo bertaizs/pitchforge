@@ -150,6 +150,11 @@ game.chargen = new Entity({
       traits: ['medicine'],
       inventory: ["doctor's bag"],
     },
+    thief: {
+      label: `thief`,
+      traits: ['sneaking', 'lockpicking'],
+      inventory: ['lockpick', 'crowbar']
+    },
     office_worker: {
       label: `office worker`,
       inventory: ['red stapler']

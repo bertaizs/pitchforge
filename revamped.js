@@ -477,8 +477,16 @@ let ghoul_template = new Entity({
 new Entity({
     name: "lockpick",
     tags: ['tool', 'lockpick', 'item'],
+    icon: 'lockpicks.png',
     description: `Handy for opening locks.`,
 }, {template: 'lockpick'} )
+
+new Entity({
+    name: "crowbar",
+    tags: ['tool', 'weapon', 'item'],
+    icon: 'crowbar.png',
+    description: `A heavy crowbar.`,
+}, {template: 'crowbar'} )
 
 new Entity({
     name: "red stapler",
@@ -659,6 +667,20 @@ let vampire = new Entity({
     location: coffin_room,
     // location: player_ship,
 })
+
+  game.add_trigger(
+    {verb: /use/, op1: /stake/, op2: vampire},
+    function(cmd) {
+      if( vampire.is_up() ) {
+        ui.add_event(`${cmd.who} drives the stake through the heart of the vampire.`)
+        vampire.go_down()
+        vampire.description = `The dreadful creature of the night is now nothing but a pile of ash.`
+        return true
+      }  
+      ui.add_event(`The vampire is gone for good, there is no point in staking it again.`)
+      return true
+    }
+  )
 
 let the_staff = new Entity({
     name: "the staff",

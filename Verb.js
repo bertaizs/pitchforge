@@ -77,18 +77,18 @@ new Verb({
   },
 })
 
-new Verb({
-  name: 'jump',
-  type: 'misc',
-  test: 'tough',
-  difficulty: 1,
-  on_success: function(cmd) {
-    ui.add_event(`${cmd.who} jumps into the air. :)`)
-  },
-  on_fail: function(cmd) {
-    ui.add_event( `${cmd.who} is too weak to jump. :(` )
-  },
-})
+// new Verb({
+//   name: 'jump',
+//   type: 'misc',
+//   test: 'tough',
+//   difficulty: 1,
+//   on_success: function(cmd) {
+//     ui.add_event(`${cmd.who} jumps into the air. :)`)
+//   },
+//   on_fail: function(cmd) {
+//     ui.add_event( `${cmd.who} is too weak to jump. :(` )
+//   },
+// })
 
 new Verb({
   name: 'look',         prep: 'at',

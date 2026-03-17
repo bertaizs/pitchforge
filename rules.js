@@ -2,7 +2,7 @@ console.log("init");
 
 const STATS = {
   tough: {
-    icon: "⚔️", // 💪⚔️ 🐉🦖🪨🔨⚓
+    icon: "⚔️", // 🦾💪⚔️ 🐉🦖🪨🔨⚓
     text: `A measure of physical strength, health, fortitude and endurance, including how one can use these effectively. Determines how much damage one can take or how much one can inflict in combat. Also includes a 'never give up, never surrender' attitude. Toughness may also inspire or intimidate others.`,
   },
   cool: { // 🤹🎩🐈‍⬛

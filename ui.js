@@ -38,74 +38,76 @@ class UI {
     ui.display_cmd()
   }
 
-    click_entity(id) {
-      let entity = game.entity(id)
-      options.log_clicks_on_entities && console.log( "clicked on Entity: "+entity.get('name') )
+  click_entity(id) {
+    let entity = game.entity(id)
+    options.log_clicks_on_entities && console.log( "clicked on Entity: "+entity.get('name') )
 
-      // if( this.cmd.get_verb().op1 )
-      //   this.cmd.op1 = entity
-      if( this.cmd.get_verb().op1 && !this.cmd.op1 )
-        this.cmd.op1 = entity
+    // if( this.cmd.get_verb().op1 )
+    //   this.cmd.op1 = entity
+    if( this.cmd.get_verb().op1 && !this.cmd.op1 )
+      this.cmd.op1 = entity
+    else
+    if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
+      this.cmd.op1 = entity
+    else
+    if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
+      this.cmd.op2 = entity
+    
+    ui.display_cmd()
+  }
+    
+  entity_link(e) {
+    let id = game.entity(e).id
+    return `ui.click_entity(${id})`
+  }
+    
+  // returns the way the entity appears in html
+  // by default, this is a clickable <a > element, where the text is the entity's get_name() value
+  // one can add params to change this behavior
+  print_entity(id, params = {}) {
+    let e = game.entity(id)
+    params.label ??= false // this will appear as a link
+    params.context ??= false  // the <a > element will be put into this sentence, replacing [entity]
+    params.prefix ??= ''
+    
+    if( !params.label && params.context ) {
+      let t = params.context.match(/\[(.*)\]/)
+      if( t && t.length>=2 )
+        params.label = t[1]
       else
-      if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
-        this.cmd.op1 = entity
-      else
-      if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
-        this.cmd.op2 = entity
-      
-      ui.display_cmd()
+        throw `error when matching regexp: ${params.context}`
     }
     
-    entity_link(e) {
-      let id = game.entity(e).id
-      return `ui.click_entity(${id})`
+    let link = `<a class="entity" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
+    if( params.context ) {
+      return params.context.replace( /\[.*\]/, link )
     }
+    return link
+    // return `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
+  }
     
-    // returns the way the entity appears in html
-    // by default, this is a clickable <a > element, where the text is the entity's get_name() value
-    // one can add params to change this behavior
-    print_entity(id, params = {}) {
-      let e = game.entity(id)
-      params.label ??= false // this will appear as a link
-      params.context ??= false  // the <a > element will be put into this sentence, replacing [entity]
-      
-      if( !params.label && params.context ) {
-        let t = params.context.match(/\[(.*)\]/)
-        if( t && t.length>=2 )
-          params.label = t[1]
-        else
-          throw `error when matching regexp: ${params.context}`
-      }
-      
-      let link = `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
-      if( params.context ) {
-        return params.context.replace( /\[.*\]/, link )
-      }
-      return link
-      // return `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
-    }
+  print_entity_ministatus(entity, params = {}) {
+    entity = game.entity(entity)
+    params.icon ??= true
+    params.stats ??= true
     
-    print_entity_ministatus(entity, params = {}) {
-      entity = game.entity(entity)
-      params.icon ??= true
-      params.stats ??= true
-      
-      let s = ``
-      s+= `<span class="ministatus">`
-      if( params.icon && entity.get('icon') )
-        s+= `<img src='${options.pictures_location}/${entity.get('icon')}' class="combat_icon" /> `
-      
-      s+= ui.print_entity(entity)
-      
-      if( params.stats && entity.is_character() ) {
-        // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
-        s+= " "+UI.icon('body')+entity.get('body')
-        s+= " "
-        s+= " "+UI.icon('spirit')+entity.get('spirit')
-      }
-      s+= `</span>`
-      return s
+    let s = ``
+    s+= `<span class="ministatus">`
+    let prefix = ''
+    if( params.icon && entity.get('icon') )
+      prefix = `<img src='${options.pictures_location}/${entity.get('icon')}' class="combat_icon" /> `
+    
+    s+= ui.print_entity(entity, {prefix: prefix})
+    
+    if( params.stats && entity.is_character() ) {
+      // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
+      s+= " "+UI.icon('body')+entity.get('body')
+      s+= " "
+      s+= " "+UI.icon('spirit')+entity.get('spirit')
     }
+    s+= `</span>`
+    return s
+  }
     
     click_path(path_id) {
       let path = game.paths[path_id]

@@ -19,8 +19,8 @@ todo
   - open/close?
   - push/pull?
 
-  - combat     | ⚔️attack, 🎯snipe, 🥊🦵kick
-  - actions    | 🔎examine, 🔧use, 🍔consume, steal, sneak
+  - combat     | ⚔️attack, 🎯snipe, 🥊🥋🦵kick🦶
+  - actions    | 🔎examine, 🔧use, 🍔consume, steal, 🥷sneak
   - inventory  | 🤌pick up, 🫳drop, 🪖equip, unequip
   - (magic) 
 
