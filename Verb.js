@@ -48,6 +48,20 @@ class Verb {
     get_text() { return this.text }
 }
 
+
+new Verb({
+  name: 'move',
+  type: 'debug',
+  test: false,
+  op1: true,
+  text: `Go somewhere.`,
+  debug: true,
+  on_success: function(cmd) {
+    cmd.who.move_to(cmd.op1)
+    // ui.add_event(`${cmd.who} moves to ${cmd.op1}`)
+  },
+})
+
 //
 // verbs to be used for DEBUG purposes only, not in a real game
 // 
@@ -104,7 +118,6 @@ new Verb({
     cmd.who.recover()
   },
 })
-
 
 new Verb({
   name: 'charsheet',    prep: 'of',

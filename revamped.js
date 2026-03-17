@@ -575,7 +575,7 @@ let ladder = new Entity({
         ladder.connect( well_bottom, well )
         return true
       }
-      ui.add_event(`There is no way to use the ladder here.`)
+      ui.add_event(`There is no point in using the ladder here.`)
       return true
     }
   )
@@ -613,6 +613,18 @@ let the_staff = new Entity({
     // location: player_ship,
 })
 
+  game.add_trigger(
+    {verb: /move/, op1: study},
+    function(cmd) {
+      if( the_staff.is_up() ) {
+        ui.add_event(`The staff does not let you enter the study.`)
+        return true
+      }
+
+      ui.add_event(`You go into the study.`)
+      return false
+    }
+  )
 
 
 let dead_woodsman = new Entity({

@@ -3,7 +3,6 @@ todo
 
 ## core
 
-* make movement also a command!
 * figure how things are displayed
   - charsheet - not a command; same goes for: options, etc
   - scroll view accordingly
@@ -14,11 +13,18 @@ todo
   - entity operands? e.g. "use"
   - use selector for text operands
 
+* clean up verbs
+  - look -> examine
+  - open/close?
+  - push/pull?
+
 * equipment
   - handle other equipment too, not just weapons
   - implement damage, armor, protection, etc
 
 ## rules
+
+cannot respec if no points!
 
 ? spec required --> full value if spec, otherwise penalty
 spec not required --> spec not taken into account? minor bonus only?

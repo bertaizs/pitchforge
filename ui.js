@@ -104,7 +104,12 @@ class UI {
       if(!path) throw `there is no path with id ${path_id}`
 
       // hack, should be done with commands!
-      path.move_through(game.get_player())
+    // -  path.move_through(game.get_player())
+      
+      if( ! path.can_pass_through(game.get_player()) )
+        throw `${game.get_player()} cannot pass through this.`
+      
+      ui.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to)}) )
       
       ui.refresh()
     }
