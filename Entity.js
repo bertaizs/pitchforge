@@ -119,6 +119,10 @@ class Entity {
     return this
   }
   
+  destroy() {
+    this.move_to(game.universe)
+  }
+  
   add( entity, pos = false ) {
     entity.move_to(this, pos)
     return this

@@ -21,7 +21,6 @@ let gloomy_forest = new Entity({
   <p>You know one thing: you need to get out of here. Quickly.</p>
   `,
 })
-// game.set_start_location(gloomy_forest)
 
 // define the player entity
 // - if you want to start with character creation, set location to game.chargen
@@ -42,7 +41,7 @@ let player = new Entity({
     // location: player_ship,
 })
 
-// mark the character to be the player
+// mark the character to be the player; not needed if the char has the tag 'player'
 // game.select_player(player)
 
 //
@@ -58,6 +57,17 @@ let player = new Entity({
     `<p>A dilapidated mansion in standing on the forest clearing.</p>
     `,
   })
+  
+  // trees, props
+  let trees = new Entity({
+    name: "trees",
+    icon: 'forest.png',
+    // description: `<p></p>`,
+    description: 
+    `<p>Sure, the forest contains many trees. They are old, dying, but there is absolutely nothing special about them.</p>
+    `,
+  })
+  
 
 let clearing_edge = new Entity({
   name: "Edge of the clearing",
@@ -65,7 +75,7 @@ let clearing_edge = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>You see a clearing in the forest with a dilapidated mansion.</p>
-  <p>There is absolutely no point in going back into the forest. You would just die there.
+  <p>There is absolutely no point in going back into the forest. You would just die there among the ${ui.print_entity(trees)}.
   `,
 })
 
@@ -74,7 +84,10 @@ let mansion_front = new Entity({
   icon: 'mansion_front.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing in front of the dilapidated ${ui.print_entity(mansion)}.</p>
+  `<p>You are standing in front of the dilapidated ${ui.print_entity(mansion)}.
+  The forest is still near, its crooked ${ui.print_entity(trees)} make you feel uncomfortable.
+  So does the mansion.
+  </p>
   `,
 })
 
@@ -92,7 +105,8 @@ let mansion_left = new Entity({
   icon: 'mansion_left.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing on the left side of the dilapidated ${ui.print_entity(mansion)}.</p>
+  `<p>You are standing on the left side of the dilapidated ${ui.print_entity(mansion)}.
+  The ${ui.print_entity(trees)} circle the mansion as if the haunted forest was trying to consume it.</p>
   `,
 })
 
@@ -101,7 +115,8 @@ let mansion_right = new Entity({
   icon: 'mansion_right.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing on the right side of the dilapidated ${ui.print_entity(mansion)}.</p>
+  `<p>You are standing on the right side of the dilapidated ${ui.print_entity(mansion)}.
+  There are ${ui.print_entity(trees)} everywhere.</p>
   `,
 })
 
@@ -288,6 +303,15 @@ let pantry = new Entity({
   `<p>You are in the mansion's pantry.</p>
   `,
 })
+
+  let garlic_braid = new Entity({
+      name: "garlic braid",
+      tags: ['prop'],
+      description: `Braids of garlic hang on the walls.`,
+      location: pantry,
+      position: `[Braids of garlic] hang on the walls.`
+  })
+
 
 let cellar = new Entity({
   name: "Winecellar",
@@ -494,6 +518,38 @@ new Entity({
     description: `A simple knife.`,
 }, {template: 'knife'} )
 
+new Entity({
+    name: "stick",
+    tags: ['item'],
+    // epithet: ["crooked", "old"],
+    icon: 'stick.png',
+    description: `Just a simple stick; broken from a tree or found in the forest.`,
+}, {template: 'stick'} )
+
+new Entity({
+    name: "broken furniture",
+    tags: ['item'],
+    // epithet: ["crooked", "old"],
+    icon: 'broken_furniture.png',
+    description: `A broken piece of furniture.`,
+}, {template: 'broken furniture'} )
+
+new Entity({
+    name: "stake",
+    tags: ['item', 'weapon', 'tool'],
+    // epithet: ["crooked", "old"],
+    icon: 'stake.png',
+    description: `A sharp stake.`,
+}, {template: 'stake'} )
+
+new Entity({
+    name: "garlic",
+    tags: ['item', 'consumable'],
+    // epithet: ["crooked", "old"],
+    icon: 'garlic.png',
+    description: `A garlic bulb.`,
+}, {template: 'garlic'} )
+
 //
 // ENTITIES
 // 
@@ -510,6 +566,14 @@ Entity.spawn( 'knife', kitchen )
 Entity.spawn( 'knife', shed )
 Entity.spawn( 'magnifying glass', study )
 Entity.spawn( "doctor's bag", master_bedroom )
+
+new Entity({
+    tags: ['item'],
+    name: "broken compass",
+    icon: 'compass.png',
+    description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
+    location: player,
+})
 
 new Entity({
     tags: ['item'],
@@ -644,5 +708,43 @@ let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] 
 
 
 //
-// TRIGGERS
+// GLOBAL TRIGGERS
 //
+
+game.add_trigger(
+  {verb: /use/, op1: trees},
+  function(cmd) {
+    if( the_staff.is_up() ) {
+      ui.add_event(`You break a branch from the trees.`)
+      Entity.spawn( 'stick', cmd.who )
+      return true
+    }
+
+    ui.add_event(`You go into the study.`)
+    return false
+  }
+)
+
+// todo: 
+// - break furniture to get broken piece
+// - use knife on stick or broken furniture to get stake
+
+game.add_trigger(
+  {verb: /pick up|use/, op1: garlic_braid},
+  function(cmd) {
+    ui.add_event(`You pick up some garlic.`)
+    Entity.spawn( 'garlic', cmd.who )
+    return true
+  }
+)
+
+game.add_trigger(
+  {verb: /consume|use/, op1: /^garlic$/},
+  function(cmd) {
+  ui.add_event(`You eat the garlic bulb as a whole. Yuck! Now you smell garlic.`)
+    cmd.op1.destroy()
+    cmd.who.add_status({name: `smells garlic`, timer: false})
+    // Entity.spawn( 'garlic', cmd.who )
+    return true
+  }
+)
