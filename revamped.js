@@ -344,7 +344,7 @@ let ladies_bedroom = new Entity({
   new Path({
     from: mansion_front, 
     to: main_hall, 
-    text: `enter the mansion!`,
+    text: `enter the [mansion]!`,
   }, {
     text: `leave the mansion via the main door`,  
   })

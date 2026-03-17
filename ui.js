@@ -110,9 +110,12 @@ class UI {
     }
 
     print_path(path) {
-      // let e = game.entity(id)
-//      return `<a class="path" onclick="${ui.path_link(path)}">${p.text}</a>`
-      return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a>`
+      let t = path.text.match(/(.*)\[(.*)\](.*)/)
+      if( !t || t.length<4 )
+        return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a>`
+      else {
+        return t[1]+`<a class="path" onclick="ui.click_path(${path.id})">${t[2]}</a>`+t[3]
+      }
     }
     
     

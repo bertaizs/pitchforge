@@ -3,8 +3,6 @@ todo
 
 ## core
 
-* position for props/entities
-
 * make movement also a command!
 * figure how things are displayed
   - charsheet - not a command; same goes for: options, etc
@@ -42,5 +40,3 @@ spec not required --> spec not taken into account? minor bonus only?
   + paths can have the same
   + descriptions can be different from the inside and the outside
   + clues can be different from the inside and the outside
-
-* not all movement links should be underlined, but specific words only
