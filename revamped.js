@@ -123,6 +123,18 @@ let well = new Entity({
   `,
 })
 
+let well_bottom = new Entity({
+  name: "Bottom of the Well",
+  icon: 'well.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Well, you are at the bottom...</p>
+  `,
+})
+
+
+
+
 let bushes = new Entity({
   name: "In the Bushes",
   icon: 'forest.png',
@@ -344,7 +356,7 @@ let ladies_bedroom = new Entity({
   new Path({
     from: mansion_front, 
     to: main_hall, 
-    text: `enter the [mansion]!`,
+    text: `enter the mansion!`,
   }, {
     text: `leave the mansion via the main door`,  
   })
@@ -520,15 +532,53 @@ new Entity({
     location: ladies_bedroom,
 })
 
-new Entity({
+let ladder = new Entity({
     tags: ['item'],
     name: "ladder",
     icon: 'ladder.png',
     description: `Someone has committed horrible things to this doll.`,
     location: mansion_right,
-    position: `A [ladder] is lying next to the mansion's wall.`
+    position: `A [ladder] is lying next to the mansion's wall.`,
+    path_up:   new Path({
+      from: game.universe, 
+      to: game.universe, 
+      text: `climb up the ladder`,
+    }),
+    path_down:   new Path({
+      from: game.universe, 
+      to: game.universe, 
+      text: `climb down the ladder`,
+    }),
+    connect: function( from, to ) {
+      this.path_up.from = game.entity(from).id
+      this.path_up.to = game.entity(to).id
+      this.path_down.from = this.path_up.to
+      this.path_down.to = this.path_up.from 
+    },
+    on_move() {
+      this.connect( game.universe, game.universe )
+    }
 })
-
+  
+  game.add_trigger(
+    {verb: /use/, op1: ladder},
+    function(cmd) {
+      if( cmd.who.get_location() == mansion_left || cmd.who.get_location() == mansion_right ) {
+        ui.add_event(`You lean the ladder against the wall.`)
+        ladder.move_to( cmd.who.get_location(), `A [ladder] has been leaned against the wall.` )
+        ladder.connect( cmd.who.get_location(), mansion_roof )
+        return true
+      }
+      if( cmd.who.get_location() == well ) {
+        ui.add_event(`You slip the ladder into the well, it now reaches the bottom.`)
+        ladder.move_to(well, `There is a [ladder] leading down into the well.`)
+        ladder.connect( well_bottom, well )
+        return true
+      }
+      ui.add_event(`There is no way to use the ladder here.`)
+      return true
+    }
+  )
 
 let vampire_eyes = new Entity({
     name: "red eyes",

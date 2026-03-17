@@ -108,10 +108,14 @@ class Entity {
     return game.entities.filter(x=>(x.get_location().id==this.id))
   }
   
+  // called after then entity is moved
+  on_move() {}
+  
   move_to(location, pos = false) {
     location = game.entity(location)
     this.location_id = location.id
     this.position = pos
+    this.on_move()
     return this
   }
   
