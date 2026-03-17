@@ -14,16 +14,19 @@ a.verb {
     text-decoration: none;
     font-size:large;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 a.entity {
     color: lightgreen;
+    cursor: pointer;
     /*text-decoration: underline;*/
 }
 
 a.path {
     color: lightgreen;
     /*text-decoration: dotted underline;*/
+    cursor: pointer;
 }
 a.path:hover {
     text-decoration: underline;

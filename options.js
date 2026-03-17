@@ -2,6 +2,7 @@
 var options = {}
 
 options.pictures_location = 'pics/'
+// https://storage.googleapis.com/static-revamped-berta-hu/pics/
 
 options.log_clicks_on_verbs = true
 options.log_clicks_on_entities = true
@@ -9,7 +10,7 @@ options.log_clicks_on_paths = false
 
 options.log_tests = false
 // options.log_test_details = false
-options.log_test_results = true
+options.log_test_results = false
 
 options.log_damage = true
 
@@ -23,7 +24,7 @@ options.log_matching_details = false  // log each comparison
 options.log_matching_details2 = false // inner details of comparison
 
 options.log_commands = true
-options.log_events = true       // also log anything outputted as an event
+// options.log_events = true       // also log anything outputted as an event
 
 options.show_tags = true,
 

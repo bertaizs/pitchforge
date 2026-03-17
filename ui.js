@@ -52,9 +52,28 @@ class UI {
       return `ui.click_entity(${id})`
     }
     
-    print_entity(id) {
+    // returns the way the entity appears in html
+    // by default, this is a clickable <a > element, where the text is the entity's get_name() value
+    // one can add params to change this behavior
+    print_entity(id, params = {}) {
       let e = game.entity(id)
-      return `<a class="entity" onclick="${ui.entity_link(e)}">${e.get_name()}</a>`
+      params.label ??= false // this will appear as a link
+      params.context ??= false  // the <a > element will be put into this sentence, replacing [entity]
+      
+      if( !params.label && params.context ) {
+        let t = params.context.match(/\[(.*)\]/)
+        if( t && t.length>=2 )
+          params.label = t[1]
+        else
+          throw `error when matching regexp: ${params.context}`
+      }
+      
+      let link = `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
+      if( params.context ) {
+        return params.context.replace( /\[.*\]/, link )
+      }
+      return link
+      // return `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
     }
     
     print_entity_ministatus(entity, params = {}) {
@@ -116,14 +135,21 @@ class UI {
       s+= `<div class="description">${location.get_interior_description()}</div>`
       
       if( ! entity.get_location().is('abstract') ) {
-        s+= `<table>`
+        
+        // items with position, printed as part of the description
+        // (this without a specific position will be printed later)
+        for( let item of entities.filter(x=>(x.is_item()&&x.get('position'))) ) {
+          s+= "<p>"+this.print_entity(item, {context: item.get('position')})+"</p>"
+        }
+        
+        s+= `<table>`        
         s+= this.print_list(
           entities.filter(x=>x.is_creature()),
           {label: "others", not_if_empty: true, display: ui.print_entity_ministatus}
         )
   
         s+= this.print_list(
-          entities.filter(x=>x.is_item()),
+          entities.filter(x=>x.is_item() && !x.get('position')),
           {label: "items", not_if_empty: true, display: ui.print_entity_ministatus}
         )
   

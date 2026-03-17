@@ -3,12 +3,14 @@ todo
 
 ## core
 
+* position for props/entities
+
 * make movement also a command!
 * figure how things are displayed
   - charsheet - not a command; same goes for: options, etc
   - scroll view accordingly
 
-* position for props/entities
+* doors
 
 * second operand of verbs
   - entity operands? e.g. "use"
@@ -35,10 +37,10 @@ spec not required --> spec not taken into account? minor bonus only?
 * character generator
   - add hobby
 
-- Clues!!
-- Entities to have multiple levels of description, revealed based on perception; can provide #knowledge
+* Clues!!
+* Entities to have multiple levels of description, revealed based on perception; can provide #knowledge
   + paths can have the same
   + descriptions can be different from the inside and the outside
   + clues can be different from the inside and the outside
 
-- not all movement links should be underlined, but specific words only
+* not all movement links should be underlined, but specific words only

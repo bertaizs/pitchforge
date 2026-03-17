@@ -526,6 +526,7 @@ new Entity({
     icon: 'ladder.png',
     description: `Someone has committed horrible things to this doll.`,
     location: mansion_right,
+    position: `A [ladder] is lying next to the mansion's wall.`
 })
 
 
@@ -573,6 +574,9 @@ let dead_woodsman = new Entity({
 
 let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
+
+let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] is stuck in a tree."} )
+
 
 
 
