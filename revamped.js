@@ -93,7 +93,7 @@ let mansion_front = new Entity({
 
 let mansion_back = new Entity({
   name: "Behind the Mansion",
-  icon: 'mansion_back.png',
+  icon: 'mansion_back2.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing behind the dilapidated ${ui.print_entity(mansion)}.</p>
@@ -147,9 +147,6 @@ let well_bottom = new Entity({
   `,
 })
 
-
-
-
 let bushes = new Entity({
   name: "In the Bushes",
   icon: 'forest.png',
@@ -161,7 +158,7 @@ let bushes = new Entity({
 
 let garage = new Entity({
   name: "Garage",
-  // icon: 'forest.png',
+  icon: 'garage_interior.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>Inside the garage behind the mansion.</p>
@@ -728,6 +725,16 @@ game.add_trigger(
 // todo: 
 // - break furniture to get broken piece
 // - use knife on stick or broken furniture to get stake
+
+game.add_trigger(
+  {verb: /use/, op1: /knife/, op2: /stick/},
+  function(cmd) {
+    ui.add_event(`${cmd.who} has carved a stake.`)
+    cmd.op2.destroy()
+    Entity.spawn( 'stake', cmd.who )
+    return true
+  }
+)
 
 game.add_trigger(
   {verb: /pick up|use/, op1: garlic_braid},

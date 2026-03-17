@@ -28,3 +28,12 @@ There is a staircase going going upstairs to a gallery. Downstairs, there is a b
 draw the interior of a wooden shed outside the mansion. It should have differnet tools, inside: rake, spade, axe, etc.
 remove all text from the image (from the bag)
 the shed is leaning to the stone wall of the mansion, so the left wall is made of stone, the right wall and the wall in front of the viewer is wood only. The roof is more simple, it just leans to the stone wall.
+
+
+Draw a cartoonish image of a hungry dog (a bloodhound) in a cage. The cage should be in front a stone wall. The dog should look hungry and in a bad shape. 
+
+Draw an image of the same dog, but now outside the cage, the background should be abstract gray, with no props visible. The dog should look angry and defensive.
+
+draw the interior of a wooden garage which is build right next to the mansion; the stone wall of the mansion is also the right wall of the garage, the rest of the garage is wooden. There is an oldtimer car in the garage, in good shape, but somewhat dusty. The camera is facing the car, the backside of the garage is dark and barely visible
+
+now draw the backside of the garage, the back wall is wooden, and there is a power generator as big as a car. It works with gas, and can supply the mansion with power.

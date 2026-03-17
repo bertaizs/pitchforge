@@ -77,7 +77,7 @@ class Game {
   // pattern is created by game.add_trigger
   match( pattern, cmd ) {
     options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
-    for( let p of ['who', 'verb', 'op1'] ) {
+    for( let p of ['who', 'verb', 'op1', 'op2'] ) {
       if( ! cmd.match( p, pattern[p] ) ) {
         options.log_matching_details && console.log(`no match`)
         return false

@@ -41,9 +41,18 @@ class UI {
     click_entity(id) {
       let entity = game.entity(id)
       options.log_clicks_on_entities && console.log( "clicked on Entity: "+entity.get('name') )
-      // this.show_sheet( entity, {respec: true} )
-      if( this.cmd.get_verb().op1 )
+
+      // if( this.cmd.get_verb().op1 )
+      //   this.cmd.op1 = entity
+      if( this.cmd.get_verb().op1 && !this.cmd.op1 )
         this.cmd.op1 = entity
+      else
+      if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
+        this.cmd.op1 = entity
+      else
+      if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
+        this.cmd.op2 = entity
+      
       ui.display_cmd()
     }
     
@@ -467,8 +476,8 @@ class UI {
         document.getElementById('verb').innerHTML = verb.get_name()
         document.getElementById('prep').innerHTML = verb.get_prep()
         document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
-        document.getElementById('sep').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )
-        document.getElementById('op2').innerHTML = ( cmd.op2 ? cmd.get_op1_text() : "" )        
+        document.getElementById('sep').innerHTML = ( cmd.op2 ? verb.get_sep() : "" )
+        document.getElementById('op2').innerHTML = ( cmd.op2 ? cmd.get_op2_text() : "" )        
       }
     }
     

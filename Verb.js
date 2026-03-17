@@ -44,6 +44,7 @@ class Verb {
 
     get_name() { return this.name }
     get_prep() { return this.prep }
+    get_sep() { return this.separator }
     get_label() { return (options.debug&&this.debug?"*":"")+this.get_name() }
     get_text() { return this.text }
 }
@@ -261,7 +262,8 @@ new Verb({
   name: 'use',
   type: 'inventory',
   test: false,
-  op1: true,
+  op1: true,    separator: 'and',
+  op2: true,
   on_success: function(cmd) {
     ui.add_event(`This does not seem to work.`)
   },

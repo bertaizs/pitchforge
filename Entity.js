@@ -121,6 +121,13 @@ class Entity {
   
   destroy() {
     this.move_to(game.universe)
+    delete game.entities[this.id]
+    if( ui.cmd.op1 == this ) {
+      ui.cmd.op1 = false
+      ui.cmd.op2 = false
+    }
+    if( ui.cmd.op2 == this )
+      ui.cmd.op2 = false
   }
   
   add( entity, pos = false ) {

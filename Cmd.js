@@ -28,7 +28,9 @@ class Cmd {
         this.op2 ??= false
         if( this.op2 ) this.op2 = game.entity(this.op2)
         this.param ??= false
-                
+
+        this.separator ??= false
+        
         if( params.validate ) this.validate()
     }
     
@@ -50,6 +52,10 @@ class Cmd {
 
     get_op1_text() {
       return this.get_as_text('op1')
+    }
+    
+    get_op2_text() {
+      return this.get_as_text('op2')
     }
 
     // checks if an attribute of the command matches pattern

@@ -10,7 +10,8 @@ todo
 * doors
 
 * second operand of verbs
-  - entity operands? e.g. "use"
+  <!--- entity operands? e.g. "use"-->
+  - order of two operands should not matter (sorting?)
   - use selector for text operands
 
 * clean up verbs
@@ -18,13 +19,18 @@ todo
   - open/close?
   - push/pull?
 
+  - combat     | ⚔️attack, 🎯snipe, 🥊🦵kick
+  - actions    | 🔎examine, 🔧use, 🍔consume, steal, sneak
+  - inventory  | 🤌pick up, 🫳drop, 🪖equip, unequip
+  - (magic) 
+
 * equipment
   - handle other equipment too, not just weapons
   - implement damage, armor, protection, etc
 
 ## rules
 
-cannot respec if no points!
+* should not be able to respec if no character points!
 
 ? spec required --> full value if spec, otherwise penalty
 spec not required --> spec not taken into account? minor bonus only?
