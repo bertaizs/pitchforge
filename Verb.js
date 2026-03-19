@@ -92,6 +92,7 @@ new Verb({
 
 new Verb({
   name: 'look',         prep: 'at',
+  icon: '🔎',
   text: `Examine someone or something, potentially learn about its strengths and weaknesses.`,
   type: 'misc',
   test: false,
@@ -107,6 +108,7 @@ new Verb({
 
 new Verb({
   name: 'recover',         // prep: 'at',
+  icon: '💤',
   text: `Recover lost body and spirit points and remove all threat from yourself. Does not heal your wounds.`,
   type: 'misc',
   test: false,
@@ -161,6 +163,7 @@ new Verb({
 
 new Verb({
   name: 'attack',
+  icon: '⚔️',
   type: 'combat',
   test: 'attack',
   test_vs: 'defense',
@@ -186,6 +189,7 @@ new Verb({
 //
 new Verb({
   name: 'pick up',
+  icon: '🤌',
   type: 'inventory',
   test: false,
   op1: true,
@@ -208,6 +212,7 @@ new Verb({
 
 new Verb({
   name: 'drop',
+  icon: '🫳',
   type: 'inventory',
   test: false,
   op1: true,
@@ -220,6 +225,7 @@ new Verb({
 
 new Verb({
   name: 'equip',  // as weapon
+  icon: '🧢',
   type: 'inventory',
   test: false,
   op1: true,
@@ -260,6 +266,7 @@ new Verb({
 
 new Verb({
   name: 'use',
+  icon: '🔧',
   type: 'inventory',
   test: false,
   op1: true,    separator: 'and',
@@ -272,6 +279,7 @@ new Verb({
 
 new Verb({
   name: 'consume',
+  icon: '🍔',
   type: 'inventory',
   test: false,
   op1: true,

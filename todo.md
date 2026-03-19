@@ -5,6 +5,7 @@ todo
 
 * figure how things are displayed
   - charsheet - not a command; same goes for: options, etc
+    + or: implement them via command, but make it a non-turn-ending command
   - scroll view accordingly
 
 * doors
@@ -19,10 +20,11 @@ todo
   - open/close?
   - push/pull?
 
-  - combat     | ⚔️attack, 🎯snipe, 🥊🥋🦵kick🦶
-  - actions    | 🔎examine, 🔧use, 🍔consume, steal, 🥷sneak
-  - inventory  | 🤌pick up, 🫳drop, 🪖equip, unequip
+  - actions    | 🔎examine, 💬talk, 🎁give, 👜pickpocket, 🥷sneak
+  - combat     | ⚔️attack, 🎯snipe, 🥊🥋🦵kick🦶, 💤recover
+  - inventory  | 🔧use, 🤌pick up, 🫳drop, 🪖equip/unequip, 🍔consume
   - (magic) 
+
 
 * equipment
   - handle other equipment too, not just weapons

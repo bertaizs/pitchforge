@@ -478,7 +478,7 @@ new Entity({
     name: "lockpick",
     tags: ['tool', 'lockpick', 'item'],
     icon: 'lockpicks.png',
-    description: `Handy for opening locks.`,
+    description: `Handy for opening locks.`, // hook pick
 }, {template: 'lockpick'} )
 
 new Entity({

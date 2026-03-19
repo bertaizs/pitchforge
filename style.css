@@ -147,3 +147,38 @@ img.combat_icon {
     padding-left: 5px;
     /*display:inline-block;*/
 }
+
+
+/*@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}*/
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+#work {
+    margin-left: 1em;
+    padding-left: 1em;
+    border-left: 6px solid  darkslategray;
+}

@@ -4,6 +4,7 @@ class UI {
   static icon(text) {
     if( text in STATS ) return STATS[text].icon
     if( text in POINTS ) return POINTS[text].icon
+    if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
     return ''
   }
   
@@ -36,6 +37,7 @@ class UI {
     // ui.show_sheet(game.get_player())
     ui.show_commands()
     ui.display_cmd()
+    window.scroll(0,0)
   }
 
   click_entity(id) {
@@ -394,7 +396,7 @@ class UI {
     verb(v) {
       let verb = VERBS[v]
       let s = `<span>
-      <a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${verb.get_label()}</a>
+      <a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${UI.icon(verb.name)+verb.get_label()}</a>
       </span>\n`
       return s
     }
@@ -627,14 +629,20 @@ class UI {
       //   document.getElementById('expl').innerHTML = ""
     }
     
-    scrollTo(html_id = 'output') {
-      window.scrollTo(document.getElementById(html_id).getBoundingClientRect() )
-    }
+    // scrollTo(html_id = 'output') {
+    //   window.scrollTo(document.getElementById(html_id).getBoundingClientRect() )
+    // }
     
     exec(cmd = this.cmd) {
+      // document.getElementById('output').style.display = 'none'
+      document.getElementById('output').style.animation = null
+      document.getElementById('output').offsetHeight
       game.exec(cmd)
       ui.refresh()
       ui.show_events()
+      // ui.scrollTo()
+      // document.getElementById('output').style.display = 'block'
+      document.getElementById('output').style.animation = "fadeIn 1s ease-in";
     }
         
 

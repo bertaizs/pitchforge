@@ -5,23 +5,7 @@ Plans for the adventure: revamped
 
 mansion -- location & prop
 
-ground floor
-
-first floor 
-  master bedroom
-  other room
-  
-roof
-
-garage
-
-cellar
-
 ## creatures to implement
-
-vampire
-
-staff / servants
 
 ? tougher ghoul?
 
@@ -31,10 +15,19 @@ whiskey
 
 rope
 
-garlic
+some more food
 
-some food
+--> broken furniture --> stake
 
+safety pin, tennis racket, rubber gloves
+
+gas can
+
+car keys
+
+generator
+
+lantern / flashlight
 
 ## triggers to implement
 
