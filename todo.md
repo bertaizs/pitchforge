@@ -54,3 +54,54 @@ spec not required --> spec not taken into account? minor bonus only?
   + paths can have the same
   + descriptions can be different from the inside and the outside
   + clues can be different from the inside and the outside
+
+
+
+---
+
+
+requirements
+
+stealth
+
+action / cycle
+
+weapon use
+
+clues / reqs
+descriptions as functions
+
+weapon reqs, penalties
+weapon bonuses
+
+
+doors
+• keyring - img
+
+items
+• whisky - img
+• broken samurai sword
+• broken pot
+• almost accurate erth globe
+• guide to slaying vampires
+    - stake
+    - incinerate
+    - via sunlight
+    - holy light / magic eq but hard to come by
+    - garlic - not a silver bullet
+    - not silver
+• diary (vamp)
+• diary (lady)
+• abandoned birds nest
+• chimney (prop)
+• silver knife
+• candellabra, silver
+
+levelup process
+
+
+dog
+
+generator, light, light switch
+
+vamp godown process

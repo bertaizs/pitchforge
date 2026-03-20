@@ -392,6 +392,35 @@ class Entity {
 
     return this
   }
+  
+  // returns true if meets one of the requirement set_start_location
+  // input is an object, or an array of objects 'OR of ANDs', 
+  // i.e. each object describes a set of requirements where all must be met; 
+  // and if one object is met, then the result is true
+  // returns false if none of the requirements sets are met
+  meets_requirements( reqs ) {
+    if( !(reqs instanceof Array) )
+      reqs = [reqs]   // ensures we have an array
+    for( let req of reqs ) {
+      req.traits ??= {}
+      console.log(req)
+      let fail = false
+      for( let i in req ) {
+        console.log(i)        
+        if( i in STATS && req[i]>this.get(i) ) fail = true
+        if( i in TESTS && req[i]>this.performance(i) ) fail = true
+      }
+      // if(!fail) {
+        for( let t in req.traits )
+          if( !this.has_trait(t) )
+            fail = true
+      // }
+      // if all is met in this req object, return true
+      if( !fail)
+        return true
+    }
+    return false
+  }
 
   // returns the value of stat (string), with an explanation
   get_stat(stat, explain = []) {
