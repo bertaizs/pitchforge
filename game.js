@@ -1,6 +1,6 @@
 
-class Game {
-
+class Game {    
+  
   constructor() {
     this.templates = {}
     this.entities = []
@@ -9,6 +9,10 @@ class Game {
     this.verbs = VERBS
     this.player_id = 1  // default value, modified via Game.select_player
     this.clues = {}     // not all clues, only those we need to refer to later (e.g. for hiding, etc)
+    
+    this.character_icons = [] // one can select from these icons during character generation
+    this.base_char = {}       // all characters will get these via Entity.gain
+    this.character_backgrounds = {} // contains backgrounds, player can select one
   }
 
   entity(e) {
@@ -125,8 +129,6 @@ game.universe = new Entity({
   description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
 )
 
-game.base_char = {cp: 10}
-
 game.chargen = new Entity({
   name: "character generation",
   tags: ['abstract', 'location'],
@@ -137,42 +139,125 @@ game.chargen = new Entity({
     return ui.chargen_sheet()
   },
   
-  character_icons: ['male0.png', 'male1.png', 'male2.png', 'female_trenchcoat4.png', 'female2.png', 'female3.png', 'female_trenchcoat2.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', ],
-  
-  character_backgrounds: {
-    private_eye: {
-      label: `private eye`,
-      inventory: ['magnifying glass'],
-      traits: ['perception'],
-    },
-    doctor: {
-      label: `doctor`,
-      traits: ['medicine'],
-      inventory: ["doctor's bag"],
-    },
-    thief: {
-      label: `thief`,
-      traits: ['sneaking', 'lockpicking'],
-      inventory: ['lockpick', 'crowbar']
-    },
-    office_worker: {
-      label: `office worker`,
-      inventory: ['red stapler']
-    },
-    sandwichman: {
-      label: `sandwichman`,
-      cp: 3,
-    },
-  },
-  
+  // character_icons: game.character_icons,
+  // character_backgrounds: game.character_backgrounds,
   
   start: function() {
     let them = game.get_player()
     them.gain(game.base_char)
     them.name = document.getElementById('chr_name').value
-    them.gain( game.chargen.character_backgrounds[document.getElementById('chr_background').value] )
+    them.gain( game.character_backgrounds[document.getElementById('chr_background').value] )
     them.move_to(this.onward)
     ui.refresh()
   },
   onward: game.universe,
 })
+
+
+
+game.base_char = {cp: 0}
+
+game.character_icons = ['male0.png', 'male1.png', 'male2.png', 'female_trenchcoat4.png', 'female2.png', 'female3.png', 'female_trenchcoat2.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', 'chargen2.png',],
+
+game.character_backgrounds = {
+  private_eye: {
+    label: `private eye`,
+    tough:  2,
+    cool:   2,
+    sharp:  2,
+    charm:  1,
+    inventory: ['magnifying glass'],
+    traits: ['perception'],
+  },
+  doctor: {
+    label: `doctor`,
+    tough:  0,
+    cool:   2,
+    sharp:  3,
+    charm:  0,
+    cp:     1,
+    traits: ['medicine'],
+    inventory: ["doctor's bag"],
+  },
+  bruiser: {
+    label: `bruiser`,
+    tough:  4,
+    cool:   0,
+    sharp:  0,
+    charm:  0,
+    // traits: ['sneaking', 'lockpicking'],
+    inventory: ['crowbar', 'knife']  
+  },
+  secretAgent: {
+    label: `secret agent`,
+    tough:  1,
+    cool:   2,
+    sharp:  2,
+    charm:  2,
+    traits: ['sneaking', 'social'],
+    inventory: ['knife'], // revolver?
+  },
+  thief: {
+    label: `thief`,
+    tough:  1,
+    cool:   3,
+    sharp:  2,
+    charm:  0,
+    traits: ['sneaking', 'lockpicking', 'pickpocket'],
+    inventory: ['lockpick', 'crowbar']
+  },
+  handyman: {
+    label: `handyman`,
+    tough:  2,
+    cool:   3,
+    sharp:  1,
+    charm:  0,
+    traits: ['crafting', 'lockpicking'],
+    inventory: ['lockpick', 'crowbar']
+  },
+  office_worker: {
+    label: `office worker`,
+    cp: 10,
+    inventory: ['red stapler']
+  },
+  kungfu: {
+    label: `kung-fu master`,
+    tough:  2,
+    cool:   3,
+    sharp:  1,
+    charm:  0,
+    traits: ['martial arts'],
+  },
+  chess: {
+    label: `chess player`,
+    tough: -1,
+    cool:   1,
+    sharp:  5,
+    charm:  0,
+    traits: ['chess', 'absent minded'],
+  },
+  salesman: {
+    label: `salesman`,
+    tough:  1,
+    cool:  -2,
+    sharp:  1,
+    charm:  4,
+    traits: ['social'],
+  },
+  occultist: {
+    label: `occultist`,
+    tough: -1,
+    cool:   0,
+    sharp:  1,
+    charm:  4,
+    traits: ['occultism', 'sixth sense', 'creepy'],
+  },
+  sandwichman: {
+    label: `sandwichman`,
+    tough:  2,
+    cool:   1,
+    sharp:  2,
+    charm:  2,
+    cp: 3,
+  },
+}

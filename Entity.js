@@ -217,7 +217,14 @@ class Entity {
     // these must have hardcoded values
     // TODO: need to consider modifiers on traits, statuses, etc
     if( x in STATS ) return this.get_stat(x)
-    if (x in this) return this[x];    
+    
+    console.log(this[x])
+    if (x in this) {
+      if( typeof x != 'function' )
+        return this[x]
+      else
+        return this[x]()
+    }
     
     // if not overridden, the default for the below is based on another attr
     switch(x) {
@@ -242,11 +249,17 @@ class Entity {
   toString() { return this.get_name() }
   
   get_description() {
-    return this.get('description')
+    let desc = this.get('description')
+    if( typeof desc == 'function')
+      desc = desc()
+    return desc
   }
 
   get_interior_description() {
     return this.get('interior_description')
+  }
+  get_location_description() {
+    return this.get_interior_description()
   }
   
   rest() {
@@ -411,7 +424,7 @@ class Entity {
     if( !(reqs instanceof Array) )
       reqs = [reqs]   // ensures we have an array
     
-    if( reqs.length==0 )  // empty list means no requirements --> fulfilled
+    if( reqs.length==0 || (reqs.length==1 && isEmpty(reqs[0])) )  // empty list means no requirements --> fulfilled
       return true
     
     for( let req of reqs ) {

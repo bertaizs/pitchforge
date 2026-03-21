@@ -3,10 +3,15 @@ todo
 
 ## core
 
+* action / cycle
+
+
 * figure how things are displayed
   - charsheet - not a command; same goes for: options, etc
     + or: implement them via command, but make it a non-turn-ending command
-  - scroll view accordingly
+
+* stealth
+
 
 * doors
 
@@ -15,24 +20,11 @@ todo
   - order of two operands should not matter (sorting?)
   - use selector for text operands
 
-* clean up verbs
-  - look -> examine
-  - open/close?
-  - push/pull?
-
-  - actions    | 🔎examine, 💬talk, 🎁give, 👜pickpocket, 🥷sneak
-  - combat     | ⚔️attack, 🎯snipe, 🥊🥋🦵kick🦶, 💤recover
-  - inventory  | 🔧use, 🤌pick up, 🫳drop, 🪖equip/unequip, 🍔consume
-  - (magic) 
-
-
 * equipment
   - handle other equipment too, not just weapons
   - implement damage, armor, protection, etc
 
 ## rules
-
-- beef up backgrounds for testing
 
 * should not be able to respec if no character points!
 
@@ -51,24 +43,8 @@ spec not required --> spec not taken into account? minor bonus only?
 * character generator
   - add hobby
 
-* Clues!!
-* Entities to have multiple levels of description, revealed based on perception; can provide #knowledge
-  + paths can have the same
-  + descriptions can be different from the inside and the outside
-  + clues can be different from the inside and the outside
-
-
 
 ---
-
-
-requirements
-
-stealth
-
-action / cycle
-
-weapon use
 
 descriptions as functions
 

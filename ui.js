@@ -561,7 +561,7 @@ class UI {
     selector( id, options = {}, params = {} ) {
       params.label ??= (x)=>x        
       let s = ``
-      s+= `<select id="${id}" onchange="document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.chargen.character_backgrounds[this.value])+')'">`
+      s+= `<select id="${id}" onchange="document.getElementById('${id}_info').innerHTML = '('+ui.print_background(game.character_backgrounds[this.value])+')'">`
       for( let o in options )
         s+= `<option value="${o}">${params.label(o, options)}</option>`
       s+= `</select>`
@@ -583,13 +583,13 @@ class UI {
       s+= `<img id="chr_icon" src="${options.pictures_location}/${game.get_player().icon}" class="entity_image" 
           style=""/>`
       s+= `<br/>`
-      for( let img of chargen.character_icons ) {
+      for( let img of game.character_icons ) {
         s+= `<img src="${options.pictures_location}/${img}" class="entity_image" style="width: 50px;"
               onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}' "/>`
       }
 
       s+= `<p>Through many years of sacrifice, you have learned to become `
-      s+= this.selector( 'chr_background', game.chargen.character_backgrounds, {label: (x,y)=>(y[x].label || x)} )
+      s+= this.selector( 'chr_background', game.character_backgrounds, {label: (x,y)=>(y[x].label || x)} )
       s+= `.`
       s+= `<div id="chr_background_info"></div>`
       s+= `</p>`

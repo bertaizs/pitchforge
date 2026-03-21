@@ -113,6 +113,7 @@ new Verb({
     let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
     ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
   },
+  sortkey: 1,
 })
 
 // new Verb({
@@ -163,7 +164,7 @@ new Verb({
   test: 'attack',
   test_vs: 'defense',
   op1: true,
-  reqs: {traits: 'martial arts'},
+  reqs: {traits: {'martial arts': true}},
   
   on_success: function(cmd) {
     if( !cmd.op1.is_character() ) {
@@ -180,8 +181,6 @@ new Verb({
     ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
   },
 })
-
-
 
 new Verb({
   name: 'recover',         // prep: 'at',
@@ -343,12 +342,12 @@ new Verb({
 // SPECIAL ACTIONS
 // 
 new Verb({
-  name: 'steal',
-  icon: '➡️',
+  name: 'pickpocket',
+  icon: '👜',
   type: 'action',
   test: 'pickpocket',
   op1: true,
-  reqs: {cool: 2},
+  reqs: {cool: 1},
   
   difficulty: function(cmd) {
     let owner = cmd.op1.get_location()
@@ -378,7 +377,7 @@ new Verb({
   text: `Enter sneak mode.`,
   type: 'action',
   test: false,
-  reqs: {cool: 2},
+  reqs: {cool: 1},
   on_success: function(cmd) {
     ui.add_event(`${cmd.who} starts sneaking.`)
     cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})

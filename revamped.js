@@ -78,7 +78,7 @@ let clearing_edge = new Entity({
   <p>There is absolutely no point in going back into the forest. You would just die there among the ${ui.print_entity(trees)}.
   `,
   location_clues: [
-    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: 5} }),
+    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: 1} }),
   ]
 })
 
@@ -249,10 +249,10 @@ let shed = new Entity({
     from: mansion_left, 
     to: mansion_roof, 
     text: `climb up to the roof`,
-    reqs: {climbing: 4},
+    reqs: {climbing: 3},
   }, {
     text: `climb down to the ground`,
-    reqs: {climbing: 4},
+    reqs: {climbing: 3},
   })
 
   new Path({
@@ -436,7 +436,7 @@ let ladies_bedroom = new Entity({
     from: mansion_roof, 
     to: master_bedroom, 
     text: `climb down the hole in the roof into a room`,
-  }, { text: `climb up through the whole to the mansion's roof`, reqs: {climbing: 4}, }
+  }, { text: `climb up through the whole to the mansion's roof`, reqs: {climbing: 3}, }
   )
 
   new Path({
@@ -582,16 +582,16 @@ Entity.spawn( 'knife', shed )
 Entity.spawn( 'magnifying glass', study )
 Entity.spawn( "doctor's bag", master_bedroom )
 
-new Entity({
+let compass = new Entity({
     tags: ['item'],
     name: "broken compass",
     icon: 'compass.png',
-    description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
+    // description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
+    description: function(){return random(4)},
     location: player,
     clues: [
-      new Clue({ text: `This cannot be natural.`, reqs: {sharp: 3} }),
+      new Clue({ text: `This cannot be natural.`, reqs: {sharp: 2} }),
     ]
-
 })
 
 new Entity({
