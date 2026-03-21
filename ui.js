@@ -28,7 +28,7 @@ class UI {
   static numfield(text) { return `<span class="numfield">${text}</span>` }
   
   constructor() {
-    this.cmd = new Cmd({verb: 'look'}, {validate: false})
+    this.cmd = new Cmd({verb: 'examine'}, {validate: false})
     this.events = []
   }
 
@@ -437,9 +437,10 @@ class UI {
       let verbs = entity.get_verbs()
       let s = ``
       s+= this.filtered_verbs(verbs, 'combat')
-      s+= this.filtered_verbs(verbs, 'misc')
-      s+= this.filtered_verbs(verbs, 'inventory')
-      s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
+      s+= this.filtered_verbs(verbs, 'action')
+      s+= this.filtered_verbs(verbs, 'inventory', {label: "item mgmnt"})
+      // s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
+      // s+= this.filtered_verbs(verbs, 'misc')
       if( options.debug ) {
         let d = `<table><tr>`
         d+= this.filtered_verbs(verbs, 'debug')

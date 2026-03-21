@@ -32,13 +32,9 @@ class Verb {
 
         this.sortkey ??= 10
         
-        this.enabled ??= true
+        this.enabled ??= true        
+        this.reqs ??= []
         
-        // this.min_ops ??= 1
-        // this.max_ops ??= 2
-        // this.op_separator ??= ''
-        // this.tab ??= 'inventory'
-
         VERBS[this.name] = this
     }
 
@@ -49,7 +45,7 @@ class Verb {
     get_text() { return this.text }
 }
 
-
+// called via dedicated path links, not via calling this command
 new Verb({
   name: 'move',
   type: 'debug',
@@ -59,7 +55,6 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     cmd.who.move_to(cmd.op1)
-    // ui.add_event(`${cmd.who} moves to ${cmd.op1}`)
   },
 })
 
@@ -74,51 +69,6 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     ui.add_event(`${cmd.who} smiles. :)`)
-  },
-})
-
-// new Verb({
-//   name: 'jump',
-//   type: 'misc',
-//   test: 'tough',
-//   difficulty: 1,
-//   on_success: function(cmd) {
-//     ui.add_event(`${cmd.who} jumps into the air. :)`)
-//   },
-//   on_fail: function(cmd) {
-//     ui.add_event( `${cmd.who} is too weak to jump. :(` )
-//   },
-// })
-
-new Verb({
-  name: 'look',         prep: 'at',
-  icon: '🔎',
-  text: `Examine someone or something, potentially learn about its strengths and weaknesses.`,
-  type: 'misc',
-  test: false,
-  // test: 'sharp',
-  // difficulty: 1,
-  op1: true,
-  on_success: function(cmd) {
-    // console.log(cmd)
-    let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
-    ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
-  },
-})
-
-new Verb({
-  name: 'recover',         // prep: 'at',
-  icon: '💤',
-  text: `Recover lost body and spirit points and remove all threat from yourself. Does not heal your wounds.`,
-  type: 'misc',
-  test: false,
-  // test: 'sharp',
-  // difficulty: 1,
-  // op1: true,
-  on_success: function(cmd) {
-    // todo: should not be immediate
-    ui.add_event( `${cmd.who} takes a breather...` )
-    cmd.who.recover()
   },
 })
 
@@ -145,17 +95,37 @@ new Verb({
   },
 })
 
+
+//
+// ACTIONS
+// 
 new Verb({
-  name: 'move',    prep: 'to',
-  type: 'debug',
+  name: 'examine',         prep: '',
+  icon: '🔎',
+  text: `Examine someone or something thoroughly, potentially learn about its strengths and weaknesses.`,
+  type: 'action',
   test: false,
+  // test: 'sharp',
+  // difficulty: 1,
   op1: true,
-  debug: true,
   on_success: function(cmd) {
-    cmd.who.move_to(cmd.op1)
-    ui.add_event(`${cmd.who} moves to ${cmd.op1}.`)
+    // console.log(cmd)
+    let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
+    ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
   },
 })
+
+// new Verb({
+//   name: 'move',    prep: 'to',
+//   type: 'debug',
+//   test: false,
+//   op1: true,
+//   debug: true,
+//   on_success: function(cmd) {
+//     cmd.who.move_to(cmd.op1)
+//     ui.add_event(`${cmd.who} moves to ${cmd.op1}.`)
+//   },
+// })
 
 //
 // COMBAT
@@ -164,6 +134,7 @@ new Verb({
 new Verb({
   name: 'attack',
   icon: '⚔️',
+  text: `Attack someone with the currently equipped weapon. You strike them with a melee weapon, you shoot them if you are wielding a ranged weapon.`,
   type: 'combat',
   test: 'attack',
   test_vs: 'defense',
@@ -184,12 +155,57 @@ new Verb({
   },
 })
 
+new Verb({
+  name: 'kick',
+  icon: '🥋',
+  text: `Deliver a powerful circle kick`,
+  type: 'combat',
+  test: 'attack',
+  test_vs: 'defense',
+  op1: true,
+  reqs: {traits: 'martial arts'},
+  
+  on_success: function(cmd) {
+    if( !cmd.op1.is_character() ) {
+      return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
+    }
+    
+    // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
+    ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
+    let damage = cmd.op1.take_damage({value: 2})
+    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+  },
+  on_fail: function(cmd) {
+    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
+  },
+})
+
+
+
+new Verb({
+  name: 'recover',         // prep: 'at',
+  icon: '💤',
+  text: `Recover lost body and spirit points and remove all threat from yourself. Does not heal your wounds.`,
+  type: 'combat',
+  test: false,
+  sortkey: 99,
+  on_success: function(cmd) {
+    // todo: should not be immediate
+    ui.add_event( `${cmd.who} takes a breather...` )
+    cmd.who.recover()
+  },
+})
+
+
+
 //
 // *** inventory ***
 //
 new Verb({
   name: 'pick up',
   icon: '🤌',
+  text: `Pick up an item and add it to your inventory.`,
   type: 'inventory',
   test: false,
   op1: true,
@@ -213,6 +229,7 @@ new Verb({
 new Verb({
   name: 'drop',
   icon: '🫳',
+  text: `Remove an item from your inventory and put it on the ground.`,
   type: 'inventory',
   test: false,
   op1: true,
@@ -226,6 +243,7 @@ new Verb({
 new Verb({
   name: 'equip',  // as weapon
   icon: '🧢',
+  text: `Wield the given item as a weapon or equip it as armour.`,
   type: 'inventory',
   test: false,
   op1: true,
@@ -267,6 +285,7 @@ new Verb({
 new Verb({
   name: 'use',
   icon: '🔧',
+  text: `Try to find a way to use an item. Try pushing or pulling it, turning it on. If it can be opened, then try opening it. If not, then try closing it. If it can be eaten, you will eat it.`,
   type: 'inventory',
   test: false,
   op1: true,    separator: 'and',
@@ -274,12 +293,13 @@ new Verb({
   on_success: function(cmd) {
     ui.add_event(`This does not seem to work.`)
   },
-  sortkey: 5,
+  sortkey: 0,
 })
 
 new Verb({
   name: 'consume',
   icon: '🍔',
+  text: `Consume the given item.`,
   type: 'inventory',
   test: false,
   op1: true,
@@ -289,12 +309,46 @@ new Verb({
   sortkey: 6,
 })
 
+new Verb({
+  name: 'give',
+  icon: '🎁',
+  text: `Give and item to someone.`,
+  type: 'inventory',
+  test: false,
+  op1: true,    separator: 'to',
+  op2: true,
+  on_success: function(cmd) {
+    if(cmd.op1.get_location()!=cmd.who) {
+      ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
+      return true
+    }
+    if(!cmd.op1.is('item')) {
+      ui.add_event(`${cmd.who} cannot give away ${cmd.op1}.`)
+      return true
+    }
+    if(!cmd.op2.is_character()) {
+      ui.add_event(`${cmd.who} cannot give away ${cmd.op1} to ${cmd.op2}.`)
+      return true
+    }
+    ui.add_event(`${cmd.who} gives ${cmd.op1} to ${cmd.op2}.`)
+    cmd.op1.move_to(cmd.op2)
+  },
+  sortkey: 7,
+})
 
+
+
+
+//
+// SPECIAL ACTIONS
+// 
 new Verb({
   name: 'steal',
-  type: 'thievery',
+  icon: '➡️',
+  type: 'action',
   test: 'pickpocket',
   op1: true,
+  reqs: {cool: 2},
   
   difficulty: function(cmd) {
     let owner = cmd.op1.get_location()
@@ -318,21 +372,16 @@ new Verb({
   sortkey: 1,
 })
 
-
-// new Verb({
-//   name: 'aim',
-//   type: 'combat',
-//   test: 'aim',
-//   // test_vs: 'defense',
-//   difficult: 3, // calc??
-//   op1: true,
-//   on_success: function(who, cmd) {
-//     cmd.op1.take_damage({value: 2})
-//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-//     return("STRIKE!!!")
-//   },
-//   on_fail: function(who, cmd) {
-//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-//     return("missed :(")
-//   },
-// })
+new Verb({
+  name: 'sneak',
+  icon: '🥷',
+  text: `Enter sneak mode.`,
+  type: 'action',
+  test: false,
+  reqs: {cool: 2},
+  on_success: function(cmd) {
+    ui.add_event(`${cmd.who} starts sneaking.`)
+    cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
+  },
+  sortkey: 6,
+})

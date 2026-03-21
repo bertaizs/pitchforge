@@ -1,7 +1,7 @@
 game.set_title("The orc and the pie (a very simple but classic adventure)")
 
 
-game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'look'])
+game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'examine'])
 
 
 let room = new Entity({
@@ -71,7 +71,7 @@ game.add_trigger(
 )
 
 game.add_trigger(
-  {who: player, verb: /pick up|look/, op1: pie},
+  {who: player, verb: /pick up|examine/, op1: pie},
   function(cmd) {
     if( orc.is_up() ) {
       ui.add_event(`The orc does not let you close to the pie!`)

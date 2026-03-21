@@ -100,7 +100,7 @@ let gustav = new Entity({
 }).level_up().move_to(cottage)
 
 game.add_trigger(
-  {who: barbakan, verb: 'look', op1: gustav},
+  {who: barbakan, verb: 'examine', op1: gustav},
   function(cmd) {
     ui.add_event(`Barbakan looks at Gustav, but Gustav stares blankly...`)
     return true

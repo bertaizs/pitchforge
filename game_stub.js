@@ -2,7 +2,7 @@
 game.set_title("First Strike")
 
 // you may want to disable verbs you do not need
-// game.enable_verbs_only(['melee', 'pick up', 'drop', 'use', 'consume', 'look'])
+// game.enable_verbs_only(['melee', 'pick up', 'drop', 'use', 'consume', 'examine'])
 
 // define the start location
 let player_ship = new Entity({

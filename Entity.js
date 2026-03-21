@@ -264,6 +264,7 @@ class Entity {
     if( !('name' in status) ) throw `status has no name`
     status.magnitude ??= 1
     status.timer ??= 1
+    status.label ??= status.name
     
     if( status.name in this.status ) {  // if already has this status
       if( params.stack_timer )      // timer is added to existing
@@ -473,7 +474,7 @@ class Entity {
   }
   
   get_verbs() {
-    return Object.keys( VERBS ).filter(x=>VERBS[x].enabled)
+    return Object.keys( VERBS ).filter(x=>VERBS[x].enabled && this.meets_requirements(VERBS[x].reqs))
   }
 
   // returns performance of this Entity for a Test
