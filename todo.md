@@ -32,6 +32,8 @@ todo
 
 ## rules
 
+- beef up backgrounds for testing
+
 * should not be able to respec if no character points!
 
 ? spec required --> full value if spec, otherwise penalty
@@ -68,7 +70,6 @@ action / cycle
 
 weapon use
 
-clues / reqs
 descriptions as functions
 
 weapon reqs, penalties

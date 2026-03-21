@@ -18,7 +18,9 @@ class Path {
     
     this.text ??= `a path leads somewhere`
     
-    this.perception_needed ??= -Infinity
+    this.reqs ??= []  // requirements for being able to use this path
+    
+    // this.perception_needed ??= -Infinity
     
     // register this Path into game.paths, this.id is the index
     this.id = game.paths.push(this)-1
@@ -53,8 +55,11 @@ class Path {
   // true if the entity can see the given path
   // based on the entity's perception or knowledge
   can_be_seen_by(entity) {
-    entity = game.entity(entity)
-    return entity.performance('perception')>=this.perception_needed
+    console.log(entity)
+    console.log(this)
+    return entity.meets_requirements( this.reqs )
+    // entity = game.entity(entity)
+    // return entity.performance('perception')>=this.perception_needed
   }
   
   // true if the entity can traverse through the path

@@ -15,13 +15,18 @@ class Entity {
     "violent", "raging", "ruthless", "muscular", ];
 
   constructor(value = {}, param = {}) {
-    for (let i in value) this[i] = value[i];
+    for (let i in value) 
+      this[i] = value[i]
 
     this.name ??= "nameless";
     this.tags ??= [];
     
     this.description ??= false;    // can be seen when looking at the entity (or on charsheet)
-    this.interior_description ??= this.description;       // can be seen when inside the entity
+    this.interior_description ??= this.description       // can be seen when inside the entity
+    this.location_description ??= this.interior_description
+    
+    this.clues ??= []
+    this.location_clues ??= []
     
     this.icon ??= false,
     this.interior_icon ??= this.icon,
@@ -398,15 +403,21 @@ class Entity {
   // i.e. each object describes a set of requirements where all must be met; 
   // and if one object is met, then the result is true
   // returns false if none of the requirements sets are met
+  // 
+  // examples:  reqs = {tough: 6, cool: 3, perception: 6, traits: {perception: true}}
+  //            reqs = [{tough: 6}, {cool: 3}]
   meets_requirements( reqs ) {
     if( !(reqs instanceof Array) )
       reqs = [reqs]   // ensures we have an array
+    
+    if( reqs.length==0 )  // empty list means no requirements --> fulfilled
+      return true
+    
     for( let req of reqs ) {
       req.traits ??= {}
-      console.log(req)
       let fail = false
+
       for( let i in req ) {
-        console.log(i)        
         if( i in STATS && req[i]>this.get(i) ) fail = true
         if( i in TESTS && req[i]>this.performance(i) ) fail = true
       }
@@ -416,8 +427,7 @@ class Entity {
             fail = true
       // }
       // if all is met in this req object, return true
-      if( !fail)
-        return true
+      if( !fail ) return true
     }
     return false
   }

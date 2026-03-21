@@ -6,11 +6,9 @@ class Game {
     this.entities = []
     this.paths = []
     this.triggers = []
-    
     this.verbs = VERBS
-
-    
-    this.player_id = 1
+    this.player_id = 1  // default value, modified via Game.select_player
+    this.clues = {}     // not all clues, only those we need to refer to later (e.g. for hiding, etc)
   }
 
   entity(e) {
@@ -127,6 +125,8 @@ game.universe = new Entity({
   description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
 )
 
+game.base_char = {cp: 10}
+
 game.chargen = new Entity({
   name: "character generation",
   tags: ['abstract', 'location'],
@@ -168,6 +168,7 @@ game.chargen = new Entity({
   
   start: function() {
     let them = game.get_player()
+    them.gain(game.base_char)
     them.name = document.getElementById('chr_name').value
     them.gain( game.chargen.character_backgrounds[document.getElementById('chr_background').value] )
     them.move_to(this.onward)

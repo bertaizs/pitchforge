@@ -77,6 +77,9 @@ let clearing_edge = new Entity({
   `<p>You see a clearing in the forest with a dilapidated mansion.</p>
   <p>There is absolutely no point in going back into the forest. You would just die there among the ${ui.print_entity(trees)}.
   `,
+  location_clues: [
+    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: 5} }),
+  ]
 })
 
 let mansion_front = new Entity({
@@ -89,6 +92,9 @@ let mansion_front = new Entity({
   So does the mansion.
   </p>
   `,
+  location_clues: [
+    new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': 1}}),
+  ],
 })
 
 let mansion_back = new Entity({
@@ -233,16 +239,20 @@ let shed = new Entity({
     from: clearing_edge, 
     to: bushes, 
     text: `follow the trail into the bushes`,
+    reqs: {perception: 1},
   }, {
     text: `back to the clearing`,
+    reqs: {},
   })
 
   new Path({
     from: mansion_left, 
     to: mansion_roof, 
     text: `climb up to the roof`,
+    reqs: {climbing: 4},
   }, {
-    text: `climb down to the ground`,  
+    text: `climb down to the ground`,
+    reqs: {climbing: 4},
   })
 
   new Path({
@@ -425,8 +435,8 @@ let ladies_bedroom = new Entity({
   new Path({
     from: mansion_roof, 
     to: master_bedroom, 
-    text: `climb down into a room`,
-  }, // { text: `climb up to the mansion's roof`, }
+    text: `climb down the hole in the roof into a room`,
+  }, { text: `climb up through the whole to the mansion's roof`, reqs: {climbing: 4}, }
   )
 
   new Path({
@@ -578,6 +588,10 @@ new Entity({
     icon: 'compass.png',
     description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
     location: player,
+    clues: [
+      new Clue({ text: `This cannot be natural.`, reqs: {sharp: 3} }),
+    ]
+
 })
 
 new Entity({
@@ -695,6 +709,11 @@ let the_staff = new Entity({
     location: main_hall,
     // location: player_ship,
 })
+  .add (   new Entity({
+    name: "butler's keyring",
+    tags: ['key', 'item'],
+    description: `A keyrights with lots of keys in it. This should open all or most doors of the mansion.`
+  })  )
 
   game.add_trigger(
     {verb: /move/, op1: study},
@@ -721,8 +740,6 @@ let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
 
 let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] is stuck in a tree."} )
-
-
 
 
 

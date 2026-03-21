@@ -123,8 +123,6 @@ class UI {
         throw `${game.get_player()} cannot pass through this.`
       
       ui.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to)}) )
-      
-      ui.refresh()
     }
 
     print_path(path) {
@@ -136,12 +134,17 @@ class UI {
       }
     }
     
+    print_clue(clue) {
+      let s = `<p>${clue.flag+" "}${clue.text}</p>`
+      return s
+    }
     
     // returns what the player entity sees when looking around in a location
     // - shows the location's interior (description & icon)
     // - show ministatus of characters & items ()
     // TODO: should call the active/player Entity on what the entity can see and return the results, and should only *process* those results here...
     print_look_around(entity) {
+      console.log(`ui.print_look_around`)
       entity = game.entity(entity)
       let location = entity.get_location()
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
@@ -154,6 +157,11 @@ class UI {
       s+= `</td><td style="vertical-align: top;">`
       s+= `<div>${this.print_entity(location)}</div>`
       s+= `<div class="description">${location.get_interior_description()}</div>`
+      
+      for( let clue of location.location_clues ) {
+        if( entity.meets_requirements(clue.reqs) && clue.enabled )
+          s += ui.print_clue(clue)
+      }
       
       if( ! entity.get_location().is('abstract') ) {
         
@@ -226,6 +234,12 @@ class UI {
         s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
       }
       s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
+      
+      // TODO: the below refers to the player, while perception does not; this is inconsistent, let's fix it!
+      for( let clue of entity.clues ) {
+        if( game.get_player().meets_requirements(clue.reqs) && clue.enabled )
+          s += ui.print_clue(clue)
+      }
       
       // from here on, the sheet is viewed in a table
       s+= `<table>`      

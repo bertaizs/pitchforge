@@ -44,4 +44,8 @@ const TESTS = {
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),
   pickpocket: new Test({stat: "cool", spec: 'thievery'}),
 
+  'climbing': new Test({stat: 'cool', spec: 'climbing'}),
+
+  'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),
+
 };
