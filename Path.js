@@ -55,8 +55,8 @@ class Path {
   // true if the entity can see the given path
   // based on the entity's perception or knowledge
   can_be_seen_by(entity) {
-    console.log(entity)
-    console.log(this)
+    // console.log(entity)
+    // console.log(this)
     return entity.meets_requirements( this.reqs )
     // entity = game.entity(entity)
     // return entity.performance('perception')>=this.perception_needed

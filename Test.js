@@ -39,7 +39,8 @@ const TESTS = {
   // aim: new Test({stat: ["tough", "cool"]}),
   // target: new Test({stat: "cool", status: {"threat": -1} }),
 
-  perception: new Test({stat: "sharp", spec: 'perception'}),
+  'perception': new Test({stat: 'sharp', spec: 'perception'}),
+  'initiative': new Test({stat: 'sharp', spec: 'initiative'}),
   
   'pick lock': new Test({stat: "cool", spec: 'thievery'}),
   pickpocket: new Test({stat: "cool", spec: 'thievery'}),
@@ -47,5 +48,6 @@ const TESTS = {
   'climbing': new Test({stat: 'cool', spec: 'climbing'}),
 
   'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),
+  
 
 };

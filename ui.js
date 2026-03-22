@@ -144,7 +144,7 @@ class UI {
     // - show ministatus of characters & items ()
     // TODO: should call the active/player Entity on what the entity can see and return the results, and should only *process* those results here...
     print_look_around(entity) {
-      console.log(`ui.print_look_around`)
+      // console.log(`ui.print_look_around`)
       entity = game.entity(entity)
       let location = entity.get_location()
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
@@ -607,7 +607,9 @@ class UI {
       `
       return s
     }
-    
+
+    // called when an event happens; the event is added into the event queue;
+    // the event queue is displayed when the UI receives control
     add_event(event = {}) {
       if( typeof event == 'string' )
         event = {type: 'text', text: event}

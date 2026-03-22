@@ -24,8 +24,12 @@ options.log_matching_details = false  // log each comparison
 options.log_matching_details2 = false // inner details of comparison
 
 options.log_commands = true
-// options.log_events = true       // also log anything outputted as an event
+options.log_events = true       // also log anything outputted as an event
 
 options.show_tags = true,
 
+
+
 options.debug = true    // debug mode
+
+options.npcs_passive = true // if true, npcs do not act

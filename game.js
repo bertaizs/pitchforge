@@ -13,6 +13,11 @@ class Game {
     this.character_icons = [] // one can select from these icons during character generation
     this.base_char = {}       // all characters will get these via Entity.gain
     this.character_backgrounds = {} // contains backgrounds, player can select one
+    
+    // this.current_entity_id = 0  // id of the entity currently acting
+    
+    this.initiative_order = []
+    this.current_entity_n = 0   // index of the current entity in the initiative order
   }
 
   entity(e) {
@@ -109,26 +114,92 @@ class Game {
   }
   
   // main clock beat of the game
-  tick() {
-    options.log_ticks && console.log(`tick!`)
-    for( let i in game.entities ) {
-      let e = game.entities[i]
-      options.log_entity_ticks && console.log(`tick: ${e}`)
-      e.tick()
+  // tick() {
+  //   options.log_ticks && console.log(`tick!`)
+  //   for( let i in game.entities ) {
+  //     let e = game.entities[i]
+  //     options.log_entity_ticks && console.log(`tick: ${e}`)
+  //     e.tick()
       
+  //   }
+  // }
+  
+  // proceed to next entity in the initiative order
+  // if end of initiative order then restart it
+  next_entity() {
+    if( this.initiative_order.length == 0 ) throw `game.next entity called without game.main_loop`
+    
+    this.current_entity_n++
+    if( this.current_entity_n >= this.initiative_order.length ) { // if end of initiative order
+      this.initiative_order = this.build_initiative_order()
+      this.current_entity_n = 0   // rebuild and restart initiative order
     }
+    return this.initiative_order[this.current_entity_n]
+  }
+  
+  // (re)builds the initiative order
+  build_initiative_order() {
+    return game.entities
+              .filter(x=>(!x.is('abstract') && !x.is('universe')))
+              .sort( (x,y)=>(y.performance('initiative')-x.performance('initiative') || x.id-y.id) )
+  }
+  
+  // this loop runs 
+  main_loop() {
+    if( this.initiative_order.length == 0 ) {
+      this.initiative_order = this.build_initiative_order()
+      this.current_entity_n = 0
+    }
+
+    let current_entity = this.initiative_order[this.current_entity_n]
+    while( current_entity.is_machine_controlled() || current_entity.has_status('stunned') ) { 
+      options.log_entity_ticks && current_entity.tick()
+
+      if(current_entity.is_character()) {
+        if( !current_entity.has_status('stunned') ) {
+          options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn.`)
+          current_entity.act()                  
+        }
+        else
+          ui.add_event(`${this} is stunned.`)
+      }
+            
+      current_entity = this.next_entity()  // proceed to next entity
+    }
+    current_entity.tick()
+    options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
+  }
+  
+  // called when the current player character ends their turn
+  // restarts main loop, proceeding with actions as per game.initiative_order
+  end_player_turn() {
+    this.next_entity()  // proceed to next entity
+    this.main_loop()    // continue main loop...
   }
     
 }
 
 var game = new Game()
 
+
+//
+// BUILTIN AREAS
+// 
+
+// the universe is the default location, its id must be 0
+// everything else must have a location, except for the universe
 game.universe = new Entity({
   name: "universe", 
-  tags: ['location'],
+  tags: ['location', 'universe'],
   description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
 )
 
+
+//
+// CHARACTER GENERATION
+// 
+
+// abstract location entity, for the character generation screen
 game.chargen = new Entity({
   name: "character generation",
   tags: ['abstract', 'location'],

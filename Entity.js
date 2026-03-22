@@ -212,19 +212,28 @@ class Entity {
   }
   
   is_up() { return this.is_character() }
+  
+  is_player_controlled() {
+    // TODO...
+    return this.is('player')
+  }
+  
+  is_machine_controlled() {
+    return !this.is('player')
+  }
 
   get(x) {
     // these must have hardcoded values
     // TODO: need to consider modifiers on traits, statuses, etc
     if( x in STATS ) return this.get_stat(x)
     
-    console.log(this[x])
     if (x in this) {
       if( typeof x != 'function' )
         return this[x]
       else
         return this[x]()
     }
+
     
     // if not overridden, the default for the below is based on another attr
     switch(x) {
@@ -300,6 +309,7 @@ class Entity {
     else 
       return false
   }
+  has_status( name ) { return this.get_status(name) }
   
   add_wound( n ) {
     if( this.get_status('wound').magnitude == n )
@@ -357,7 +367,6 @@ class Entity {
         if( i == 'poison' )
           this.take_damage({value: this.status[i].magnitude, type: 'body'})
       }
-      
     }
     
   }
@@ -587,6 +596,10 @@ class Entity {
       event = verb.on_fail(cmd)
     }
     return event
+  } // Entity.exec
+  
+  act() {
+    ui.add_event(`${this} acts...`)
   }
 
 } // Entity

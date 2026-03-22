@@ -321,7 +321,7 @@ new Verb({
       ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
       return true
     }
-    if(!cmd.op1.is('item')) {
+    if(!cmd.op1.is_takeable()) {
       ui.add_event(`${cmd.who} cannot give away ${cmd.op1}.`)
       return true
     }
