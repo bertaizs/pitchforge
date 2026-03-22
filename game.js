@@ -13,9 +13,7 @@ class Game {
     this.character_icons = [] // one can select from these icons during character generation
     this.base_char = {}       // all characters will get these via Entity.gain
     this.character_backgrounds = {} // contains backgrounds, player can select one
-    
-    // this.current_entity_id = 0  // id of the entity currently acting
-    
+        
     this.initiative_order = []
     this.current_entity_n = 0   // index of the current entity in the initiative order
   }
@@ -94,6 +92,7 @@ class Game {
     return true
   }
   
+  // called when someone executes a command
   exec(cmd = ui.cmd) {
     if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
     cmd.validate()  // throws an exception if cmd is not 'valid'
@@ -110,19 +109,12 @@ class Game {
     }
     
     options.log_matching && console.log(`executing default command`)
-    this.get_player().exec(cmd)
+    this.get_current_entity().exec(cmd)
   }
   
-  // main clock beat of the game
-  // tick() {
-  //   options.log_ticks && console.log(`tick!`)
-  //   for( let i in game.entities ) {
-  //     let e = game.entities[i]
-  //     options.log_entity_ticks && console.log(`tick: ${e}`)
-  //     e.tick()
-      
-  //   }
-  // }
+  get_current_entity() {
+    return this.initiative_order[this.current_entity_n]
+  }
   
   // proceed to next entity in the initiative order
   // if end of initiative order then restart it
@@ -134,7 +126,7 @@ class Game {
       this.initiative_order = this.build_initiative_order()
       this.current_entity_n = 0   // rebuild and restart initiative order
     }
-    return this.initiative_order[this.current_entity_n]
+    return this.get_current_entity()
   }
   
   // (re)builds the initiative order
@@ -151,7 +143,7 @@ class Game {
       this.current_entity_n = 0
     }
 
-    let current_entity = this.initiative_order[this.current_entity_n]
+    let current_entity = this.get_current_entity()
     while( current_entity.is_machine_controlled() || current_entity.has_status('stunned') ) { 
       options.log_entity_ticks && current_entity.tick()
 
@@ -169,6 +161,8 @@ class Game {
     current_entity.tick()
     options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
   }
+  
+  run() { this.main_loop() }
   
   // called when the current player character ends their turn
   // restarts main loop, proceeding with actions as per game.initiative_order

@@ -208,7 +208,7 @@ class Entity {
   }
   
   is_open_container() {
-    return this.is('open') && this.is('container')
+    return (this.is('open') && this.is('container')) || this.is('remains')
   }
   
   is_up() { return this.is_character() }

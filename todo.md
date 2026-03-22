@@ -3,15 +3,12 @@ todo
 
 ## core
 
-* action / cycle
+* autoattack of enemies
+* aggression
 
-
-* figure how things are displayed
-  - charsheet - not a command; same goes for: options, etc
-    + or: implement them via command, but make it a non-turn-ending command
+* only add those events to the queue that happen in scope of player
 
 * stealth
-
 
 * doors
 
@@ -23,6 +20,10 @@ todo
 * equipment
   - handle other equipment too, not just weapons
   - implement damage, armor, protection, etc
+
+* non-turn ending command
+* implement charsheet, options and quests as non-turn-ending commands
+  - create trait for non-turn ending examine
 
 ## rules
 

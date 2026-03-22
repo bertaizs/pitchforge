@@ -655,6 +655,7 @@ class UI {
       document.getElementById('output').style.animation = null
       document.getElementById('output').offsetHeight
       game.exec(cmd)
+      game.end_player_turn()
       ui.refresh()
       ui.show_events()
       // ui.scrollTo()
