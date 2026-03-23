@@ -48,7 +48,13 @@ class Entity {
     // this.img ??= false          // or image file name
     this.location_id ??= 0      // the default location of all will be the game universe
     this.position ??= false     // position within the location; string; depends on the location
-    
+
+    // factions
+    if( this.is('player') )
+      this.faction ??= 'player'
+    this.faction ??= 'neutral'
+    this.attitude ??= 0
+        
     if( this.location ) {
       this.move_to(this.location, this.position)
       delete this.location
@@ -109,8 +115,14 @@ class Entity {
     return game.entity(this.location_id)
   }
   
+  // returns entities contained by this entity
   list_entities_here() {
     return game.entities.filter(x=>(x.get_location().id==this.id))
+  }
+  
+  // returns hostile entities who share the same location this entity
+  list_hostiles_here() {
+    return this.get_location().list_entities_here().filter( x=>x.is_hostile_to(this) )
   }
   
   // called after then entity is moved
@@ -220,6 +232,13 @@ class Entity {
   
   is_machine_controlled() {
     return !this.is('player')
+  }
+  
+  is_hostile_to(other_entity) {
+    if( this.get('faction') == 'neutral' || other_entity.get('faction')=='neutral' ) {
+      return false
+    }
+    return this.get('faction') != other_entity.get('faction')
   }
 
   get(x) {
@@ -599,7 +618,13 @@ class Entity {
   } // Entity.exec
   
   act() {
-    ui.add_event(`${this} acts...`)
+    let hostiles = this.list_hostiles_here()
+    if( hostiles.length>0 ) {
+      let target = hostiles[random(hostiles.length)]
+      ui.add_event(`${this} attacks ${target}`)
+    }
+    else
+      ui.add_event(`${this} passes.`)
   }
 
 } // Entity

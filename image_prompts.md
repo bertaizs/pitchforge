@@ -37,3 +37,7 @@ Draw an image of the same dog, but now outside the cage, the background should b
 draw the interior of a wooden garage which is build right next to the mansion; the stone wall of the mansion is also the right wall of the garage, the rest of the garage is wooden. There is an oldtimer car in the garage, in good shape, but somewhat dusty. The camera is facing the car, the backside of the garage is dark and barely visible
 
 now draw the backside of the garage, the back wall is wooden, and there is a power generator as big as a car. It works with gas, and can supply the mansion with power.
+
+
+Draw a picture of chaotic, bizarre, decadent statue of a strange creature, with a combination of bat-wings, tentacles, eyes, teeth, claws all over it. Its body is covered with scale/fur/skin/feathers, it should not resemble anything and does not follow any rules of biology or anything else. Its geometry is also all over the place, there is no logic or symmetry in the creature. It has a chaotic and malign aura.
+The statue is made of black obsidian, but it radiates an eerie glow (blueish/purpleish).

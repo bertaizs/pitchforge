@@ -476,6 +476,7 @@ let ghoul_template = new Entity({
     epithet: Entity.enemy_epithets,
     icon: ['ghoul.png', 'ghoul2.png', 'ghoul3.png', 'ghoul4.png', 'ghoul5.png'],
     description: `A stinking undead creature.`,
+    faction: 'enemy',
     tough:  2,
     cool:   -1,
     sharp:  -1,
@@ -615,6 +616,35 @@ new Entity({
     location: ladies_bedroom,
 })
 
+new Entity({
+    tags: ['item', 'book'],
+    name: "Vampire Slaying for Dummies",
+    icon: 'book.png',
+    description: `<p>'Vampire Slaying for Dummies' by Professor Van Helsing.
+    Skimming through the book, it is very academic, with a very detailed history of vampirism, 
+    the anatomy of vampires and metaphysical description of the process of how they sustain. 
+    However, there is a summary section with practical advice.</p>
+    <i>Vampires are vile, powerful creatures, mundane attempts for slaying them shall fail. 
+    Wounds which would kill a mortal merely slow them down. 
+    Still, there are ways for slaying them permanently:
+    <ul>
+      <li>The most straightforward way of the slayer is to drive a stake through the heart. (The heart of the vampire, I mean.) 
+      The must be made of organic material, preferably wood, the type of the wood does not matter. 
+      It must be sharpened at one end so that it goes through the vampire in a frictionless manner.
+      Metal or anything inorganic does not qualify.</li>
+      <li>Complete incineration, as not even a vampire can regenerate when rendered into a pile of ash. However, make sure to burn every part of it.</li>
+      <li>Exposure to direct sunlight -- that also results in setting the creature of the night ablaze, thus leading to full incineration via holy fire.</li>
+      <li>Holy weapons, relics or symbols can help, the stronger faith of the wielder, the more likely holy fires will erupt. Any holy presence may still stun the beast or slow it down.</li>
+    </ul>
+    <p>Garlic, while not deadly also helps. The beasts hate garlic and are reluctant to touch let alone bite someone with the smell of garlic.
+    It may give some protection, but it is no silver bullet.</p>
+    <p>Speaking of silver: blades, weapons, bullets or items made of silver are very useful as the vampire slayer may sell them for quick cash thus funding the acquisition of further equipment.
+    However, silver is <u>not</u> useful against vampires. (That is against werewolves, don't confuse them!)</p>
+    </i>
+    `,
+    location: mansion_roof,
+})
+
 let ladder = new Entity({
     tags: ['item'],
     name: "ladder",
@@ -673,6 +703,7 @@ let vampire = new Entity({
     tags: ['undead', 'character', 'boss'],
     icon: 'vampire4.png',
     description: `A creature of darkness with ${ui.print_entity(vampire_eyes)}; this beast returned from the grave to drain your blood.`,
+    faction: 'enemy',
     tough:  10,
     cool:   10,
     sharp:  6,
@@ -701,6 +732,7 @@ let the_staff = new Entity({
     tags: ['undead', 'construct', 'character'],
     icon: 'the_staff.png',
     description: `A assembled from different bodyparts of the mansion's staff.`,
+    faction: 'neutral',
     tough:  10,
     cool:   3,
     sharp:  3,
