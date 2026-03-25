@@ -42,7 +42,7 @@ class UI {
 
   click_entity(id) {
     let entity = game.entity(id)
-    options.log_clicks_on_entities && console.log( "clicked on Entity: "+entity.get('name') )
+    options.log_clicks_on_entities && console.log( `clicked on Entity: ${entity} (#${entity.id})`)
 
     // if( this.cmd.get_verb().op1 )
     //   this.cmd.op1 = entity

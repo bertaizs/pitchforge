@@ -621,7 +621,9 @@ class Entity {
     let hostiles = this.list_hostiles_here()
     if( hostiles.length>0 ) {
       let target = hostiles[random(hostiles.length)]
-      ui.add_event(`${this} attacks ${target}`)
+      // ui.add_event(`${this} attacks ${target}`)
+      
+      game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
     }
     else
       ui.add_event(`${this} passes.`)
