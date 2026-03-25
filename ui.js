@@ -80,7 +80,7 @@ class UI {
         throw `error when matching regexp: ${params.context}`
     }
     
-    let link = `<a class="entity" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
+    let link = `<a class="entity${e.is_hostile_to(player) ? " hostile" : ""}" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
     if( params.context ) {
       return params.context.replace( /\[.*\]/, link )
     }

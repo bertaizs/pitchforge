@@ -30,6 +30,6 @@ options.show_tags = true,
 
 
 
-options.debug = true    // debug mode
+options.debug = false    // debug mode
 
 options.npcs_passive = false // if true, npcs do not act

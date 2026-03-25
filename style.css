@@ -23,6 +23,10 @@ a.entity {
     /*text-decoration: underline;*/
 }
 
+.hostile {
+    color: red !important;
+}
+
 a.path {
     color: lightgreen;
     /*text-decoration: dotted underline;*/

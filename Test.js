@@ -1,4 +1,20 @@
 class Test {
+  static XXX =     -2
+  static TRIVIAL = -1
+  static MUNDANE =  0
+  static BASIC =    1
+  static EASY =     2
+  static MEDIUM =   3
+  static ADVANCED = 4
+  static HARD =     5
+  static VERYHARD = 6   // cap here?
+  static PRO =      7
+  static SPECIALIST=8
+  static MASTER =   9
+  static GRANDMASTER=10
+  static PARAGON = 11
+  static IMPOSSIBLE = Infinity
+  
   constructor(value = {}, param = {}) {
     for( let i in value ) this[i] = value[i];
     for( let i in param ) this[i] = param[i]

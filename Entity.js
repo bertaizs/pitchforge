@@ -240,10 +240,21 @@ class Entity {
     return !this.is('player')
   }
   
+  // returns true if this entity and the other entity are hostiles
   is_hostile_to(other_entity) {
+    if(this.id == other_entity.id)
+      return false    // no one is hostile to themselves :)
+    
+    // if either entity is neutral, test each npc's cham vs the others attitude
     if( this.get('faction') == 'neutral' || other_entity.get('faction')=='neutral' ) {
+      if( !other_entity.is_player_controlled() && (this.performance('charm')+other_entity.get('attitude')) < 0 )
+        return true      
+      if( !this.is_player_controlled() && (other_entity.performance('charm')+this.get('attitude') < 0) )
+        return true
       return false
     }
+    
+    // if factions are different and neither is neutral, they are hostile
     return this.get('faction') != other_entity.get('faction')
   }
 

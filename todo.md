@@ -3,32 +3,40 @@ todo
 
 ## core
 
-* aggression
-
 * only add those events to the queue that happen in scope of player
+
+* doors
 
 * stealth
 
-* doors
+* work panel should display clickable/colored entities
 
 * second operand of verbs
   <!--- entity operands? e.g. "use"-->
   - order of two operands should not matter (sorting?)
   - use selector for text operands
+  - allow unlimited operands???
 
+* non-turn ending commands
+  * charsheet
+  * levelup
+  * quests
+  * options
+
+
+## core, but next release
 * equipment
   - handle other equipment too, not just weapons
 
-* non-turn ending command
-* implement charsheet, options and quests as non-turn-ending commands
-  - create trait for non-turn ending examine
+* create trait for non-turn ending examine
+
 
 ## rules
 
 * should not be able to respec if no character points!
 
-? spec required --> full value if spec, otherwise penalty
-spec not required --> spec not taken into account? minor bonus only?
+??? spec required --> full value if spec, otherwise penalty
+??? spec not required --> spec not taken into account? minor bonus only?
 
 ## interface
 
@@ -45,11 +53,8 @@ spec not required --> spec not taken into account? minor bonus only?
 
 ---
 
-descriptions as functions
-
 weapon reqs, penalties
 weapon bonuses
-
 
 doors
 • keyring - img
@@ -58,20 +63,13 @@ items
 • whisky - img
 • broken samurai sword
 • broken pot
-• almost accurate erth globe
-• guide to slaying vampires
-    - stake
-    - incinerate
-    - via sunlight
-    - holy light / magic eq but hard to come by
-    - garlic - not a silver bullet
-    - not silver
+• almost accurate earth globe
 • diary (vamp)
 • diary (lady)
 • abandoned birds nest
 • chimney (prop)
 • silver knife
-• candellabra, silver
+• candelabra, silver
 
 levelup process
 
