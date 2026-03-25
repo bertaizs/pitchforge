@@ -147,7 +147,7 @@ class Game {
     while( current_entity.is_machine_controlled() || current_entity.has_status('stunned') ) { 
       options.log_entity_ticks && current_entity.tick()
 
-      if(current_entity.is_character()) {
+      if( current_entity.is_character() && !options.npcs_passive ) {
         if( !current_entity.has_status('stunned') ) {
           options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn.`)
           current_entity.act()                  

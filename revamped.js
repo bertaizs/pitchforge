@@ -497,6 +497,7 @@ new Entity({
     tags: ['tool', 'weapon', 'item'],
     icon: 'crowbar.png',
     description: `A heavy crowbar.`,
+    tier: 1,
 }, {template: 'crowbar'} )
 
 new Entity({
@@ -524,6 +525,7 @@ new Entity({
     tags: ['melee', 'weapon', 'tool', 'item'],
     icon: 'axe.png',
     description: `Chop-chop.`,
+    tier: 2,
 }, {template: 'axe'} )
 
 new Entity({
@@ -532,6 +534,7 @@ new Entity({
     epithet: ["sharp", "rusty", "old"],
     icon: 'knife.png',
     description: `A simple knife.`,
+    tier: 1,
 }, {template: 'knife'} )
 
 new Entity({
@@ -556,6 +559,7 @@ new Entity({
     // epithet: ["crooked", "old"],
     icon: 'stake.png',
     description: `A sharp stake.`,
+    tier: 1,
 }, {template: 'stake'} )
 
 new Entity({
@@ -733,6 +737,7 @@ let the_staff = new Entity({
     icon: 'the_staff.png',
     description: `A assembled from different bodyparts of the mansion's staff.`,
     faction: 'neutral',
+    attitude: -2,
     tough:  10,
     cool:   3,
     sharp:  3,

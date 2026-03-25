@@ -147,7 +147,7 @@ new Verb({
     
     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
     ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
-    let damage = cmd.op1.take_damage({value: 2})
+    let damage = cmd.op1.take_damage({value: 1, tier: cmd.who.get('damage_tier')})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
   },
   on_fail: function(cmd) {

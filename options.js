@@ -32,4 +32,4 @@ options.show_tags = true,
 
 options.debug = true    // debug mode
 
-options.npcs_passive = true // if true, npcs do not act
+options.npcs_passive = false // if true, npcs do not act

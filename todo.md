@@ -3,7 +3,6 @@ todo
 
 ## core
 
-* autoattack of enemies
 * aggression
 
 * only add those events to the queue that happen in scope of player
@@ -19,7 +18,6 @@ todo
 
 * equipment
   - handle other equipment too, not just weapons
-  - implement damage, armor, protection, etc
 
 * non-turn ending command
 * implement charsheet, options and quests as non-turn-ending commands

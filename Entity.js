@@ -34,7 +34,13 @@ class Entity {
     this.level ??= 0;
     this.cp ??= 0;
     
-    this.tier ??= 0
+    if( this.is_character() ) {
+      this.tier ??= 0
+    } else if(this.is_item() ) {
+      this.tier ??= -1
+    } else {  // location
+      this.tier ?? 2
+    }
 
     this.traits ??= {};
     this.status ??= {}
@@ -261,6 +267,36 @@ class Entity {
       case 'size': return this.get('tier')
     }
     
+    if(x=='weapon') {
+      let w = this.list_entities_here().filter(x=>x.get('position')=='weapon')
+      if( w.length>0 )
+        return w[0]
+      else
+        return false
+    }
+    if(x=='damage_tier') {
+      let weapon = this.get('weapon')
+      if( weapon )
+        return weapon.get('tier')
+      else
+        return this.get('tier')
+    }
+    
+    if(x=='armour') {
+      let a = this.list_entities_here().filter(x=>x.get('position')=='armour')
+      if( a.length>0 )
+        return a[0]
+      else
+        return false
+    }
+    if(x=='armour_tier') {
+      let armour = this.get('armour')
+      if( armour )
+        return armour.get('tier')
+      else
+        return this.get('tier')
+    }
+    
     throw `don't know how to get ${x}`;
   }
   
@@ -350,12 +386,15 @@ class Entity {
   
   take_damage(param = {}) {
     if( typeof param == 'number' )  param = {value: param}
-    param.value ??= 2
+    param.value ??= 1
     param.type ??= 'body'
     param.tier ??= this.get('tier')
+    param.ignore_armour ??= false
     
     // damage reduced by difference between damage tier vs target's tier
-    let tier_diff = param.tier - this.get('tier')
+    let tier_diff = param.tier - this.get('armour_tier')
+    if( param.ignore_armour )
+      tier_diff = 0
     let damage = Math.max(param.value + tier_diff, 0)
     ui.add_event(`${this} takes ${damage} points of damage.`)
     this[param.type] -= damage
