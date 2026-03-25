@@ -245,6 +245,9 @@ class Entity {
     if(this.id == other_entity.id)
       return false    // no one is hostile to themselves :)
     
+    if(!this.is_character() || !other_entity.is_character())
+      return false
+    
     // if either entity is neutral, test each npc's cham vs the others attitude
     if( this.get('faction') == 'neutral' || other_entity.get('faction')=='neutral' ) {
       if( !other_entity.is_player_controlled() && (this.performance('charm')+other_entity.get('attitude')) < 0 )

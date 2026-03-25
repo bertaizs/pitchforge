@@ -212,6 +212,7 @@ game.chargen = new Entity({
     them.gain(game.base_char)
     them.name = document.getElementById('chr_name').value
     them.gain( game.character_backgrounds[document.getElementById('chr_background').value] )
+    them.recover()
     them.move_to(this.onward)
     ui.refresh()
   },
@@ -326,3 +327,29 @@ game.character_backgrounds = {
     cp: 3,
   },
 }
+
+
+
+// doors: opening and closing
+game.add_trigger(
+  {verb: /use/, op1: /.*/, op2: /^$/},
+  function(cmd) {
+    // if( cmd.op1 && !cmd.op2 && cmd.op1.is('door') ) {
+    if( cmd.op1.is('open') || cmd.op1.is('closed') ) {
+      let door = cmd.op1
+      if( door.is('open') ) {
+        door.remove_tag('open')
+        door.set_tag('closed')
+        ui.add_event(`${cmd.who} closes ${door}.`)
+        return true
+      } else 
+      if( door.is('closed') && !door.is('locked') ) {
+        door.remove_tag('closed')
+        door.set_tag('open')
+        ui.add_event(`${cmd.who} opens ${door}.`)
+        return true
+      }
+    }
+    return false
+  }
+)

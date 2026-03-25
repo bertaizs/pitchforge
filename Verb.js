@@ -289,7 +289,7 @@ new Verb({
   test: false,
   op1: true,    separator: 'and',
   op2: true,
-  on_success: function(cmd) {
+  on_success: function(cmd) {    
     ui.add_event(`This does not seem to work.`)
   },
   sortkey: 0,

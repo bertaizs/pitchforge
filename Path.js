@@ -18,6 +18,10 @@ class Path {
     
     this.text ??= `a path leads somewhere`
     
+    this.door ??= false
+    if( this.door instanceof Entity )
+      this.door = this.door.id
+    
     this.reqs ??= []  // requirements for being able to use this path
     
     // this.perception_needed ??= -Infinity
@@ -55,16 +59,16 @@ class Path {
   // true if the entity can see the given path
   // based on the entity's perception or knowledge
   can_be_seen_by(entity) {
-    // console.log(entity)
-    // console.log(this)
     return entity.meets_requirements( this.reqs )
-    // entity = game.entity(entity)
-    // return entity.performance('perception')>=this.perception_needed
   }
   
   // true if the entity can traverse through the path
   // based on the entity's size and abilities, etc
   can_pass_through(entity) {
+    // canNOT pass through if there is a door and it is locked
+    if( this.door && game.entity(this.door).is('closed') )
+      return false
+    
     return true // TODO, not implemented
   }
   

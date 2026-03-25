@@ -87,6 +87,13 @@ class UI {
     return link
     // return `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
   }
+  
+  // shorthand for ui.print_entity
+  e(id, label = false) { 
+    if( !label ) 
+      label = game.entity(id).get_name()
+    return this.print_entity(id, {label: label}) 
+  }
     
   print_entity_ministatus(entity, params = {}) {
     entity = game.entity(entity)
@@ -183,7 +190,7 @@ class UI {
         )
   
         s+= this.print_list(
-          game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) )),
+          game.paths.filter(x=>( x.has_endpoint(location) && x.can_be_seen_by(entity) && x.can_pass_through(entity) )),
           {label: "exists", display: this.print_path, separator: `<br/>`, prefix: "➡️ " }
         )          
         s+= `</table>`

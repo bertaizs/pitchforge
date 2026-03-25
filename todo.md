@@ -5,7 +5,16 @@ todo
 
 * only add those events to the queue that happen in scope of player
 
+* order of two operands should not matter
+  - (sorting?)
+
 * doors
+  <!--- open/close-->
+  - unlock/lock
+  - force
+  - pick lock
+
+* ui.img
 
 * stealth
 
@@ -13,7 +22,6 @@ todo
 
 * second operand of verbs
   <!--- entity operands? e.g. "use"-->
-  - order of two operands should not matter (sorting?)
   - use selector for text operands
   - allow unlimited operands???
 

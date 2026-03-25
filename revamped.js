@@ -82,15 +82,26 @@ let clearing_edge = new Entity({
   ]
 })
 
+  let mansion_front_door = new Entity({
+    name: "Front Door",
+    tags: ['door', 'closed'],
+    // icon: 'mansion_front.png',
+    description: `<p>A heavy wooden double door stands in the mansion's main enterance.</p>`,
+    location_clues: [
+      // new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': 1}}),
+    ],
+  })
+
 let mansion_front = new Entity({
   name: "In front of the Mansion",
   icon: 'mansion_front.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing in front of the dilapidated ${ui.print_entity(mansion)}.
-  The forest is still near, its crooked ${ui.print_entity(trees)} make you feel uncomfortable.
+  `<p>You are standing in front of the dilapidated ${ui.e(mansion)}.
+  The forest is still near, its crooked ${ui.e(trees)} make you feel uncomfortable.
   So does the mansion.
   </p>
+  <p>A wooden ${ui.e(mansion_front_door, "double door")} leads into the mansion.</p>
   `,
   location_clues: [
     new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': 1}}),
@@ -281,6 +292,7 @@ let main_hall = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing in the main hall of the mansion.</p>
+  <p>A ${ui.print_entity(mansion_front_door, {label: "double door"})} leads to the outside.</p>
   `,
 })
 
@@ -332,6 +344,7 @@ let cellar = new Entity({
   // prop
   let coffin = new Entity({
     name: "Coffin",
+    tags: ['closed', 'door'],
     icon: 'mansion_coffin.png',
     // description: `<p></p>`,
     interior_description: 
@@ -388,6 +401,7 @@ let ladies_bedroom = new Entity({
     from: mansion_front, 
     to: main_hall, 
     text: `enter the mansion!`,
+    door: mansion_front_door,
   }, {
     text: `leave the mansion via the main door`,  
   })
@@ -738,7 +752,7 @@ let the_staff = new Entity({
     description: `A assembled from different bodyparts of the mansion's staff.`,
     faction: 'neutral',
     attitude: -2,
-    tough:  10,
+    tough:  8,
     cool:   3,
     sharp:  3,
     charm:  -2,
@@ -746,11 +760,12 @@ let the_staff = new Entity({
     location: main_hall,
     // location: player_ship,
 })
-  .add (   new Entity({
+
+  let keyring = new Entity({
     name: "butler's keyring",
     tags: ['key', 'item'],
-    description: `A keyrights with lots of keys in it. This should open all or most doors of the mansion.`
-  })  )
+    description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`
+  })
 
   game.add_trigger(
     {verb: /move/, op1: study},
