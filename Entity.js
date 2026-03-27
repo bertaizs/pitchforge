@@ -266,13 +266,13 @@ class Entity {
     // TODO: need to consider modifiers on traits, statuses, etc
     if( x in STATS ) return this.get_stat(x)
     
-    if (x in this) {
-      if( typeof x != 'function' )
+    if (x in this) {  // if what you are get-ting is a function, run it and return results
+      if( typeof this[x] != 'function' ) {
         return this[x]
-      else
-        return this[x]()
+      } else {
+        return this[x]()        
+      }
     }
-
     
     // if not overridden, the default for the below is based on another attr
     switch(x) {
@@ -327,10 +327,7 @@ class Entity {
   toString() { return this.get_name() }
   
   get_description() {
-    let desc = this.get('description')
-    if( typeof desc == 'function')
-      desc = desc()
-    return desc
+    return this.get('description')
   }
 
   get_interior_description() {

@@ -247,7 +247,7 @@ class UI {
       if( options.show_tags ) {
         s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
       }
-      s+= entity.get('description') ? `<div>`+entity.get('description')+`</div>` : ''
+      s+= entity.get_description() ? `<div>`+entity.get_description()+`</div>` : ''
       
       // TODO: the below refers to the player, while perception does not; this is inconsistent, let's fix it!
       for( let clue of entity.clues ) {

@@ -94,7 +94,6 @@ class Game {
       return false
     }
     // for op1 and op2, check if EITHER order matches
-    // if( cmd.op1 && cmd.op2 ) {  
     if( cmd.match('op1',pattern['op1']) && cmd.match('op2',pattern['op2']) ) {
       options.log_matching_details && console.log(`match!`)
       return true
@@ -108,22 +107,6 @@ class Game {
       return true
     }
     return false
-    // }
-    // else if( cmd.op1 ) {  // op1 is present only
-    //   if( cmd.match( 'op1', pattern['op1'] ) ) {
-    //     console.log('ZZZZ', cmd.op2, pattern.op2)
-    //     // console.log(cmd.op2)
-    //     // console.log(pattern.op2)
-    //     // options.log_matching_details && console.log(`no match`)
-    //     options.log_matching_details && console.log(`match!`)
-    //     return true
-    //   }
-    //   return false
-    // }
-
-    // console.log('YYYY')
-    // options.log_matching_details && console.log(`match!`)
-    // return true
   }
 
   // old version, with limitation: if there are both op1 and op2, they can match in this order only, not if reversed
