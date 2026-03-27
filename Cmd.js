@@ -13,7 +13,6 @@ class Cmd {
             this[i] = value[i]
         
         this.who ??= game.get_player()
-    
             
             // Cmd shall always have an attr called verb
             // which must point to VERBS

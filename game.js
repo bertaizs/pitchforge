@@ -77,10 +77,57 @@ class Game {
     pattern.op2 ??= /.*/
     this.triggers.push( {pattern: pattern, action: action, sortkey: sortkey} )
   }
+  
+  
+  
 
   // returns true if the cmd (Cmd) matches the pattern
   // pattern is created by game.add_trigger
   match( pattern, cmd ) {
+    options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
+    if( ! cmd.match( 'verb', pattern['verb'] ) ) {
+      // options.log_matching_details && console.log(`no match`)
+      return false
+    }
+    if( ! cmd.match( 'who', pattern['who'] ) ) {
+      // options.log_matching_details && console.log(`no match`)
+      return false
+    }
+    // for op1 and op2, check if EITHER order matches
+    // if( cmd.op1 && cmd.op2 ) {  
+    if( cmd.match('op1',pattern['op1']) && cmd.match('op2',pattern['op2']) ) {
+      options.log_matching_details && console.log(`match!`)
+      return true
+    }
+    if( cmd.match('op1', pattern['op2']) && cmd.match('op2', pattern['op1']) ) {
+      options.log_matching_details && console.log(`match!`)
+      // replace op1 ond op2, so that the trigger needs to be defined only once
+      let x = cmd.op1
+      cmd.op1 = cmd.op2
+      cmd.op2 = x
+      return true
+    }
+    return false
+    // }
+    // else if( cmd.op1 ) {  // op1 is present only
+    //   if( cmd.match( 'op1', pattern['op1'] ) ) {
+    //     console.log('ZZZZ', cmd.op2, pattern.op2)
+    //     // console.log(cmd.op2)
+    //     // console.log(pattern.op2)
+    //     // options.log_matching_details && console.log(`no match`)
+    //     options.log_matching_details && console.log(`match!`)
+    //     return true
+    //   }
+    //   return false
+    // }
+
+    // console.log('YYYY')
+    // options.log_matching_details && console.log(`match!`)
+    // return true
+  }
+
+  // old version, with limitation: if there are both op1 and op2, they can match in this order only, not if reversed
+  __match( pattern, cmd ) {
     options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
     for( let p of ['who', 'verb', 'op1', 'op2'] ) {
       if( ! cmd.match( p, pattern[p] ) ) {
@@ -91,6 +138,7 @@ class Game {
     options.log_matching_details && console.log(`match!`)
     return true
   }
+
   
   // called when someone executes a command
   exec(cmd = ui.cmd) {

@@ -8,9 +8,6 @@ examine compass
 
 * only add those events to the queue that happen in scope of player
 
-* order of two operands should not matter
-  - (sorting?)
-
 * doors
   <!--- open/close-->
   - unlock/lock

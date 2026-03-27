@@ -20,8 +20,8 @@ options.log_entity_ticks = true
 options.log_perception_on_charsheets = false
 
 options.log_matching = true // log when matches are found or if no match is found
-options.log_matching_details = false  // log each comparison
-options.log_matching_details2 = false // inner details of comparison
+options.log_matching_details = false  // log each comparison (cmp what with what)
+options.log_matching_details2 = false // inner details of comparison (Entity, regexp, etc)
 
 options.log_commands = true
 options.log_events = true       // also log anything outputted as an event
@@ -32,4 +32,4 @@ options.show_tags = true,
 
 options.debug = false    // debug mode
 
-options.npcs_passive = false // if true, npcs do not act
+options.npcs_passive = true // if true, npcs do not act
