@@ -2,11 +2,15 @@ todo
 ====
 
 ## bugs
-examine compass
 
 ## core
 
-* only add those events to the queue that happen in scope of player
+* figure rules for movement, initiative and 
+  attacks (if you enter, you always get auto-attacked)
+  + set status for 'just entered'?
+  + you get one move and one action in your turn; action ends turn
+    - solves dashing/running
+    - if you move when not in combat, you first end turn and then move?
 
 * doors
   <!--- open/close-->
@@ -19,7 +23,6 @@ examine compass
 * work panel should display clickable/colored entities
 
 * second operand of verbs
-  <!--- entity operands? e.g. "use"-->
   - use selector for text operands
   - allow unlimited operands???
 

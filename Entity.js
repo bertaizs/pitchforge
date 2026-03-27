@@ -676,7 +676,7 @@ class Entity {
       game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
     }
     else
-      ui.add_event(`${this} passes.`)
+      ui.add_event({text: `${this} passes.`, location: this.get_location()})
   }
 
 } // Entity

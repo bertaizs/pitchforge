@@ -625,6 +625,18 @@ class UI {
     add_event(event = {}) {
       if( typeof event == 'string' )
         event = {type: 'text', text: event}
+      event.type ??= 'text'
+      
+      // if the event is tied to a location, we are only adding the event to the queue 
+      // if the player is there (otherwise not relevant for the player)
+      // TODO: consider if the location is the player; consider if the player is controlling something else
+      if( 'location' in event ) {
+        if( ! options.show_events_at_other_locations ) {
+          event.location = game.entity(event.location)
+          if( event.location.id!=player.get_location().id /* && event.location.id!=player.id */ )
+            return false          
+        }
+      }
       
       if( 'type' in event == false ) throw `adding event without a type ${event}`
       options.log_events && console.log(event)

@@ -32,4 +32,6 @@ options.show_tags = true,
 
 options.debug = false    // debug mode
 
-options.npcs_passive = true // if true, npcs do not act
+options.npcs_passive = false // if true, npcs do not act
+
+options.show_events_at_other_locations = false
