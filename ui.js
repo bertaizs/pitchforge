@@ -33,10 +33,10 @@ class UI {
   }
 
   refresh() {
-    ui.show_main()
-    // ui.show_sheet(game.get_player())
-    ui.show_commands()
-    ui.display_cmd()
+    this.show_main()
+    // this.show_sheet(game.get_player())
+    this.show_commands()
+    this.display_cmd()
     window.scroll(0,0)
   }
 
@@ -55,7 +55,7 @@ class UI {
     if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
       this.cmd.op2 = entity
     
-    ui.display_cmd()
+    this.display_cmd()
   }
     
   entity_link(e) {
@@ -104,7 +104,7 @@ class UI {
     s+= `<span class="ministatus">`
     let prefix = ''
     if( params.icon && entity.get('icon') )
-      prefix = `<img src='${options.pictures_location}/${entity.get('icon')}' class="combat_icon" /> `
+      prefix = ui.img(entity.get('icon'), '', "combat_icon") + " "
     
     s+= ui.print_entity(entity, {prefix: prefix})
     
@@ -145,6 +145,13 @@ class UI {
       let s = `<p>${clue.flag+" "}${clue.text}</p>`
       return s
     }
+
+    img(filename, params = "", cl="entity_image") {
+      if( typeof params != 'string') throw `only string params are supported in ui.img()`
+      // TODO: support a hash here and map it, e.g. as {onclick: "alert(1)"}
+      
+      return `<img class='${cl}' src="${options.pictures_location}/${filename}" ${params}></img>`
+    }
     
     // returns what the player entity sees when looking around in a location
     // - shows the location's interior (description & icon)
@@ -159,7 +166,7 @@ class UI {
       // style="width: 100%;"
       let s = `<table><tr><td style="vertical-align: top;">`
         if( location.get('interior_icon') ) {
-          s+= `<img class='entity_image' src="${options.pictures_location}/${location.get('interior_icon')}"></img>`
+          s+= this.img(location.get('interior_icon'))
         }
       s+= `</td><td style="vertical-align: top;">`
       s+= `<div>${this.print_entity(location)}</div>`
@@ -231,7 +238,7 @@ class UI {
       
       let s = `<table><tr><td style="vertical-align: top;">`
       if( entity.get('icon') ) {
-        s+= `<img class='entity_image' src="${options.pictures_location}/${entity.get('icon')}"/>`
+        s+= this.img(entity.get('icon'))
       }
       s+= `</td><td style="vertical-align: top;">`
       
@@ -587,12 +594,10 @@ class UI {
       </p>`
       
       s+= `<p>If you look into a mirror, you would see something like:</p>`
-      s+= `<img id="chr_icon" src="${options.pictures_location}/${game.get_player().icon}" class="entity_image" 
-          style=""/>`
+      s+= this.img(game.get_player().get('icon'), 'id="chr_icon"')
       s+= `<br/>`
       for( let img of game.character_icons ) {
-        s+= `<img src="${options.pictures_location}/${img}" class="entity_image" style="width: 50px;"
-              onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}' "/>`
+        s+= this.img(img, `style="width: 50px;" onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}'" `)
       }
 
       s+= `<p>Through many years of sacrifice, you have learned to become `

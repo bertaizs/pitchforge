@@ -1,6 +1,9 @@
 todo
 ====
 
+## bugs
+examine compass
+
 ## core
 
 * only add those events to the queue that happen in scope of player
@@ -13,8 +16,6 @@ todo
   - unlock/lock
   - force
   - pick lock
-
-* ui.img
 
 * stealth
 
