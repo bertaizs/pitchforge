@@ -593,8 +593,10 @@ Entity.spawn( 'ghoul', mansion_front )
 
 Entity.spawn( 'ghoul', mansion_back )
 Entity.spawn( 'ghoul', mansion_back )
-Entity.spawn( 'ghoul', mansion_back )
-Entity.spawn( 'ghoul', mansion_back )
+Entity.spawn( 'ghoul', garage )
+Entity.spawn( 'ghoul', shed )
+Entity.spawn( 'ghoul', shed )
+Entity.spawn( 'ghoul', shed )
 
 Entity.spawn( 'knife', kitchen )
 Entity.spawn( 'knife', shed )

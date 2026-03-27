@@ -49,6 +49,8 @@ class Entity {
 
     this.body ??= this.get('max_body')
     this.spirit ??= this.get('max_spirit')
+    
+    this.moves ??= 1
 
     // this.position ??= false     // or string describing how/where the Noun is
     // this.img ??= false          // or image file name
@@ -130,6 +132,9 @@ class Entity {
   list_hostiles_here() {
     return this.get_location().list_entities_here().filter( x=>x.is_hostile_to(this) )
   }
+  
+  // true if there are hostiles around
+  is_in_combat() {  return this.list_hostiles_here().length>0 }
   
   // called after then entity is moved
   on_move() {}
@@ -260,7 +265,7 @@ class Entity {
     // if factions are different and neither is neutral, they are hostile
     return this.get('faction') != other_entity.get('faction')
   }
-
+  
   get(x) {
     // these must have hardcoded values
     // TODO: need to consider modifiers on traits, statuses, etc
@@ -626,7 +631,8 @@ class Entity {
     return result
   }
   
-  // executes a command of type Cmd, returns what happens as string
+  // executes a command of type Cmd, 
+  // returns what happens as string (which is not used)
   exec( cmd ) {
     let result
     let event = ""

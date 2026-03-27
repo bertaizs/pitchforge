@@ -5,6 +5,7 @@ class UI {
     if( text in STATS ) return STATS[text].icon
     if( text in POINTS ) return POINTS[text].icon
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
+    if( text=='moves' ) return '➡️'
     return ''
   }
   
@@ -98,7 +99,10 @@ class UI {
   print_entity_ministatus(entity, params = {}) {
     entity = game.entity(entity)
     params.icon ??= true
-    params.stats ??= true
+    // params.stats ??= true
+    params.body ??= true
+    params.spirit ??= false
+    params.moves ??= false
     
     let s = ``
     s+= `<span class="ministatus">`
@@ -108,12 +112,28 @@ class UI {
     
     s+= ui.print_entity(entity, {prefix: prefix})
     
-    if( params.stats && entity.is_character() ) {
-      // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
-      s+= " "+UI.icon('body')+entity.get('body')
-      s+= " "
-      s+= " "+UI.icon('spirit')+entity.get('spirit')
+    if( entity.is_character() ) {
+      if( params.body )
+        s+= " "+UI.icon('body')+entity.get('body')
+      if( params.spirit )
+        s+= " "+UI.icon('spirit')+entity.get('spirit')
+      if( params.moves ) {
+        s+= " "
+        for( let i=0; i<entity.get('moves'); i++ )
+          s+= UI.icon('moves')        
+      }
     }
+    
+    // if( params.stats && entity.is_character() ) {
+    //   // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
+    //   s+= " "+UI.icon('body')+entity.get('body')
+    //   s+= " "
+    //   s+= " "+UI.icon('spirit')+entity.get('spirit')
+    // }
+    // if( params.stats && entity.is_character() ) {
+
+    // }
+    
     s+= `</span>`
     return s
   }
@@ -174,7 +194,7 @@ class UI {
       
       for( let clue of location.location_clues ) {
         if( entity.meets_requirements(clue.reqs) && clue.enabled )
-          s += ui.print_clue(clue)
+          s += this.print_clue(clue)
       }
       
       if( ! entity.get_location().is('abstract') ) {
@@ -243,7 +263,7 @@ class UI {
       s+= `</td><td style="vertical-align: top;">`
       
       // let s = `<div>`
-      s+= ui.print_entity(entity)
+      s+= this.print_entity(entity)
       if( options.show_tags ) {
         s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
       }
@@ -252,7 +272,7 @@ class UI {
       // TODO: the below refers to the player, while perception does not; this is inconsistent, let's fix it!
       for( let clue of entity.clues ) {
         if( game.get_player().meets_requirements(clue.reqs) && clue.enabled )
-          s += ui.print_clue(clue)
+          s += this.print_clue(clue)
       }
       
       // from here on, the sheet is viewed in a table
@@ -278,7 +298,7 @@ class UI {
       
       // STATS
       if( perception > 2 && entity.is_creature()) {
-        s+= ui.print_sheet_stats(entity, params)
+        s+= this.print_sheet_stats(entity, params)
       }
       
       // COMBAT
@@ -361,7 +381,7 @@ class UI {
     sheet_click( stat, plusminus, entity, params = {respec: true} ) {
         entity = game.entity(entity)
         entity.change_stat( stat, plusminus )
-        ui.show_sheet( entity, params )
+        this.show_sheet( entity, params )
     }
 
     sheet_level_up( entity, params = {respec: true} ) {
@@ -505,7 +525,7 @@ class UI {
     display_cmd(cmd = this.cmd) {
       if( !game.get_player().get_location().is('abstract') ) {
         let verb = cmd.get_verb()
-        document.getElementById('who').innerHTML = ui.print_entity_ministatus(game.get_player())
+        document.getElementById('who').innerHTML = ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
         document.getElementById('verb').innerHTML = verb.get_name()
         document.getElementById('prep').innerHTML = verb.get_prep()
         document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
@@ -674,12 +694,15 @@ class UI {
     //   window.scrollTo(document.getElementById(html_id).getBoundingClientRect() )
     // }
     
+    // called when you execute something from the UI
+    // fades into new screen
+    // refreshes ui (ui.refresh)
     exec(cmd = this.cmd) {
       // document.getElementById('output').style.display = 'none'
       document.getElementById('output').style.animation = null
       document.getElementById('output').offsetHeight
       game.exec(cmd)
-      game.end_player_turn()
+      // game.end_player_turn()
       ui.refresh()
       ui.show_events()
       // ui.scrollTo()

@@ -124,10 +124,11 @@ class Game {
 
   
   // called when someone executes a command
+  // - checks triggers
+  // - calls entity.exec
   exec(cmd = ui.cmd) {
     if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
     cmd.validate()  // throws an exception if cmd is not 'valid'
-    
     options.log_commands && console.log(`executing: `, cmd)
     
     // if any of the triggers match, execute the triggered actions
@@ -138,9 +139,26 @@ class Game {
         if( quit ) return false
       }
     }
-    
+    // if none of the above matches, execute the default action
     options.log_matching && console.log(`executing default command`)
     this.get_current_entity().exec(cmd)
+    
+    // check if the given cmd is turn ending for the player
+    if( this.get_current_entity().id == game.get_player().id ) {
+      let player = game.get_player()
+      // if moved and still has moves, then use a move and do not end turn; if not in combat, end tht turn
+      if( cmd.verb=='move' && player.get('moves')>0 && player.is_in_combat() ) {
+        player.moves--
+        options.log_player_turn_milestones && console.log(`${player} used a move`)
+      }
+      else 
+      if( !('quick' in cmd ) ) {  // 'quick' commands don't end the turn
+        player.moves = 1
+        game.end_player_turn()  // proceeds with main_loop
+      } else {
+        options.log_player_turn_milestones && console.log(`${player}'s turn continues`)        
+      }
+    }
   }
   
   get_current_entity() {
@@ -191,15 +209,21 @@ class Game {
     }
     current_entity.tick()
     options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
-  }
+  } // main_loop
   
   run() { this.main_loop() }
   
   // called when the current player character ends their turn
   // restarts main loop, proceeding with actions as per game.initiative_order
   end_player_turn() {
+    options.log_player_turn_milestones && console.log(`${player}'s turn ends`)
     this.next_entity()  // proceed to next entity
     this.main_loop()    // continue main loop...
+  }
+  
+  reset_player_turn() {
+    options.log_player_turn_milestones && console.log(`${player}'s turn resets`)
+    player.moves = 1
   }
     
 }

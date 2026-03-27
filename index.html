@@ -25,21 +25,22 @@
     <div id="title">title</div>
     
     <div id="output" name="output">
-        <div id="work" style="">So it begins.</div>
+        <div id="work" style=""></div>
         <div id="main" style="border: 0px solid blue; margin-bottom: 15px;">main</div>
     </div>
     
     <div id="cmd" style="border: 0px solid blue; margin-bottom: 15px; margin-top: 15px;">cmd</div>
     
     <div id="expl" style="border: 0px solid darkorange; display: none;">&nbsp;</div>
-    <div id="debug" style="border: 0px solid blue; margin-bottom: 15px; margin-top: 15px;">debug</div>
+    <div id="debug" style="border: 0px solid blue; margin-bottom: 15px; margin-top: 15px;"></div>
 
   </body>
   <!--<script src="init.js"></script>-->
   <script src="revamped.js"></script>
   <!--<script src="orc_and_pie.js"></script>-->
+  
   <script>
-    game.run()
-    ui.refresh()
+    game.run()    // starts main loop, returns when player is in control
+    ui.refresh()  // once player is in control, refresh the screen
   </script>
 </html>

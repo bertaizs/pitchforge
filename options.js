@@ -24,6 +24,7 @@ options.log_matching_details = false  // log each comparison (cmp what with what
 options.log_matching_details2 = false // inner details of comparison (Entity, regexp, etc)
 
 options.log_commands = true
+options.log_player_turn_milestones = true
 options.log_events = true       // also log anything outputted as an event
 
 options.show_tags = true,

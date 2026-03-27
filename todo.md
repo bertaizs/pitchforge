@@ -1,16 +1,9 @@
-todo
-====
+# todo
+======
 
 ## bugs
 
 ## core
-
-* figure rules for movement, initiative and 
-  attacks (if you enter, you always get auto-attacked)
-  + set status for 'just entered'?
-  + you get one move and one action in your turn; action ends turn
-    - solves dashing/running
-    - if you move when not in combat, you first end turn and then move?
 
 * doors
   <!--- open/close-->
@@ -88,3 +81,13 @@ dog
 generator, light, light switch
 
 vamp godown process
+
+
+# appendix
+
+<!--* figure rules for movement, initiative and 
+  attacks (if you enter, you always get auto-attacked)
+  + you get one move and one action in your turn; action ends turn
+    - solves dashing/running
+    - if you move when not in combat, you first end turn and then move?
+  - nope: set status for 'just entered'-->
