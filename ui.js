@@ -663,6 +663,31 @@ class UI {
       this.events.push(event)
     }
     
+    text( ...args ) {
+      // allow first arg to be an event for customization; this is optional, can be skipped
+      if( args.length==0 ) throw `ui.text called with no arguments`
+      let event = {}
+      if( (typeof args[0]=='object') && !(args[0] instanceof Entity) ) {
+        event = args[0]
+      }
+      event.type ??= 'text'
+      event.whitespace ??= true
+      console.log(event)
+      
+      let txt = ``
+      for( let arg of args ) {
+        if(txt || event.whitespace) txt+= " "
+        if( arg instanceof Entity )
+          txt+= ui.e(arg)
+        else
+        if( typeof arg == 'string' )
+          txt+= arg
+      }
+      event.text = txt
+      
+      ui.add_event(event)
+    }
+    
     // execute an event
     // return as string anything to display
     print_event(event = {}) {
@@ -702,7 +727,7 @@ class UI {
       document.getElementById('output').style.animation = null
       document.getElementById('output').offsetHeight
       game.exec(cmd)
-      // game.end_player_turn()
+      // game.end_player_turn()   // moved into game.exec
       ui.refresh()
       ui.show_events()
       // ui.scrollTo()
