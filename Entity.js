@@ -41,6 +41,11 @@ class Entity {
     } else {  // location
       this.tier ?? 2
     }
+    
+    if( this.is('locked') ) {
+      this.tough ??= Test.BASIC
+      this.cool ??= Test.BASIC
+    }
 
     this.traits ??= {};
     this.status ??= {}
@@ -624,11 +629,16 @@ class Entity {
     return n;
   }
 
+  // test this entity's performance vs a fixed value vs_value
+  // vs_value is meant to be:
+  // - static number, or
+  // - result of a performance() of another entity
   test( test, vs_value, params = {}, explain = [] ) {
     let result = this.performance( test, params, explain )
     explain.push({value: -vs_value, label: `vs`})
     result -= vs_value
-    return result
+    // return result
+    return (result>=0)
   }
   
   // executes a command of type Cmd, 
@@ -654,6 +664,7 @@ class Entity {
           throw `don't know how to process difficulty: ${verb.difficulty}`
       } else
       if( verb.op1 ) {          // versus test
+        // TODO: use Entity.test() ???
         vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )
       }
       options.log_test_results && console.log(`vs performance: ${vs_result}`)        

@@ -84,11 +84,10 @@ let clearing_edge = new Entity({
 
   let mansion_front_door = new Entity({
     name: "Front Door",
-    tags: ['door', 'closed'],
+    tags: ['door', 'closed', 'locked'],
     // icon: 'mansion_front.png',
-    description: `<p>A heavy wooden double door stands in the mansion's main enterance.</p>`,
+    description: `<p>A heavy wooden double door stands in the mansion's main entrance.</p>`,
     location_clues: [
-      // new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': 1}}),
     ],
   })
 
@@ -500,11 +499,11 @@ let ghoul_template = new Entity({
 }, {template: 'ghoul'} )
 
 new Entity({
-    name: "lockpick",
+    name: "lockpicks",
     tags: ['tool', 'lockpick', 'item'],
     icon: 'lockpicks.png',
     description: `Handy for opening locks.`, // hook pick
-}, {template: 'lockpick'} )
+}, {template: 'lockpicks'} )
 
 new Entity({
     name: "crowbar",

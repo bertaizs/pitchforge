@@ -325,7 +325,7 @@ game.character_backgrounds = {
     sharp:  2,
     charm:  0,
     traits: ['sneaking', 'lockpicking', 'pickpocket'],
-    inventory: ['lockpick', 'crowbar']
+    inventory: ['lockpicks', 'crowbar']
   },
   handyman: {
     label: `handyman`,
@@ -334,7 +334,7 @@ game.character_backgrounds = {
     sharp:  1,
     charm:  0,
     traits: ['crafting', 'lockpicking'],
-    inventory: ['lockpick', 'crowbar']
+    inventory: ['lockpicks', 'crowbar']
   },
   office_worker: {
     label: `office worker`,
@@ -389,9 +389,14 @@ game.character_backgrounds = {
 game.add_trigger(
   {verb: /use/, op1: /.*/, op2: /^$/},
   function(cmd) {
-    // if( cmd.op1 && !cmd.op2 && cmd.op1.is('door') ) {
     if( cmd.op1.is('open') || cmd.op1.is('closed') ) {
       let door = cmd.op1
+      
+      if( door.is('locked') ) {
+        ui.add_event(ui.e(door)+` is locked.`)
+        return true
+      }
+      
       if( door.is('open') ) {
         door.remove_tag('open')
         door.set_tag('closed')
@@ -406,5 +411,26 @@ game.add_trigger(
       }
     }
     return false
-  }
-)
+  } )
+
+// lockpicking
+game.add_trigger(
+  {verb: /use/, op1: /lockpick/, op2: /.*/},
+  function(cmd) {
+    if( cmd.op2.is('locked') ) {
+      
+      let lock = cmd.op2
+      if( cmd.who.test('lockpicking', 
+          cmd.op2.performance('cool')   ) ) {
+        cmd.op2.remove_tag('locked')
+        ui.add_event(ui.e(cmd.who) + ` has picked the lock on `+ui.e(cmd.op2))
+        return true
+      } else {
+        ui.add_event(ui.e(cmd.who) + ` failed to pick the lock on `+ui.e(cmd.op2))
+        return true
+      }
+
+    }
+    ui.add_event(ui.e(cmd.op2)+` is not locked.`)
+    return true
+  } )

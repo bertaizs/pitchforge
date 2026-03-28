@@ -1,5 +1,5 @@
 class Test {
-  static XXX =     -2
+  static CHILDSPLAY=-2
   static TRIVIAL = -1
   static MUNDANE =  0
   static BASIC =    1
@@ -51,19 +51,18 @@ const TESTS = {
   // strike: new Test({stat: "tough", /* randomize: true */ }),
   attack: new Test({stat: "tough"}),
   // melee: new Test({stat: "tough"}),
-  defense: new Test({stat: "tough", status: {"threat": -1} }),
+  defense: new Test({stat: "tough", status: {'threat': -1} }),
   // aim: new Test({stat: ["tough", "cool"]}),
   // target: new Test({stat: "cool", status: {"threat": -1} }),
 
   'perception': new Test({stat: 'sharp', spec: 'perception'}),
   'initiative': new Test({stat: 'sharp', spec: 'initiative'}),
   
-  'pick lock': new Test({stat: "cool", spec: 'thievery'}),
-  pickpocket: new Test({stat: "cool", spec: 'thievery'}),
+  'lockpicking': new Test({stat: "cool", spec: 'thievery', status: {'progress': -1} }),
+  'pickpocket': new Test({stat: "cool", spec: 'thievery'}),
 
   'climbing': new Test({stat: 'cool', spec: 'climbing'}),
 
   'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),
-  
 
 };
