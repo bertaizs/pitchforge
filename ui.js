@@ -5,13 +5,16 @@ class UI {
     if( text in STATS ) return STATS[text].icon
     if( text in POINTS ) return POINTS[text].icon
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
-    if( text=='moves' ) return '➡️'
+    if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].icon || ''
+    if( text=='moves' ) return '➡️'    
     return ''
   }
   
   static help_text(text) {
     if( text in STATS ) return STATS[text].text
     if( text in POINTS ) return POINTS[text].text
+    if( text in TRAITS ) return TRAITS[text].text + (TRAITS[text].stat ? ` (based on ${UI.wicon(TRAITS[text].stat)})` : ``)
+    if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].text
     return ""
   }
   
@@ -22,7 +25,7 @@ class UI {
   static keyword(text) {
     let s = ``
     let help = UI.help_text(text)
-    s+= `<span${help ? ' title="'+help+'"' : ''}>${UI.wicon(text)}</span>`
+    s+= `<span${help ? ' title="'+help+'"' : ''} class="keyword">${UI.wicon(text)}</span>`
     return s
   }
  
@@ -37,6 +40,7 @@ class UI {
     this.show_main()
     // this.show_sheet(game.get_player())
     this.show_commands()
+    this.show_menu()
     this.display_cmd()
     window.scroll(0,0)
   }
@@ -243,7 +247,6 @@ class UI {
       s+= `<tr><td>&nbsp;</td></tr>`
       return s
     }
-    
 
     // returns the character sheet of the entity
     // this is also what you see if you LOOK at the entity (from outside)
@@ -277,13 +280,13 @@ class UI {
       
       // from here on, the sheet is viewed in a table
       s+= `<table>`      
-      if( perception > 2 && entity.is_creature() ) {
+      if( perception > Test.EASY && entity.is_creature() ) {
         s+= this.print_list(
           [entity.get('level')],
-          {label: "level", display: UI.numfield }
+          {label: UI.keyword("level"), display: UI.numfield }
         )
       }
-      if( perception >= 0 && entity.is_creature() ) {
+      if( perception >= Test.MUNDANE && entity.is_creature() ) {
         s+= this.print_list(
           [`${UI.numfield(entity.get('body'))}/${entity.get('max_body')}`],
           {label: UI.keyword('body'), display: (x)=>x,
@@ -293,57 +296,54 @@ class UI {
           [`${UI.numfield(entity.get('spirit'))}/${entity.get('max_spirit')}`],
           {label: UI.keyword('spirit'), display: (x)=>x }
         )
-        // s+= `<tr><td>...</td><td>...</td></tr>`
       }
       
       // STATS
-      if( perception > 2 && entity.is_creature()) {
+      if( perception > Test.EASY && entity.is_creature()) {
         s+= this.print_sheet_stats(entity, params)
       }
       
       // COMBAT
       let COMBAT = {'attack': true, 'defense': true, 
-                // 'melee': true,
-                // 'aim': true, 'target': true
       }
-      if( perception > 2 && entity.is_creature()) {
-        for( let i in COMBAT ) {
-            s+= `<tr><td class="table_left table_nopadding">${i}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.performance(i))}</span> `
-            // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
-            // TODO: fix explanation click
-            s+= `</td>`
-            s+= `</tr>`
-        }
-        s+= `<tr><td>&nbsp;</td></tr>`
-      }
+      // if( perception > 2 && entity.is_creature()) {
+      //   for( let i in COMBAT ) {
+      //       s+= `<tr><td class="table_left table_nopadding">${i}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.performance(i))}</span> `
+      //       // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
+      //       // TODO: fix explanation click
+      //       s+= `</td>`
+      //       s+= `</tr>`
+      //   }
+      //   s+= `<tr><td>&nbsp;</td></tr>`
+      // }
 
       // EQUIPMENT & INVENTORY
-      if( perception > 0 && entity.is_creature() || entity.is_open_container() ) {
+      if( perception > Test.MUNDANE && entity.is_creature() || entity.is_open_container() ) {
         let equipped = entity.get_equipped_items()
         if( equipped.length>0 )
-          s+= this.print_list( equipped, {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus} )
+          s+= this.print_list( equipped, {label: UI.keyword("equipment"), not_if_empty: true, display: ui.print_entity_ministatus} )
         
         let nonequipped = entity.get_nonequipped_items()
         if( nonequipped.length>0 )
-          s+= this.print_list( nonequipped, {label: "inventory", not_if_empty: false, display: ui.print_entity_ministatus} )
+          s+= this.print_list( nonequipped, {label: UI.keyword("inventory"), not_if_empty: false, display: ui.print_entity_ministatus} )
       }
       
       // TRAITS
-      if( (perception > 2 && entity.is_creature()) || entity.is_item() ) {
+      if( (perception > Test.MEDIUM && entity.is_creature()) || entity.is_item() ) {
         let traits = entity.get('traits')
         if( !isEmpty(traits) )
           s+= this.print_list(
             Object.keys(traits),
-            {label: "traits", display: (x)=>x }
+            {label: UI.keyword("traits"), not_if_empty: true, display: (x)=>UI.keyword(x) }
           )        
       }
       
       // STATUSES
-      if( perception > 2 && entity.is_creature()) {
+      if( perception > Test.BASIC && entity.is_creature()) {
         let status = entity.get('status')
         s+= this.print_list(
           Object.keys(status),
-          {label: UI.keyword('statuses'), 
+          {label: UI.keyword('statuses'), not_if_empty: true,
            // display: (i)=>`${i} (timer: ${entity.status[i].timer}, magnitude: ${entity.status[i].magnitude})`,
            display: (i)=>{ return i+ 
                             (entity.status[i].magnitude!=1 ? " (level "+entity.status[i].magnitude+")" : "")+ 
@@ -355,7 +355,7 @@ class UI {
       // CHARACTER POINTS
       if( perception == Infinity ) {
         s+= this.print_list(
-          [entity.get('cp')],
+          [UI.icon('cp')+entity.get('cp')],
           {label: UI.keyword('character points'), display: UI.numfield }
         )
       }
@@ -534,6 +534,13 @@ class UI {
       }
     }
     
+    show_menu() {
+      if(game.get_player_location().is('abstract'))
+        document.getElementById('menu').style.display = 'none'
+      else
+        document.getElementById('menu').style.display = 'block'
+    }
+    
     show_commands() {
       let s = ``
       if( options.debug ) {
@@ -572,11 +579,25 @@ class UI {
       document.getElementById('cmd').innerHTML = s      
     }
     
+    // print_trait(trait) {
+    //   let trait_data, help_text
+    //   if( trait in TRAITS ) {
+    //     trait_data = TRAITS[trait]
+    //     help_text = TRAITS[trait].text
+    //     if( TRAITS[trait].stat )
+    //       help_text += ` (based on ${UI.icon(TRAITS[trait].stat)+TRAITS[trait].stat})`
+    //   } else {
+    //     trait_data = {}
+    //   }
+    //   let s = `<span class="help"></span>`
+    //   return s
+    // }
+    
     print_background( background ) {
       let s = ``
       if( background.traits ) {
         s+= background.traits.length>1 ? "traits: " : "trait: "
-        s+= background.traits.join(", ")
+        s+= background.traits.map(x=>UI.keyword(x)).join(", ")
       }
       if( background.inventory ) {
         if( s ) s+= " and "
@@ -584,12 +605,14 @@ class UI {
         s+= background.inventory.join(", ")
       }
       let others = Object.keys( STATS ).concat( ["cp"] )
+      s+= `<br/>`
       for( let x of others ) 
         if( x in background ) {
           if( s ) s+= " and "
-          s+= x+": "+plusminus(background[x])
+          // s+= UI.icon(x)+x+": "+plusminus(background[x])
+          s+= UI.keyword(x)+": "+plusminus(background[x])
         }
-      return "starts with "+s
+      return sentence( background.label+" starts with "+s+"." )
     }
     
     selector( id, options = {}, params = {} ) {
@@ -623,9 +646,14 @@ class UI {
       s+= `<p>Through many years of sacrifice, you have learned to become `
       s+= this.selector( 'chr_background', game.character_backgrounds, {label: (x,y)=>(y[x].label || x)} )
       s+= `.`
-      s+= `<div id="chr_background_info"></div>`
+      s+= `<div id="chr_background_info">`
+      // throw "x"
+      // console.log(game.character_backgrounds)
+      s+= ui.print_background(game.character_backgrounds[Object.keys(game.character_backgrounds)[0]])
+      s+= `</div>`
       s+= `</p>`
       
+      // TODO: do this via charsheet
       // s+= `<table>`
       // s+= ui.print_sheet_stats( game.get_player(), {respec: true} )
       // s+= this.print_list(

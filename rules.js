@@ -25,17 +25,18 @@ const STATS = {
 
 const POINTS = {
   body: {
-    icon: "💖",
+    text: "Physical wellbeing and readiness. Lose body points when you taking damage, getting hurt, getting tired or off-ballance. One can recover body points quickly, but one will go down when losing all body points.",
+    icon: "❤️",  //💖
   },
   spirit: {
+    text: "Spiritual freshness and power. Use spirit points for special abilities, lose them when going through trauma or getting hit by non-physical means. One can recover spirit points quickly, but will go down when losing all spirit points.",
     icon: "⚡",
   },
+  cp: {
+    icon: "❇️", // ✳️❇️✴️
+  }
 }
 
-// SKILLS = {
-//   melee: {},
-//   lockpicking: {},
-// };
 
 const BONUS = 3;
 const PENALTY = -BONUS;
@@ -44,14 +45,21 @@ const CP_PER_LEVEL = 4;
 const LETHAL_WOUND = 6
 
 const TRAITS = {
-  // melee: {
-  //   stat: "tough",
-  // },
 
   lockpicking: {
+    text: `Open locks, via lockpicks`,
     stat: "cool",
   },
+  
+  perception: {
+    text: `Notice clues, secrets, read and understand the your environment.`,
+    stat: "sharp",
+  },
 
+  'martial arts': {
+    text: `Fight with bare hands and feet, deliver powerful kicks.`,
+  },
+  
   // "absent-minded": {
   //   sharp: +1,
   //   initiative: PENALTY,
@@ -75,4 +83,19 @@ const TRAITS = {
   initiative: {
     stat: "cool",
   },
-};
+}
+
+const OTHER_KEYWORDS = {
+  'character points': {
+    text: `One can purchase stats or traits from character points. One can distribute a certain amount of cps at each level-up.`
+  },
+  'level': {
+    text: `Measures your overall experience. Does not directly influence any stat values or tests, but rather an abstract measure of how experienced one is; more experienced characters have higher stat values and more traits and thus more likely to succeed on tests.`
+  },
+  'equipment': {
+    text: `Weapons you wield, armour you wear and all other items you have readied for immediate use.`
+  },
+  'inventory': {
+    text: `Items you are carrying.`
+  },
+}

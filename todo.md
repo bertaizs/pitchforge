@@ -5,19 +5,17 @@
 
 ## core
 
-* doors
-  <!--- open/close-->
-  - unlock/lock
-  - force
-  - pick lock
+* top menu: refresh, restart, charsheet, quests, levelup???
 
-* stealth
+* cp icon
 
-* work panel should display clickable/colored entities
-
-* second operand of verbs
-  - use selector for text operands
-  - allow unlimited operands???
+* char creator
+  - respec
+  - levelup
+    - should not be able to distribute more points 
+    - block increase if no points available
+    - should not be able to remove points below minimum
+  - go to respec/levelup as a creation step
 
 * non-turn ending commands
   * charsheet
@@ -25,6 +23,20 @@
   * quests
   * options
 
+* player death / end of game
+  * ~~quest results
+
+* doors
+  - show on description if a door is open or closed
+  - keys
+  - force
+
+* stealth
+
+* proceed with work panel clickable/colored entities
+
+* second operand of verbs
+  - use selector for text operands
 
 ## core, but next release
 * equipment
@@ -32,25 +44,28 @@
 
 * create trait for non-turn ending examine
 
-
 ## rules
 
-* should not be able to respec if no character points!
+initiative: revisit as it does not help now ???
+  - if X enters a location, other entities should not be able to react to them if they are after them in initiative order
 
 ??? spec required --> full value if spec, otherwise penalty
 ??? spec not required --> spec not taken into account? minor bonus only?
 
 ## interface
 
-* hide explanation on new click
-* properly explain performance too, not just stats
-
+* explanations
+  * hide explanation on new click
+  * properly explain performance too, not just stats
+  
 * consistent coloring of charsheet text
 
 ## nice to have
 
 * character generator
   - add hobby
+
+* allow unlimited operands for verbs ???
 
 
 ---

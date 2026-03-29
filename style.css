@@ -27,12 +27,16 @@ a.entity {
     color: red !important;
 }
 
-a.path {
+.party {
+    color: royalblue !important;
+}
+
+.path {
     color: lightgreen;
     /*text-decoration: dotted underline;*/
     cursor: pointer;
 }
-a.path:hover {
+.path:hover {
     text-decoration: underline;
 }
 
@@ -181,8 +185,34 @@ img.combat_icon {
 	}
 }
 
+#menu {
+    top:0px; right: 0px;
+    margin-right: 2em;
+    margin-top: 6px;
+    position: absolute;
+    color: darkslategray;
+}
+    .menuitem {
+        color: darkslategray;
+    }
+    .menuitem:hover {
+        color: blue;
+    }
+
 #work {
     margin-left: 1em;
     padding-left: 1em;
+    /*border-left-color: linear-gradient(to right, red, orange);*/
+    /*border: 2px solid darkslategray;*/
+    /*border-radius: 1em;*/
+    margin-bottom: 6px;
     border-left: 6px solid  darkslategray;
+}
+
+.keyword {
+    /*text-decoration: dotted purple underline;*/
+    color: darkgray;
+    /*text-decoration: underline dashed;*/
+    /*color: */
+    /*font-style: italic;*/
 }

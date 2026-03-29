@@ -24,6 +24,13 @@
 
     <div id="title">title</div>
     
+    <div id="menu">
+        <span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> |
+        <span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', op1: player, quick: true}))">character</span> |
+        <span class="menuitem" onclick="ui.refresh()">refresh</span> |
+        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
+    </div>
+    
     <div id="output" name="output">
         <div id="work" style=""></div>
         <div id="main" style="border: 0px solid blue; margin-bottom: 15px;">main</div>
