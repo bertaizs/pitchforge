@@ -201,10 +201,12 @@ class Game {
           options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn.`)
           current_entity.act()                  
         }
-        else
-          ui.add_event(`${this} is stunned.`)
+        else {
+          ui.text({location: this.get_location()}, this, ` is stunned.`)
+          // ui.add_event(`${this} is stunned.`)           
+        }
       }
-            
+   
       current_entity = this.next_entity()  // proceed to next entity
     }
     current_entity.tick()
@@ -393,20 +395,20 @@ game.add_trigger(
       let door = cmd.op1
       
       if( door.is('locked') ) {
-        ui.add_event(ui.e(door)+` is locked.`)
+        ui.text(door, ` is locked.`)
         return true
       }
       
       if( door.is('open') ) {
         door.remove_tag('open')
         door.set_tag('closed')
-        ui.add_event(`${cmd.who} closes ${door}.`)
+        ui.text(cmd.who, ` closes `, door)
         return true
       } else 
       if( door.is('closed') && !door.is('locked') ) {
         door.remove_tag('closed')
         door.set_tag('open')
-        ui.add_event(`${cmd.who} opens ${door}.`)
+        ui.text(cmd.who, ` opens `, door)
         return true
       }
     }
@@ -423,14 +425,14 @@ game.add_trigger(
       if( cmd.who.test('lockpicking', 
           cmd.op2.performance('cool')   ) ) {
         cmd.op2.remove_tag('locked')
-        ui.add_event(ui.e(cmd.who) + ` has picked the lock on `+ui.e(cmd.op2))
+        ui.text(cmd.who, ` has picked the lock on `, cmd.op2)
         return true
       } else {
-        ui.add_event(ui.e(cmd.who) + ` failed to pick the lock on `+ui.e(cmd.op2))
+        ui.text(cmd.who, ` failed to pick the lock on `, cmd.op2)
         return true
       }
 
     }
-    ui.add_event(ui.e(cmd.op2)+` is not locked.`)
+    ui.text( cmd.op2, ` is not locked.`)
     return true
   } )

@@ -659,7 +659,10 @@ class UI {
       }
       
       if( 'type' in event == false ) throw `adding event without a type ${event}`
-      options.log_events && console.log(event)
+      if( 'plaintext' in event)
+        options.log_events && console.log(event.plaintext)
+      else
+        options.log_events && console.log(event)
       this.events.push(event)
     }
     
@@ -675,15 +678,21 @@ class UI {
       console.log(event)
       
       let txt = ``
+      let plain_text = ``
       for( let arg of args ) {
         if(txt || event.whitespace) txt+= " "
-        if( arg instanceof Entity )
+        if( arg instanceof Entity ) {
           txt+= ui.e(arg)
+          plain_text += arg.get_name()+`#${arg.id}`
+        }
         else
-        if( typeof arg == 'string' )
+        if( typeof arg == 'string' ) {
           txt+= arg
+          plain_text += arg          
+        }
       }
       event.text = txt
+      event.plaintext = plain_text
       
       ui.add_event(event)
     }
