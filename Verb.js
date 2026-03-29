@@ -117,17 +117,18 @@ new Verb({
   sortkey: 1,
 })
 
-// new Verb({
-//   name: 'move',    prep: 'to',
-//   type: 'debug',
-//   test: false,
-//   op1: true,
-//   debug: true,
-//   on_success: function(cmd) {
-//     cmd.who.move_to(cmd.op1)
-//     ui.add_event(`${cmd.who} moves to ${cmd.op1}.`)
-//   },
-// })
+new Verb({
+  name: 'talk',        prep: 'to',
+  icon: '💬',
+  text: `Talk to another character.`,
+  type: 'action',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    ui.add_event(`There is no response.`)
+  },
+  sortkey: 3,
+})
 
 //
 // COMBAT
@@ -286,14 +287,14 @@ new Verb({
   name: 'use',
   icon: '🔧',
   text: `Try to find a way to use an item. Try pushing or pulling it, turning it on. If it can be opened, then try opening it. If not, then try closing it. If it can be eaten, you will eat it.`,
-  type: 'inventory',
+  type: 'action',
   test: false,
   op1: true,    separator: 'and',
   op2: true,
   on_success: function(cmd) {    
     ui.add_event(`This does not seem to work.`)
   },
-  sortkey: 0,
+  sortkey: 2,
 })
 
 new Verb({
@@ -313,7 +314,7 @@ new Verb({
   name: 'give',
   icon: '🎁',
   text: `Give and item to someone.`,
-  type: 'inventory',
+  type: 'action',
   test: false,
   op1: true,    separator: 'to',
   op2: true,
@@ -333,7 +334,7 @@ new Verb({
     ui.add_event(`${cmd.who} gives ${cmd.op1} to ${cmd.op2}.`)
     cmd.op1.move_to(cmd.op2)
   },
-  sortkey: 7,
+  sortkey: 4,
 })
 
 
@@ -369,7 +370,7 @@ new Verb({
     ui.add_event(`${owner} noticed that ${cmd.who} was trying to steal ${cmd.op1}!`)
     ui.add_event(`${owner} is angry!`)
   },
-  sortkey: 1,
+  sortkey: 5,
 })
 
 new Verb({
