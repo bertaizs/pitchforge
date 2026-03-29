@@ -798,7 +798,8 @@ let the_staff = new Entity({
   let keyring = new Entity({
     name: "butler's keyring",
     tags: ['key', 'item'],
-    description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`
+    description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`,
+    location: the_staff,
   })
 
   game.add_trigger(
