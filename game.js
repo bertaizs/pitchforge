@@ -473,7 +473,7 @@ game.add_trigger(
     return true
   } )
 
-// opening a door with a key
+// unlocking or locking a door with a key
 game.add_trigger(
   {verb: /use/, op1: /.*/, op2: /.*/},
   function(cmd) {
