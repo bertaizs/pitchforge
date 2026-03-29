@@ -79,7 +79,8 @@ new Verb({
   op1: true,
   debug: true,
   on_success: function(cmd) {
-    ui.add_event( ui.print_sheet(cmd.op1) )
+    // document.getElementById('work').innerHTML = ui.print_sheet(cmd.op1, cmd.p)
+    ui.add_event( ui.print_sheet(cmd.op1, cmd.p) )
   },
 })
 

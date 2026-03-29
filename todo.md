@@ -2,19 +2,15 @@
 ======
 
 ## bugs
+  - only increase is possible during level-up (part of infra is implemented)
 
 ## core
 
-* top menu: refresh, restart, charsheet, quests, levelup???
+* top menu: charsheet, quests, levelup???
 
 * cp icon
 
 * char creator
-  - respec
-  - levelup
-    - should not be able to distribute more points 
-    - block increase if no points available
-    - should not be able to remove points below minimum
   - go to respec/levelup as a creation step
 
 * non-turn ending commands

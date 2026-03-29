@@ -27,6 +27,8 @@ class Cmd {
         this.op2 ??= false
         if( this.op2 ) this.op2 = game.entity(this.op2)
         this.param ??= false
+        
+        this.p ??= {}
 
         this.separator ??= false
         

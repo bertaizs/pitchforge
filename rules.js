@@ -1,5 +1,7 @@
 console.log("init");
 
+const MAX_STAT = Infinity
+const MIN_STAT = -3
 const STATS = {
   tough: {
     icon: "⚔️", // 🦾💪⚔️ 🐉🦖🪨🔨⚓

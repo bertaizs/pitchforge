@@ -51,6 +51,15 @@ a.entity {
     font-weight: bold;
 }
 
+.keyword {
+    /*text-decoration: dotted purple underline;*/
+    color: darkgray;
+    /*text-decoration: underline dashed;*/
+    /*color: */
+    /*font-style: italic;*/
+}
+
+
 .btn {
   border: 0;
   line-height: 2.5;
@@ -197,6 +206,7 @@ img.combat_icon {
     }
     .menuitem:hover {
         color: blue;
+        cursor: pointer;
     }
 
 #work {
@@ -209,10 +219,6 @@ img.combat_icon {
     border-left: 6px solid  darkslategray;
 }
 
-.keyword {
-    /*text-decoration: dotted purple underline;*/
-    color: darkgray;
-    /*text-decoration: underline dashed;*/
-    /*color: */
-    /*font-style: italic;*/
+#main {
+        margin-bottom: 15px;
 }

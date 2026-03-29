@@ -231,16 +231,64 @@ class UI {
       return s
     } // print_look_around
     
+    sheet_click( stat, plusminus, entity ) {
+        entity = game.entity(entity)
+        entity.change_stat( stat, plusminus )
+        this.show_menu()
+        this.show_sheet( entity, {mode: ui.mode})
+    }
+
+    sheet_level_up( entity, params = {respec: true} ) {
+        entity = game.entity(entity)
+        entity.level_up( )
+        ui.show_sheet( entity, params )
+    }
+
+    show_sheet( entity, params = {} ) {
+        document.getElementById('work').innerHTML = this.print_sheet(entity, params)
+    }
+    
+    reset_stats(entity) {
+      for( let i in this.original_stats )
+        entity[i] = this.original_stats[i]
+    }
+    
+    can_modify_stat( entity, stat, change, params ) {
+      if( params.mode == 'standard' )   // no changes allowed in standard mode
+        return false
+      if( params.mode == 'edit' )       // any change is allowed in edit mode
+        return true
+      if( params.mode == 'respec' ) {   // legit changes only
+        if( change==-1 && entity[stat] > MIN_STAT ) {   // cannot decrease below minimum
+          return true
+        } else                                          // can only increase if enough cp
+        if( change==+1 && entity.cp >= Entity.cost_of_stat_point(entity[stat]+1) )
+          return true
+        return false
+      }
+      if( params.mode == 'level-up' ) { // legit changes only, cannot decrease below original value
+        if( change==-1 && entity[stat]>ui.original_stats[stat] ) {
+          return true          
+        } else
+        if( change==+1 && entity.cp >= Entity.cost_of_stat_point(entity[stat]+1) )
+          return true
+        return false
+      }
+    }
     
     print_sheet_stats( entity, params ) {
       let s = ``
+      params.mode ??= 'standard'
+      ui.mode = params.mode
       for( let i in STATS ) {
           s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
-          if( 'respec' in params ) {
-              s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `
-              s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
+          if( params.mode != 'standard' ) {
+            if( this.can_modify_stat(entity, i, +1, params) )
+              s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `              
+            if( this.can_modify_stat(entity, i, -1, params) )
+                s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
           }
-          s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
+          // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
           s+= `</td>`
           s+= `</tr>`
       }
@@ -300,6 +348,10 @@ class UI {
       
       // STATS
       if( perception > Test.EASY && entity.is_creature()) {
+        this.original_stats = {}
+        for(let stat in STATS)
+          this.original_stats[stat] = entity[stat]  // here we are NOT using Entity.get as we need the raw info
+        this.original_stats.cp = entity.cp
         s+= this.print_sheet_stats(entity, params)
       }
       
@@ -376,22 +428,6 @@ class UI {
       let s = ``      
       s+= this.print_look_around(game.get_player())
       document.getElementById('main').innerHTML = s
-    }
-
-    sheet_click( stat, plusminus, entity, params = {respec: true} ) {
-        entity = game.entity(entity)
-        entity.change_stat( stat, plusminus )
-        this.show_sheet( entity, params )
-    }
-
-    sheet_level_up( entity, params = {respec: true} ) {
-        entity = game.entity(entity)
-        entity.level_up( )
-        ui.show_sheet( entity, params )
-    }
-
-    show_sheet( entity, params = {} ) {
-        document.getElementById('work').innerHTML = this.print_sheet(entity, params)
     }
 
     explanation(exp) {
@@ -536,9 +572,23 @@ class UI {
     
     show_menu() {
       if(game.get_player_location().is('abstract'))
-        document.getElementById('menu').style.display = 'none'
-      else
-        document.getElementById('menu').style.display = 'block'
+        document.getElementById('menu').innerHTML = ''
+      else {
+        let s = ``
+        if( game.get_player().get('cp')>0 ) {
+          s+= `<span class="menuitem" style="color: gold;" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'level-up'}, quick: true}))">spend ${UI.icon('cp')+game.get_player().get('cp')} character points</span> |`  
+        }
+        if( options.debug ) {
+          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'respec'}, quick: true}))">full respec</span> |`
+          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> |`            
+        }
+        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> |`
+        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', op1: player, quick: true}))">quests</span> |
+        <span class="menuitem" onclick="ui.refresh()">refresh</span> |
+        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
+        `
+        document.getElementById('menu').innerHTML = s
+      }
     }
     
     show_commands() {
@@ -563,7 +613,7 @@ class UI {
         <span id="op2" class="cmd" >operand 1</span>
 
         &nbsp; <button class="btn" onclick="ui.exec()">⏎</button>
-        &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button>
+        <!-- &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button> -->
         </div>
         `
         
