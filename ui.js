@@ -85,7 +85,13 @@ class UI {
         throw `error when matching regexp: ${params.context}`
     }
     
-    let link = `<a class="entity${e.is_hostile_to(player) ? " hostile" : ""}" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
+    let extra_class = ''
+    if( e.is_party_member() )
+      extra_class = ' party'
+    if( e.is_hostile_to(player) )
+      extra_class = ' hostile'
+    
+    let link = `<a class="entity${extra_class}" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
     if( params.context ) {
       return params.context.replace( /\[.*\]/, link )
     }
@@ -576,16 +582,16 @@ class UI {
       else {
         let s = ``
         if( game.get_player().get('cp')>0 ) {
-          s+= `<span class="menuitem" style="color: gold;" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'level-up'}, quick: true}))">spend ${UI.icon('cp')+game.get_player().get('cp')} character points</span> |`  
+          s+= `<span class="menuitem" style="color: gold;" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'level-up'}, quick: true}))">spend ${UI.icon('cp')+game.get_player().get('cp')} character points</span> | `  
         }
         if( options.debug ) {
-          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'respec'}, quick: true}))">full respec</span> |`
-          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> |`            
+          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'respec'}, quick: true}))">full respec</span> | `
+          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> | `            
         }
-        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> |`
-        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', op1: player, quick: true}))">quests</span> |
-        <span class="menuitem" onclick="ui.refresh()">refresh</span> |
-        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
+        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> | `
+        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', op1: player, quick: true}))">quests</span> | 
+        <span class="menuitem" onclick="ui.refresh()">refresh</span> | 
+        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart ⏻</span>
         `
         document.getElementById('menu').innerHTML = s
       }

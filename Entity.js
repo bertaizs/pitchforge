@@ -231,6 +231,7 @@ class Entity {
     return this.is('item') || this.is('remains') || this.is('prop')
   }
   
+  // true if this entity can be picked up and carried in inventories
   is_takeable() {
     return this.is('item')
   }
@@ -239,18 +240,25 @@ class Entity {
     return (this.is('open') && this.is('container')) || this.is('remains')
   }
   
+  // true if this entity is active and can make actions
   is_up() { return this.is_character() }
   
-  is_player_controlled() {
-    // TODO...
+  //  true if this entity is controlled by the player
+  is_player_controlled() {  // TODO...
     return this.is('player')
   }
   
+  // true if this entity belongs to the player's party
+  is_party_member() { // TODO...
+    return this.is('player')
+  }
+  
+  // true if this entity is controlled by the computer
   is_machine_controlled() {
     return !this.is('player')
   }
   
-  // returns true if this entity and the other entity are hostiles
+  // true if this entity and the other entity are hostiles
   is_hostile_to(other_entity) {
     if(this.id == other_entity.id)
       return false    // no one is hostile to themselves :)

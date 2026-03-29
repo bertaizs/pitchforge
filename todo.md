@@ -6,35 +6,31 @@
 
 ## core
 
-* top menu: charsheet, quests, levelup???
+* top menu: quests, as non-turn ending command
 
-* cp icon
-
-* char creator
-  - go to respec/levelup as a creation step
-
-* non-turn ending commands
-  * charsheet
-  * levelup
-  * quests
-  * options
-
+  ### end of game
 * player death / end of game
   * ~~quest results
 
-* doors
+  ### doors
   - show on description if a door is open or closed
   - keys
   - force
 
-* stealth
 
-* proceed with work panel clickable/colored entities
 
+  ### talk to
 * second operand of verbs
   - use selector for text operands
 
+  ### etc
+  * proceed with work panel clickable/colored entities
+  * stealth
+
+
+
 ## core, but next release
+
 * equipment
   - handle other equipment too, not just weapons
 
@@ -56,12 +52,16 @@ initiative: revisit as it does not help now ???
   
 * consistent coloring of charsheet text
 
+* go to respec/levelup as a creation step
+
 ## nice to have
 
 * character generator
   - add hobby
 
 * allow unlimited operands for verbs ???
+
+* options?
 
 
 ---
@@ -83,8 +83,6 @@ items
 • chimney (prop)
 • silver knife
 • candelabra, silver
-
-levelup process
 
 
 dog
