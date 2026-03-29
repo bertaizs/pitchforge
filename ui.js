@@ -635,23 +635,19 @@ class UI {
       document.getElementById('cmd').innerHTML = s      
     }
     
-    // print_trait(trait) {
-    //   let trait_data, help_text
-    //   if( trait in TRAITS ) {
-    //     trait_data = TRAITS[trait]
-    //     help_text = TRAITS[trait].text
-    //     if( TRAITS[trait].stat )
-    //       help_text += ` (based on ${UI.icon(TRAITS[trait].stat)+TRAITS[trait].stat})`
-    //   } else {
-    //     trait_data = {}
-    //   }
-    //   let s = `<span class="help"></span>`
-    //   return s
-    // }
-    
     print_background( background ) {
-      let s = ``
+      let s = sentence( background.label+" starts with " )
+      let others = Object.keys( STATS ).concat( ["cp"] )
+      let s2 = ''
+      for( let x of others ) 
+        if( x in background ) {
+          if( s2 ) s2+= ", "
+          // s+= UI.icon(x)+x+": "+plusminus(background[x])
+          s2+= UI.keyword(x)+": "+plusminus(background[x])
+        }
+      s+= s2
       if( background.traits ) {
+        s+= `,<br/> and with `
         s+= background.traits.length>1 ? "traits: " : "trait: "
         s+= background.traits.map(x=>UI.keyword(x)).join(", ")
       }
@@ -660,16 +656,9 @@ class UI {
         s+= background.inventory.length>1 ? "items: " : "item: "
         s+= background.inventory.join(", ")
       }
-      let others = Object.keys( STATS ).concat( ["cp"] )
-      s+= `<br/>`
-      for( let x of others ) 
-        if( x in background ) {
-          if( s ) s+= " and "
-          // s+= UI.icon(x)+x+": "+plusminus(background[x])
-          s+= UI.keyword(x)+": "+plusminus(background[x])
-        }
-      return sentence( background.label+" starts with "+s+"." )
-    }
+      s+= "."
+      return s
+    } // end: print_background
     
     selector( id, options = {}, params = {} ) {
       params.label ??= (x)=>x        
@@ -679,7 +668,7 @@ class UI {
         s+= `<option value="${o}">${params.label(o, options)}</option>`
       s+= `</select>`
       return s
-    }
+    } // end: selector
     
     chargen_sheet(chargen = game.chargen) {
       let s = ``
@@ -699,30 +688,20 @@ class UI {
         s+= this.img(img, `style="width: 50px;" onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}'" `)
       }
 
-      s+= `<p>Through many years of sacrifice, you have learned to become `
+      s+= `<div>Through many years of sacrifice, you have learned to become `
       s+= this.selector( 'chr_background', game.character_backgrounds, {label: (x,y)=>(y[x].label || x)} )
       s+= `.`
+      s+= `</div>`
       s+= `<div id="chr_background_info">`
-      // throw "x"
-      // console.log(game.character_backgrounds)
       s+= ui.print_background(game.character_backgrounds[Object.keys(game.character_backgrounds)[0]])
       s+= `</div>`
-      s+= `</p>`
       
-      // TODO: do this via charsheet
-      // s+= `<table>`
-      // s+= ui.print_sheet_stats( game.get_player(), {respec: true} )
-      // s+= this.print_list(
-      //   [game.get_player().get('cp')],
-      //   {label: UI.keyword('character points'), display: UI.numfield }
-      // )
-      // s+= `</table>`
-      
+      // TODO: allow player to make changes, or distribute points here?      
       s+= `
-      <p><a class="path" onclick="game.chargen.start()">➡️onward!</a></p>
+      <p><a class="path" onclick="game.chargen.start()">➡️Onward! Let the adventure begin!</a></p>
       `
       return s
-    }
+    } // end: chargen_sheet
 
     // called when an event happens; the event is added into the event queue;
     // the event queue is displayed when the UI receives control

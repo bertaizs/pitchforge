@@ -308,7 +308,7 @@ game.character_backgrounds = {
     cool:   0,
     sharp:  0,
     charm:  0,
-    // traits: ['sneaking', 'lockpicking'],
+    // traits: ['bruiser'],
     inventory: ['crowbar', 'knife']  
   },
   secretAgent: {
@@ -335,11 +335,15 @@ game.character_backgrounds = {
     cool:   3,
     sharp:  1,
     charm:  0,
-    traits: ['crafting', 'lockpicking'],
+    traits: ['crafting', 'repair'],
     inventory: ['lockpicks', 'crowbar']
   },
   office_worker: {
     label: `office worker`,
+    tough:  0,
+    cool:   0,
+    sharp:  0,
+    charm:  0,
     cp: 10,
     inventory: ['red stapler']
   },
@@ -383,6 +387,14 @@ game.character_backgrounds = {
     charm:  2,
     cp: 3,
   },
+  // custom: {
+  //   label: `custom character`,
+  //   tough:  0,
+  //   cool:   0,
+  //   sharp:  0,
+  //   charm:  0,
+  //   cp: 10,
+  // },
 }
 
 
