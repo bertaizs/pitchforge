@@ -25,11 +25,15 @@
 
 ## revamped - story
 
+door to the cellar
+
 darkness
-- in basement
+- in cellar
 - light sources
 
 vampire's eyes lethal
+
+vamp godown process --> stunning
 
 secret door in basement
 
@@ -91,8 +95,15 @@ cemetery, ghost
 
 * create trait for non-turn ending examine
 
-initiative: revisit as it does not help now ???
+* initiative: revisit as it does not help now ???
   - if X enters a location, other entities should not be able to react to them if they are after them in initiative order
+
+<!--* figure rules for movement, initiative and 
+  attacks (if you enter, you always get auto-attacked)
+  + you get one move and one action in your turn; action ends turn
+    - solves dashing/running
+    - if you move when not in combat, you first end turn and then move?
+  - nope: set status for 'just entered'-->
 
 * second operand of verbs
   - use selector for text operands
@@ -102,7 +113,8 @@ initiative: revisit as it does not help now ???
   * properly explain performance too, not just stats
   
 * go to respec/levelup as a creation step
-  
+
+* safe in the study
   
 ## rules
 
@@ -122,8 +134,8 @@ initiative: revisit as it does not help now ???
 * options?
 
 
----
 
+# appendix
 
 doors
 • keyring - img
@@ -141,18 +153,4 @@ items
 • candelabra, silver
 
 
-dog
-
 generator, light, light switch
-
-vamp godown process
-
-
-# appendix
-
-<!--* figure rules for movement, initiative and 
-  attacks (if you enter, you always get auto-attacked)
-  + you get one move and one action in your turn; action ends turn
-    - solves dashing/running
-    - if you move when not in combat, you first end turn and then move?
-  - nope: set status for 'just entered'-->
