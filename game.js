@@ -448,3 +448,66 @@ game.add_trigger(
     ui.text( cmd.op2, ` is not locked.`)
     return true
   } )
+
+// forcing a door with a crowbar
+game.add_trigger(
+  {verb: /use/, op1: /crowbar/, op2: /.*/},
+  function(cmd) {
+    if( cmd.op2.is('locked') ) {
+      
+      let lock = cmd.op2
+      if( cmd.who.test('tough', 
+          cmd.op2.performance('tough')   ) ) {
+        cmd.op2.remove_tag('locked')
+        cmd.op2.remove_tag('closed')
+        cmd.op2.set_tag('open')
+        ui.text(cmd.who, ` has ripped `, cmd.op2, ` open!`)
+        return true
+      } else {
+        ui.text(cmd.who, ` failed to force `, cmd.op2, ` open.`)
+        return true
+      }
+
+    }
+    ui.text( cmd.op2, ` is not locked.`)
+    return true
+  } )
+
+// opening a door with a key
+game.add_trigger(
+  {verb: /use/, op1: /.*/, op2: /.*/},
+  function(cmd) {
+    let key = false, door = false
+    if( cmd.op1.is('locked') || cmd.op1.is('door') ) {
+      door = cmd.op1
+    }
+    if( cmd.op2.is('locked') || cmd.op2.is('door') ) {
+      door = cmd.op2
+    }
+    if( cmd.op1.is('key') ) {
+      key = cmd.op1
+    }
+    if( cmd.op2.is('key') ) {
+      key = cmd.op2
+    }
+
+    if( key && door ) {
+      if( door.key != key.id ) {
+        ui.text(key, ` is not the right key for `, door, `.`)
+        return true        
+      }
+      if( door.is(`locked`) ) {
+          ui.text(cmd.who, ` unlocks `, door, ` with `, key, `.`)
+          door.remove_tag('locked')
+          return true
+      } else {
+        ui.text(cmd.who, ` locks `, door, ` with `, key, `.`)
+        door.remove_tag('open')
+        door.set_tag('closed')
+        door.set_tag('locked')
+        return true
+      }
+    }
+    // ui.text( cmd.op2, ` is not locked.`)
+    return false
+  } )

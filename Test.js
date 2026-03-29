@@ -1,4 +1,5 @@
 class Test {
+  static AUTOPASS = -Infinity
   static CHILDSPLAY=-2
   static TRIVIAL = -1
   static MUNDANE =  0

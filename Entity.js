@@ -41,12 +41,16 @@ class Entity {
     } else {  // location
       this.tier ?? 2
     }
-    
+        
     if( this.is('locked') ) {
-      this.tough ??= Test.BASIC
+      this.tough ??= Test.ADVANCED
       this.cool ??= Test.BASIC
     }
 
+    if( 'key' in this ) {
+      this.key = game.entity(this.key).id
+    }
+    
     this.traits ??= {};
     this.status ??= {}
 
@@ -345,7 +349,12 @@ class Entity {
   toString() { return this.get_name() }
   
   get_description() {
-    return this.get('description')
+    let s = this.get('description') 
+    if( this.is('open') )
+      s+= `<p>${sentence(this.get_name())} is open.</p>`
+    if( this.is('closed') )
+      s+= `<p>${sentence(this.get_name())} is closed.</p>`
+    return s
   }
 
   get_interior_description() {

@@ -30,8 +30,7 @@ let player = new Entity({
     tags: ['player', 'character'],
     level: 1,
     icon: 'unknown_trenchcoat.png',
-    // icon: 'unknown_trenchcoat.png',
-    description: `You are the player of this small game.`,
+    description: `You are the player of this little game.`,
     tough:  0,
     cool:   0,
     sharp:  0,
@@ -74,36 +73,70 @@ let clearing_edge = new Entity({
   icon: 'forest_mansion_in_distance.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You see a clearing in the forest with a dilapidated mansion.</p>
-  <p>There is absolutely no point in going back into the forest. You would just die there among the ${ui.print_entity(trees)}.
+  `<p>You see a clearing in the forest. A dilapidated mansion stands in the middle of the clearing. Its dark windows eye you suspiciously. 
+  There is a stench of death and decay in the air, even the ${ui.e(trees)} around look dying.
+  </p>
+  <p>There is absolutely no point in going back into the forest. You would just die there among the trees.
   `,
   location_clues: [
-    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: 1} }),
+    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: Test.BASIC} }),
   ]
 })
 
-  let mansion_front_door = new Entity({
-    name: "Front Door",
-    tags: ['door', 'closed', 'locked'],
-    // icon: 'mansion_front.png',
-    description: `<p>A heavy wooden double door stands in the mansion's main entrance.</p>`,
-    location_clues: [
+  let copper_key = new Entity({
+    name: "copper key",
+    tags: ['item', 'key',],
+    description: `<p>The key is somewhat dirty but it can probably still work.</p>`,
+    clues: [
+      new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: Test.MEDIUM} }),
     ],
   })
 
+  let clue_knocking = new Clue({ text: `Knocking could be a way to get in, but may also draw unwanted attention.`, reqs: {sharp: Test.MEDIUM}, flag: '💡' })
+  let mansion_front_door_knocker = new Entity({
+    name: "knocker",
+    // tags: ['door', 'closed', 'locked'],
+    description: `<p>The knocker on the door forms the head of a bear, holding the ring you can knock with. You can <i>use</i> the knocker to knock, you know...</p>`,
+    clues: [
+      clue_knocking,
+    ],
+  })
+  let mansion_front_door = new Entity({
+    name: "front door",
+    tags: ['door', 'closed', 'locked'],
+    // icon: 'mansion_front.png',
+    tough: 4,
+    key: copper_key,
+    description: `<p>A heavy wooden double door stands in the mansion's main entrance. There is a ${ui.e(mansion_front_door_knocker, "knocker")} on the door. You may want to consider knocking..</p>`,
+    clues: [
+      new Clue({ text: `Considering the overall state of the mansion, this door looks surprisingly sturdy.`, reqs: {perception: Test.EASY} }),
+      clue_knocking,
+      new Clue({ text: ()=>{
+                              if( copper_key.get_location()==game.universe ) {
+                                copper_key.move_to(mansion_front)
+                                return `You find a ${ui.e(copper_key)} under the door mat.`
+                              } else return ''
+                            }, reqs: {perception: Test.ADVANCED} }),
+    ],
+  })
+  
 let mansion_front = new Entity({
   name: "In front of the Mansion",
   icon: 'mansion_front.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing in front of the dilapidated ${ui.e(mansion)}.
+  It has clearly seen better days; you can see holes in the roof. 
+  Some walls are made of wood, some others are made of stone but both are severely damaged.
   The forest is still near, its crooked ${ui.e(trees)} make you feel uncomfortable.
   So does the mansion.
   </p>
-  <p>A wooden ${ui.e(mansion_front_door, "double door")} leads into the mansion.</p>
   `,
   location_clues: [
-    new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': 1}}),
+    new Clue({text: ()=>`The ${ui.e(mansion_front_door, "front door")} leading into the mansion is ${mansion_front_door.is('open') ? "wide open" : "closed"}.`, reqs: {} }),
+    new Clue({text: `There is a ${ui.e(mansion_front_door_knocker,"knocker")} on the door.`, reqs: {'perception': Test.EASY}}),
+    new Clue({text: `Did this place belong to some very rich person? Was the home of a family? The mansion could support a couple of people and their servants.`, reqs: {'sharp': Test.EASY}}),
+    new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': Test.EASY}}),
   ],
 })
 

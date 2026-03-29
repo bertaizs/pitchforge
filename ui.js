@@ -172,7 +172,10 @@ class UI {
     }
     
     print_clue(clue) {
-      let s = `<p>${clue.flag+" "}${clue.text}</p>`
+      let text = clue.get_text()
+      let s = ''
+      if( text )  // if the clue has empty text, we return ''
+        s = `<p>${clue.flag+" "}${text}</p>`
       return s
     }
 
