@@ -471,6 +471,7 @@ game.add_trigger(
 game.add_trigger(
   {verb: /use/, op1: /.*/, op2: /.*/},
   function(cmd) {
+    if( cmd.op1==false || cmd.op2==false ) return false
     let key = false, door = false
     if( cmd.op1.is('locked') || cmd.op1.is('door') ) {
       door = cmd.op1

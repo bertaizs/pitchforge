@@ -695,6 +695,10 @@ new Entity({
     </i>
     `,
     location: mansion_roof,
+    clues: [
+      new Clue({text: `While most of the book is academic, there is a really practical advice which shines through all parts:<br/>
+        <i>By all means, do NOT look into the eyes of a vampire!</i>`, reqs: {sharp: Test.EASY} })
+    ],
 })
 
 let ladder = new Entity({
@@ -816,12 +820,18 @@ let vampire = new Entity({
     icon: 'vampire4.png',
     description: `A creature of darkness with ${ui.print_entity(vampire_eyes)}; this beast returned from the grave to drain your blood.`,
     faction: 'enemy',
-    tough:  10,
+    tough:  7,
     cool:   10,
     sharp:  6,
     charm:  8,
     traits: {},
     location: coffin_room,
+    act() {ui.text(`no actions for the vampire`)},
+    go_down() {
+      ui.text(`The `, vampire, ` falls on the ground. No mortal could survive this, but your foe is no mere mortal. The vampire regenerates; your attack just stunned it for a while.`)
+      vampire.add_status({name: 'stunned', timer: 3})
+      vampire.recover()
+    }
     // location: player_ship,
 })
 
@@ -829,16 +839,42 @@ let vampire = new Entity({
     {verb: /use/, op1: /stake/, op2: vampire},
     function(cmd) {
       if( vampire.is_up() ) {
-        ui.add_event(`${cmd.who} drives the stake through the heart of the vampire.`)
-        vampire.go_down()
+        ui.text(cmd.who,` drives the stake through the heart of the vampire, who collapses into a pile of ash.`)
+        // vampire.go_down() // cannot be used as it is special
+        vampire.remove_tag('character')
+        vampire.set_tag('remains')
+        vampire.name = "vampire's remains"
+        vampire.icon = 'ashes.png'
         vampire.description = `The dreadful creature of the night is now nothing but a pile of ash.`
         return true
       }  
-      ui.add_event(`The vampire is gone for good, there is no point in staking it again.`)
+      ui.text(`The vampire is gone for good, there is no point in staking it again.`)
       return true
     }
   )
 
+  game.add_trigger(
+    {verb: /examine/, op1: vampire_eyes, },
+    function(cmd) {
+      if( vampire.is_up() ) {
+        ui.text(`The vampire's eyes are peculiar... mesmerizing... You feel you must hold the creature's stare... forever...`)
+        if( cmd.who.test('resistance', Math.trunc(vampire.performance('charm')/2) ) ) {
+          cmd.who.take_damage({type: 'spirit', value: 3})
+          if( cmd.who.is_up() ) {
+            ui.text(`Summoning all your spiritual strength, you look away from the `, vampire, `'s eyes.`)
+          }
+          return true
+        } else {
+          ui.text(`You feel helpless as the `,vampire,` steps right next to you and reaches out to your neck with his fangs. The bite hurts just a little...`)          
+          cmd.who.go_down()
+          return true
+        }
+      }
+      throw `this should not happen, the vampire is already dead`
+    }
+  )
+  
+  
 let the_staff = new Entity({
     name: "the staff",
     tags: ['undead', 'construct', 'character'],

@@ -65,5 +65,6 @@ const TESTS = {
   'climbing': new Test({stat: 'cool', spec: 'climbing'}),
 
   'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),
+  'resistance': new Test({stat: "charm", spec: 'resistance'}),
 
 };
