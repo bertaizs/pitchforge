@@ -224,7 +224,7 @@ class Entity {
     return this.tags.includes(what)
   }
   
-  is_creature() { return this.is('character') }
+  is_creature() { return this.is('character') && !this.is('item') }
   is_character() { return this.is_creature() }
   
   is_location() { // if not specified otherwise, an Entity is a location
@@ -434,9 +434,10 @@ class Entity {
     if( param.ignore_armour )
       tier_diff = 0
     let damage = Math.max(param.value + tier_diff, 0)
-    ui.add_event(`${this} takes ${damage} points of damage.`)
+    ui.text( {location: this.get_location()}, this,` takes ${damage} points of ${UI.wicon(param.type)} damage.` )
+    console.log(param)
     this[param.type] -= damage
-    options.log_damage && console.log(`${this} takes ${damage} points of ${param.type} damage`)    
+    options.log_damage && console.log(`${this} takes ${damage} points of ${UI.wicon(param.type)} damage`)    
     
     // checking if damage causes a wound
     // the wound may make the entity go_down
@@ -448,7 +449,6 @@ class Entity {
     if( this[param.type] <= 0 )
       this.go_down()
     
-    // TODO: check if this Entity goes down
     return damage
   }
   
@@ -702,15 +702,19 @@ class Entity {
   } // Entity.exec
   
   act() {
-    let hostiles = this.list_hostiles_here()
+    if( !this.is_character() )    // only characters get to act by default
+      return false
+    
+    let hostiles = this.list_hostiles_here()  // auto-attack hostiles
     if( hostiles.length>0 ) {
       let target = hostiles[random(hostiles.length)]
-      // ui.add_event(`${this} attacks ${target}`)
-      
       game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
+      return true
     }
-    else
+    else {
       ui.add_event({text: `${this} passes.`, location: this.get_location()})
+      return false
+    }
   }
 
 } // Entity

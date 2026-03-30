@@ -220,7 +220,7 @@ class UI {
         
         s+= `<table>`        
         s+= this.print_list(
-          entities.filter(x=>x.is_creature()),
+          entities.filter(x=>x.is_creature() ),
           {label: "others", not_if_empty: true, display: ui.print_entity_ministatus}
         )
   
@@ -805,6 +805,7 @@ class UI {
       // game.end_player_turn()   // moved into game.exec
       ui.refresh()
       ui.show_events()
+      // document.getElementById('work').innerHTML += `<div style="border-bottom: 1px solid darkslategray;"></div>`
       // ui.scrollTo()
       // document.getElementById('output').style.display = 'block'
       document.getElementById('output').style.animation = "fadeIn 1s ease-in";

@@ -724,7 +724,40 @@ let ladder = new Entity({
       this.connect( game.universe, game.universe )
     }
 })
-  
+
+
+let idol = new Entity({
+    tags: ['item', 'character'],
+    name: "strange idol",
+    icon: 'idol.png',
+    description: `A chaotic, bizarre, decadent statue of a strange creature, with a combination of bat-wings, tentacles, eyes, teeth, claws all over it. 
+    Its body is covered with scale, fur, skin and feathers, it does not resemble anything you are familiar with and defies all the rules of biology, anatomy or even geometry.
+    There is no logic or symmetry in the creature, it stands as a mockery of everything you have known. 
+    The black obsidian statue has a chaotic and malign aura and radiates an eerie glow.`,
+    location: clearing_edge,
+    clues: [
+      new Clue({ text: `You have a very bad feeling about this idol. You fear touching it and you would like to be as far away from it as possible.`, reqs: {'sixth sense': Test.BASIC} }),
+      new Clue({ text: `You fear touching the idol and you would like to be as far away from it as possible. It is not safe to hold this... thing!`, reqs: {'sixth sense': Test.MEDIUM} }),
+      new Clue({ text: `This idol is a singularity, a focus of malign energy and the sheer hatred it radiates distorts reality. Knowing of its existence already hurts you. This status must be gone for good.`, reqs: {'sixth sense': Test.ADVANCED}, flag: true }),
+    ],
+    act() {
+      if( this.get_location()==game.get_player() ) {
+        ui.text(`You feel something is sucking you soul away.`)
+        game.get_player().take_damage({type: 'spirit'})
+      } 
+    }
+})
+
+game.add_trigger(
+  {verb: /examine/, op1: idol},
+  function(cmd) {
+    ui.text(`You feel mesmerized by the idol, lost in time and space; reality fades for a brief moment and you no longer know who or what you are, and cannot decide whether to cover in fear, run away, or bow down and worship this magnificent thing. You feel it is crushing your very soul; you struggle to move our eyes away.`)
+    cmd.who.take_damage({type: 'spirit'})
+    return false
+  }
+)
+
+
   game.add_trigger(
     {verb: /use/, op1: ladder},
     function(cmd) {
@@ -793,6 +826,9 @@ let the_staff = new Entity({
     traits: {},
     location: main_hall,
     // location: player_ship,
+    clues: [
+      new Clue({ text: `One of the arms of the creature is holding a keyring, this might be useful.`, reqs: {perception: Test.EASY}, flag: true }),
+    ]
 })
 
   let keyring = new Entity({
