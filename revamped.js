@@ -741,22 +741,49 @@ let idol = new Entity({
       new Clue({ text: `This idol is a singularity, a focus of malign energy and the sheer hatred it radiates distorts reality. Knowing of its existence already hurts you. This status must be gone for good.`, reqs: {'sixth sense': Test.ADVANCED}, flag: true }),
     ],
     act() {
-      if( this.get_location()==game.get_player() ) {
+      if( !this.is('remains') && this.get_location()==game.get_player() ) {
         ui.text(`You feel something is sucking you soul away.`)
         game.get_player().take_damage({type: 'spirit'})
       } 
+    },
+    go_down() {
+      this.name = 'crushed idol'
+      this.description = `Most of the malign radiation is gone, merely a shadow remains, as the evil idol has been destroyed.`
+      this.clues = []
+      this.set_tag('remains')
     }
 })
 
-game.add_trigger(
-  {verb: /examine/, op1: idol},
-  function(cmd) {
-    ui.text(`You feel mesmerized by the idol, lost in time and space; reality fades for a brief moment and you no longer know who or what you are, and cannot decide whether to cover in fear, run away, or bow down and worship this magnificent thing. You feel it is crushing your very soul; you struggle to move our eyes away.`)
-    cmd.who.take_damage({type: 'spirit'})
-    return false
-  }
-)
+  game.add_trigger(
+    {verb: /examine/, op1: idol},
+    function(cmd) {
+      if( !idol.is('remains') ) {
+        ui.text(`You feel mesmerized by the idol, lost in time and space; reality fades for a brief moment and you no longer know who or what you are, and cannot decide whether to cover in fear, run away, or bow down and worship this magnificent thing. You feel it is crushing your very soul; you struggle to move our eyes away.`)
+        cmd.who.take_damage({type: 'spirit'})        
+      }
+      return false
+    }
+  )
 
+  game.add_trigger(
+    {verb: /attack/, op1: idol},
+    function(cmd) {
+      ui.text(`You crush the evil idol.`)
+      idol.go_down()
+      return true
+    }
+  )
+
+  game.add_trigger(
+    {verb: /use/, op1: /woodsman's axe/, op2: idol},
+    function(cmd) {
+      ui.text(`You crush the evil idol.`)
+      idol.go_down()
+      return true
+    }
+  )
+  
+  
 
   game.add_trigger(
     {verb: /use/, op1: ladder},

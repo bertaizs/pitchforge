@@ -43,8 +43,6 @@ opening coffin
 
 cross
 
-idol
-
 car, escape
 
 roof, clues:
