@@ -192,6 +192,9 @@ class UI {
       if( typeof params != 'string') throw `only string params are supported in ui.img()`
       // TODO: support a hash here and map it, e.g. as {onclick: "alert(1)"}
       
+      if( options.picture_ext=='jpg' && filename.match(/png$/) )
+        filename = filename.replace( /png$/, 'jpg' )
+      
       return `<img class='${cl}' src="${options.pictures_location}/${filename}" ${params}></img>`
     }
     
