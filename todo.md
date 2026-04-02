@@ -1,15 +1,9 @@
 # todo
 ======
 
-  ## bugs
-  - only increase is possible during level-up (part of it is already implemented but not working)
-
 # mvp
 
 ## core
-
-### quests
-* top menu: quests, as non-turn ending command
 
 ### end of game
 * player death / end of game
@@ -31,17 +25,9 @@ darkness
 - in cellar
 - light sources
 
-vampire's eyes lethal
-
-vamp godown process --> stunning
-
 secret door in basement
 
-opening coffin
-
 ... some levelups
-
-cross
 
 car, escape
 
@@ -50,15 +36,13 @@ roof, clues:
   - escape route after idol destroyed
 
 ## wrapping
-
-- index page, introducing this
-- generate html for
-  - orc and the pie
-  - revamped :)
-  - game stub
-
+:)
 
 # future releases  
+
+## bugs
+  - only increase is possible during level-up (part of it is already implemented but not working)
+
 
 ## revamped story items
 
