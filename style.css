@@ -224,3 +224,17 @@ img.combat_icon {
 #main {
         margin-bottom: 15px;
 }
+
+#cmd {
+     margin-bottom: 15px; 
+     margin-top: 15px;
+}
+
+#expl {
+    display: none;
+}
+
+#debug {
+     margin-bottom: 15px; 
+     margin-top: 15px;
+}

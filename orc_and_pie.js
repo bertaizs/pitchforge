@@ -3,7 +3,6 @@ game.set_title("The orc and the pie (a very simple but classic adventure)")
 
 game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'examine'])
 
-
 let room = new Entity({
   name: "in the middle of somewhere",
   tags: ['start', 'location'],
@@ -89,7 +88,6 @@ game.add_trigger(
       return true
     }
     else {
-      // console.log(op1)
       cmd.op1.move_to(game.universe)
       let text = `Congratulations, you have eaten the pie and completed this game! 😁`
       ui.add_event(text)
@@ -98,5 +96,3 @@ game.add_trigger(
     }      
   }
 )
-
-// game.select_player(player)

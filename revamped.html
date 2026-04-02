@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>chargen</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="utils.js"></script>
+    <script src="options.js"></script>
+
+    <script src="Info.js"></script>
+    <script src="Test.js"></script>
+    <script src="rules.js"></script>
+    <script src="Entity.js"></script>
+    <script src="Path.js"></script>
+    <script src="Clue.js"></script>
+    <script src="Verb.js"></script>
+    <script src="Cmd.js"></script>
+    <script src="game.js"></script>
+
+    <script src="ui.js"></script>
+
+  </head>
+  <body ondblclick="javascript:ui.exec()" onclick="ui.click_somewhere()">
+
+    <div id="title">title</div>             <div id="menu">menu</div>
+    
+    <div id="output" name="output">
+        <div id="work"></div>
+        <div id="main">main</div>
+    </div>
+    <div id="cmd" >cmd</div>
+    
+    <div id="expl" >&nbsp;</div>
+    <div id="debug" ></div>
+
+  </body>
+  <script src="init.js"></script>
+<!-- the below points to the file defining the game; everything else can be standard -->
+  <script src="revamped.js"></script>
+  
+  <script>
+    game.run()    // starts main loop, returns when player is in control
+    ui.refresh()  // once player is in control, refresh the screen
+  </script>
+</html>
