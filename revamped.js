@@ -376,11 +376,11 @@ let cellar = new Entity({
   // prop
   let coffin = new Entity({
     name: "Coffin",
-    tags: ['closed', 'door'],
+    tags: ['closed', 'door', 'container'],
     icon: 'mansion_coffin.png',
-    // description: `<p></p>`,
+    description: `<p>A coffin...?</p>`,
     interior_description: 
-    `<p>A coffin...?</p>
+    `<p>You are inside a coffing??</p>
     `,
   })
   
@@ -668,6 +668,16 @@ new Entity({
     location: ladies_bedroom,
 })
 
+let cross = new Entity({
+    name: "cross",
+    tags: ['item'],
+    icon: 'cross.png',
+    description: `A simple cross.`,
+    location: well_bottom,
+})
+
+
+
 new Entity({
     tags: ['item', 'book'],
     name: "Vampire Slaying for Dummies",
@@ -738,7 +748,7 @@ let idol = new Entity({
     Its body is covered with scale, fur, skin and feathers, it does not resemble anything you are familiar with and defies all the rules of biology, anatomy or even geometry.
     There is no logic or symmetry in the creature, it stands as a mockery of everything you have known. 
     The black obsidian statue has a chaotic and malign aura and radiates an eerie glow.`,
-    location: clearing_edge,
+    location: coffin,
     clues: [
       new Clue({ text: `You have a very bad feeling about this idol. You fear touching it and you would like to be as far away from it as possible.`, reqs: {'sixth sense': Test.BASIC} }),
       new Clue({ text: `You fear touching the idol and you would like to be as far away from it as possible. It is not safe to hold this... thing!`, reqs: {'sixth sense': Test.MEDIUM} }),
@@ -825,14 +835,30 @@ let vampire = new Entity({
     sharp:  6,
     charm:  8,
     traits: {},
-    location: coffin_room,
-    act() {ui.text(`no actions for the vampire`)},
+    location: coffin,
+    act() {
+      if( this.get_location()==coffin && coffin.is('open') ) {
+        this.move_to(coffin_room)
+        ui.text(`A `,vampire,` rises from the coffin!<br/>
+          `+ui.img('vampire3.png'))
+        return true
+      }
+      
+      if( this.has_penalty() )
+        ui.text(vampire,` is reluctant to touch `,game.get_player(),` who smells garlic.`)
+      
+      this.autoattack()
+      
+      // ui.text(`no actions for the vampire`)
+    },
     go_down() {
       ui.text(`The `, vampire, ` falls on the ground. No mortal could survive this, but your foe is no mere mortal. The vampire regenerates; your attack just stunned it for a while.`)
       vampire.add_status({name: 'stunned', timer: 3})
       vampire.recover()
-    }
-    // location: player_ship,
+    },
+    has_penalty() {
+      return Boolean(game.get_player().has_status('smells garlic'))
+    },
 })
 
   game.add_trigger(
@@ -978,5 +1004,19 @@ game.add_trigger(
     cmd.who.add_status({name: `smells garlic`, timer: false})
     // Entity.spawn( 'garlic', cmd.who )
     return true
+  }
+)
+
+game.add_trigger(
+  {verb: /use/, op1: cross, op2: vampire},
+  function(cmd) {
+    if( cmd.who.spend({value: 1, type: 'spirit'}) ) {
+      ui.text(`The `,vampire,` backs off as you raise the `,cross,`. An immense force slams the vampire to the wall.`)
+      vampire.add_status({name: 'stunned', timer: 4})
+      // ui.text(`The `,vampire,` is brie fly stunned.`)
+      return true      
+    } else {
+      ui.text(`You do not feel confident to stand up against the `,vampire,`.`)      
+    }
   }
 )

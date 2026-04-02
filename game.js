@@ -79,8 +79,6 @@ class Game {
   }
   
   
-  
-
   // returns true if the cmd (Cmd) matches the pattern
   // pattern is created by game.add_trigger
   match( pattern, cmd ) {
@@ -110,39 +108,47 @@ class Game {
   }
 
   // old version, with limitation: if there are both op1 and op2, they can match in this order only, not if reversed
-  __match( pattern, cmd ) {
-    options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
-    for( let p of ['who', 'verb', 'op1', 'op2'] ) {
-      if( ! cmd.match( p, pattern[p] ) ) {
-        options.log_matching_details && console.log(`no match`)
-        return false
-      }
-    }
-    options.log_matching_details && console.log(`match!`)
-    return true
-  }
+  // __match( pattern, cmd ) {
+  //   options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
+  //   for( let p of ['who', 'verb', 'op1', 'op2'] ) {
+  //     if( ! cmd.match( p, pattern[p] ) ) {
+  //       options.log_matching_details && console.log(`no match`)
+  //       return false
+  //     }
+  //   }
+  //   options.log_matching_details && console.log(`match!`)
+  //   return true
+  // }
 
   
   // called when someone executes a command
   // - checks triggers
+  // - if no trigger is found, uses the default action for the verb
   // - calls entity.exec
+  // - ends turn if needed
   exec(cmd = ui.cmd) {
     if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
     cmd.validate()  // throws an exception if cmd is not 'valid'
     options.log_commands && console.log(`executing: `, cmd)
     
     // if any of the triggers match, execute the triggered actions
-    for( let trigger of game.triggers.sort((x,y)=>(x.sortkey-y.sortkey)) ) {
+    let triggers = game.triggers.sort((x,y)=>(x.sortkey-y.sortkey))
+    let i = 0
+    let action_triggered = false
+    while( !action_triggered && i<triggers.length ) { // go through each trigger until we trigger an action
+      let trigger = triggers[i]
       if( this.match(trigger.pattern, cmd) ) {
         options.log_matching && console.log(`match found: `, trigger.pattern, cmd)
-        let quit = trigger.action(cmd)
-        if( quit ) return false
+        action_triggered = trigger.action(cmd) // trigger returns true if a 'final' action is found
       }
+      i++
     }
-    // if none of the above matches, execute the default action
-    options.log_matching && console.log(`executing default command`)
-    this.get_current_entity().exec(cmd)
+    if( !action_triggered ) {   // if no action has been triggered, execute the default action
+      options.log_matching && console.log(`executing default command`)
+      this.get_current_entity().exec(cmd)      
+    }
     
+    // TODO: rework action economy and MOVES?????
     // check if the given cmd is turn ending for the player
     if( this.get_current_entity().id == game.get_player().id ) {
       let player = game.get_player()
@@ -180,6 +186,7 @@ class Game {
   
   // (re)builds the initiative order
   build_initiative_order() {
+    options.log_turn_start && console.log(`*** TURN starts ***`)
     return game.entities
               .filter(x=>(!x.is('abstract') && !x.is('universe')))
               .sort( (x,y)=>(y.performance('initiative')-x.performance('initiative') || x.id-y.id) )
@@ -194,25 +201,24 @@ class Game {
 
     let current_entity = this.get_current_entity()
     while( current_entity.is_machine_controlled() || current_entity.has_status('stunned') ) { 
-      options.log_entity_ticks && current_entity.tick()
+      current_entity.tick() // machine controlled entity's turn starts with tick
 
-      if( current_entity.is_character() && !options.npcs_passive ) {  // character's turn
+      if( !options.npcs_passive ) {
         if( !current_entity.has_status('stunned') ) {
-          options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn.`)
+          options.log_character_turns && current_entity.is_character() && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn.`)
           current_entity.act()                  
         }
         else {
-          ui.text({location: this.get_location()}, this, ` is stunned.`)
+          ui.text({location: current_entity.get_location()}, current_entity, ` is stunned.`)
         }
-      } 
-      else {  // item's turn
-        current_entity.act()
       }
    
       current_entity = this.next_entity()  // proceed to next entity
     }
-    current_entity.tick()
-    options.log_entity_ticks && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
+    
+    current_entity.tick() // player controlled entity's turn starts with tick
+    options.log_character_turns && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
+    // options.log_character_turns && console.log(`Handing control to user.`)
   } // main_loop
   
   run() { this.main_loop() }
@@ -380,6 +386,10 @@ game.character_backgrounds = {
     sharp:  1,
     charm:  4,
     traits: ['occultism', 'sixth sense', 'creepy'],
+    knowledge: {
+      'vampires': {slaying: `You can slay a vampire by driving a stake through their heart. They can also be slain if you incinerate them. Exposure to direct sunlight shall burn them.`},
+      'ghouls': {what: `Ghouls are stupid undead creatures.`, slaying: `Ghouls can be killed if you hit them hard.`},      
+    }
   },
   sandwichman: {
     label: `sandwichman`,

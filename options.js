@@ -14,8 +14,10 @@ options.log_test_results = false
 
 options.log_damage = true
 
-options.log_ticks = true
-options.log_entity_ticks = true
+options.log_turn_start = true       // log when a game turn starts (i.e. not entity's turn)
+// options.log_ticks = true
+options.log_entity_ticks = false     // log tick for every entity (incl. items, locations)
+options.log_character_turns = true  // log when a character's turn starts
 
 options.log_perception_on_charsheets = false
 
@@ -33,6 +35,9 @@ options.show_tags = true,
 
 options.debug = false    // debug mode
 
-options.npcs_passive = true // if true, npcs do not act
+options.npcs_passive = false // if true, npcs do not act
+options.no_ticks = false // if true, ticks/time is turned off
+
+options.show_full_knowledge = true  // quests/journal shows the full Info block as JSON
 
 options.show_events_at_other_locations = false

@@ -1,3 +1,10 @@
+// User Interface (UI)
+// this class has one instance: ui
+// UI/ui converts the data model into presentation/html, this one must contain all those routines that output html
+// - methods with print in their name return html as string
+// - methods with show/display in their name call a print method and write the output into a certain ID of the html web page document for the user
+// - ui.refresh() is the heart of this method, that calls the show/display methods and refresh the output
+// - when stuff happens, the data model puts events into an event queue, these are pulled out by UI/ui and displayed when the events can be shown to the user
 
 class UI {
   
@@ -42,6 +49,8 @@ class UI {
     this.show_commands()
     this.show_menu()
     this.display_cmd()
+    ui.show_events()
+
     window.scroll(0,0)
   }
 
@@ -433,6 +442,29 @@ class UI {
       return s
     } // print_sheet
     
+    print_quests() {
+      let s = ``
+      let knowledge = game.get_player().knowledge
+      for( let i in knowledge ) {
+        let info = knowledge[i]
+        s+= `<div>`
+          s+= `<b>${info.name}</b><br/>`
+          let t = info.summarize()
+          if( t.length>0 )
+            s+= `<ul>`+t.map(x=>`<li>${x}</li>`).join("\n")+`</ul>`
+          // s+= `<div>${info.get_text()}</div>`
+          if( options.show_full_knowledge )
+            s+= `<div>`+JSON.stringify(info)+`</div>`
+          s+= `<div>&nbsp</div>`
+        s+= `</div>`
+      }
+      return s
+    }
+    
+    show_quests() {
+      document.getElementById('work')
+    }
+    
     show_main() {
       let s = ``      
       s+= this.print_look_around(game.get_player())
@@ -592,7 +624,7 @@ class UI {
           s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> | `            
         }
         s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> | `
-        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', op1: player, quick: true}))">quests</span> | 
+        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', quick: true}))">quests</span> | 
         <span class="menuitem" onclick="ui.refresh()">refresh</span> | 
         <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart ⏻</span>
         `
@@ -658,6 +690,11 @@ class UI {
         if( s ) s+= " and "
         s+= background.inventory.length>1 ? "items: " : "item: "
         s+= background.inventory.join(", ")
+      }
+      if( background.knowledge ) {
+        if( s ) s+= " and "
+        s+= `knowledge of `
+        s+= Object.keys(background.knowledge).join(', ')
       }
       s+= "."
       return s
@@ -804,7 +841,7 @@ class UI {
       game.exec(cmd)
       // game.end_player_turn()   // moved into game.exec
       ui.refresh()
-      ui.show_events()
+      // ui.show_events()
       // document.getElementById('work').innerHTML += `<div style="border-bottom: 1px solid darkslategray;"></div>`
       // ui.scrollTo()
       // document.getElementById('output').style.display = 'block'

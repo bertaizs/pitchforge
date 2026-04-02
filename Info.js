@@ -7,60 +7,35 @@ class Info {
   constructor(value = {}, params = {}) {
     for( let i in value )
         this[i] = value[i]
-        
-    if( !('name' in this) ) throw `Info block needs a name` // Info.name identifies the subject of the info
-    // this.text ??= this.name                                 // Info.text shall be displayed when the info is displayed
-    // 
-    // all other attributes are custom (tag: value); values can be
-    // - strings - if a new value is acquired, it overwrites this
-    // - numeric - if a new value is required, it is added to this    
+    // if( !('name' in this) ) throw `Info block needs a name` // Info.name identifies the subject of the info
   }
   
-  // get_text() {
-  //   if( typeof this.text == 'string' )
-  //     return this.text
-  //   if( typeof this.text == 'function' )
-  //     return this.text()
-  //   throw `unable to get_text for ${this.name}`
-  // }
-  
-  summarize() { return this.name }
-  
-  // returns this info as text
-  get_text() {
-    if( 'text' in this && typeof this.text=='string' )
-      return this.text
-    return this.summarize()
+  // returns a list of printable data strings that can be displayed
+  summarize() {
+    let t = []
+    // for( let i of Object.keys(this).sort() )
+    for( let i in this )
+      if( typeof this[i]=='string' && !i.match(/^_/) )
+        t.push(this[i])
+    return t
   }
-  
-  // extends this Info with the info (tag=>value pairs) in attrs
+    
+  // extends this Info with the (tag=>value) pairs in attrs
   gain( attrs = {} ) {
     for( let i in attrs ) {
-      if( typeof attrs[i] == 'string' )
-        this[i] = attrs[i]      // if string, replace it
-      if( typeof attrs[i] == 'number' ) {
-        this[i] ??= 0
-        this[i] += attrs[i]     // if number, add it to the existing number
-      }
+      this[i] = attrs[i]
     }
     return this
   }
   
-  // true, if this Info contains AT LEAST as much info as in attrs
+  // true, if this Info contains all the tags in attrs
   contains( attrs = {} ) {
     for( let i in attrs ) {
       if( !(i in this) ) {
         return false
       }
-      else if( i!='name' || i!='text' ) {
-        if( typeof attrs[i] == 'string' && attrs[i]!=this[i] )
-          return false
-        else
-        if( typeof attrs[i] == 'number' && attrs[i]>this[i] )
-          return false
-      }
     }
     return true
-  } 
+  }
 
 } // class Info

@@ -85,6 +85,21 @@ new Verb({
 })
 
 new Verb({
+  name: 'quests',    // prep: 'of',
+  type: 'debug',
+  test: false,
+  op1: false,
+  debug: true,
+  on_success: function(cmd) {
+    // document.getElementById('work').innerHTML = ui.print_sheet(cmd.op1, cmd.p)
+    ui.add_event( ui.print_quests() )
+  },
+})
+
+
+
+
+new Verb({
   name: 'select',    prep: '',
   type: 'debug',
   test: false,

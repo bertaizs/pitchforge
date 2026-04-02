@@ -6,7 +6,7 @@ class Entity {
     else return 1
   }
   static stat_points_at_level_up(n) { return 3 }
-  static stat_penalty(n) { return Math.trunc(n/2) }
+  static stat_penalty(n) { return Math.round(n/2) } // this returns a penalty value, so we round UP from .5
   static stat_specialization_bonus(n) { return n }
 
   static max_id = 0;
@@ -76,6 +76,8 @@ class Entity {
       this.move_to(this.location, this.position)
       delete this.location
     }
+    
+    this.knowledge ??= {}
         
     // this.exits ??= []
     this.epithet ??= "";
@@ -422,6 +424,24 @@ class Entity {
     }
   }
   
+  // lose resource willingly, does not depend on damage tier
+  // cannot result in wounds or in this entity going down
+  spend(param={}) {
+    if( typeof param == 'number' )  param = {value: param}
+    param.value ??= 1
+    param.type ??= 'spirit'
+    
+    if( this.get(param.type)>=param.value ) {
+      this[param.type] -= param.value
+      ui.text(this,` spends ${param.value} points of ${UI.wicon(param.type)}.`)
+      return true
+    } else {
+      ui.text(this,` cannot afford spending ${param.value} points of ${UI.wicon(param.type)}.`)
+      return false
+    }
+  }
+  
+  // lose a resource involuntarily, this entity may receive wounds, may go down
   take_damage(param = {}) {
     if( typeof param == 'number' )  param = {value: param}
     param.value ??= 1
@@ -452,8 +472,11 @@ class Entity {
     return damage
   }
   
-  // clock ; this is called every turn
+  // clock ; this is called at the start of this entity's every turn
   tick() {
+    if( options.no_ticks ) return false
+    options.log_entity_ticks && console.log(`tick: ${this} (#${this.id})`)
+    
     for( let i in this.status ) {
       if(this.status[i].timer) this.status[i].timer--
       
@@ -513,8 +536,45 @@ class Entity {
         this[i] += background[i]
     if( 'cp' in background )
       this.cp += background.cp
+    
+    if( 'knowledge' in background )
+      for( let k in background.knowledge ) {
+        console.log(background.knowledge[k])
+        this.gain_knowledge( background.knowledge[k] ) 
+      }
 
     return this
+  }
+  
+  // adds the given info block to the knowledge of this entity
+  // parameter info can be: string, object, Info -- all will be converted to Info
+  gain_knowledge( info ) {
+    if( typeof info == 'string' )
+      info = new Info({name: info})
+    if( !(info instanceof Info) )
+      info = new Info(info)
+      // throw `Entity.gain_knowledge called with wrong parameter: `+knowledge
+    
+    let name = info.name
+    if(name in this.knowledge)
+      this.knowledge[name].gain(info)  // if there is knowledge on the given subject, the knowledge is extended
+    else
+      this.knowledge[name] = info  // if this entity does not know anything about the given subject, the knowledge is established
+  }
+  
+  // checks if this entity has certain knowledge
+  // true if this entity's knowledge block 'contains' the info block knowledge
+  // where 'contains' mean it contains at least the same info or more
+  has_knowledge( knowledge ) {
+    if( typeof knowledge == 'string' )
+      knowledge = new Info({name: knowledge})
+    // if( !(knowledge instanceof Info) )
+      // throw `Entity.has_knowledge called with wrong parameter: `+knowledge
+    if( typeof knowledge == 'object' && !(knowledge instanceof Info) )
+      knowledge = new Info(knowledge)
+    
+    let name = knowledge.name
+    return (name in this.knowledge) && this.knowledge[name].contains(knowledge)
   }
   
   // returns true if meets one of the requirement set_start_location
@@ -540,11 +600,18 @@ class Entity {
         if( i in STATS && req[i]>this.get(i) ) fail = true
         if( i in TESTS && req[i]>this.performance(i) ) fail = true
       }
-      // if(!fail) {
+      if(!fail) {
         for( let t in req.traits )
           if( !this.has_trait(t) )
             fail = true
-      // }
+
+        if( 'knowledge' in reqs ) {
+          if( reqs instanceof Info ) {
+            
+          }
+            // if( ! reqs.knowledge.)
+        }
+      }
       // if all is met in this req object, return true
       if( !fail ) return true
     }
@@ -595,16 +662,22 @@ class Entity {
     return Object.keys( VERBS ).filter(x=>VERBS[x].enabled && this.meets_requirements(VERBS[x].reqs))
   }
 
+  // true if this entity has penalty on the given test
+  has_penalty( test_name = false ) {
+    return false
+  }
+  
   // returns performance of this Entity for a Test
   // - can add additional parameters
   // - explain is used for returning how it is calculated
   performance(test, params = {}, explain = []) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
+    let penalty = false
     
     let n = this.get_best_stat(test.stat, explain);
     // console.log(explain)
-
+    
     // considering specializations
     let spec = false
     for( let i in test.spec )
@@ -625,9 +698,18 @@ class Entity {
         explain.push({value: diff, label: `${status.name}: ${diff}`})
       }
     }
-
+    
     // todo: consider items ?
 
+    // considering penalties
+    if( this.has_penalty(test.get_name()) )
+      penalty = true
+    if( penalty ) {
+      let penalty_value = Entity.stat_penalty(n)
+      explain.push({value: penalty_value, label: `penalty: (${penalty_value})`})
+      n -= penalty_value
+    }
+    
     // considering randomization: rolls two dice, substracts one from the other (todo: advantage / disadvantage)
     if( 'randomize' in test ) {
       let die_plus = die_roll()
@@ -701,20 +783,28 @@ class Entity {
     return event
   } // Entity.exec
   
-  act() {
-    if( !this.is_character() )    // only characters get to act by default
-      return false
-    
+  
+  // this entity picks a hostile target and attack it
+  autoattack() {
     let hostiles = this.list_hostiles_here()  // auto-attack hostiles
     if( hostiles.length>0 ) {
       let target = hostiles[random(hostiles.length)]
       game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
       return true
-    }
-    else {
-      ui.add_event({text: `${this} passes.`, location: this.get_location()})
+    }    
+    else {    // TODO: ?? move to act() ??
+      ui.add_event({text: `${this} has no target, passes.`, location: this.get_location()})
       return false
     }
+  }
+  
+  // called when the entity could act, if they want to
+  // this does what they want if they have a turn, are not stunned, etc.
+  act() {
+    if( !this.is_character() )    // only characters do something by default
+      return false
+    
+    this.autoattack()   // default action is an autoattack
   }
 
 } // Entity
