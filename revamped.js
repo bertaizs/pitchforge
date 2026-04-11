@@ -1020,3 +1020,26 @@ game.add_trigger(
     }
   }
 )
+
+
+game.ending.description = function() {
+  let s = `<p>Your adventure has ended.</p>`
+  
+  if( game.get_player().is_up() ) 
+    s+= `<p>You have survived the adventure.</p>`
+  else
+  s+= `<p>You are dead.</p>`
+
+  if( !vampire.is_up() )
+    s+= `<p>You have successfully destroyed the vampire.</p>`
+  else
+  s+= `<p>The vampire still rules the mansion.</p>`
+
+  if( idol.is('remains') )
+    s+= `<p>You have vanquished the source of evil.</p>`
+  else
+  s+= `<p>You were unable to vanquish the evil that corrupted the mansion.</p>`
+
+  
+  return s
+}

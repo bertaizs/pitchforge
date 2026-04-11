@@ -235,6 +235,10 @@ class Game {
     options.log_player_turn_milestones && console.log(`${player}'s turn resets`)
     player.moves = 1
   }
+  
+  end_game() {
+    this.get_player().move_to(game.ending)
+  }
     
 }
 
@@ -252,6 +256,14 @@ game.universe = new Entity({
   tags: ['location', 'universe'],
   description: `The universe is an abstract entity you are not supposed to interact with directly; you should never be seeing this ingame.`}
 )
+
+game.ending = new Entity({
+  name: "The End",
+  tags: ['abstract', 'location'],
+  description: function() {   // redefine to reflect on what has happened and what the player has accomplished
+    return `This is the end of the game, thanks for playing!`
+  },
+})
 
 
 //

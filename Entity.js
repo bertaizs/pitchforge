@@ -22,8 +22,8 @@ class Entity {
     this.tags ??= [];
     
     this.description ??= false;    // can be seen when looking at the entity (or on charsheet)
-    this.interior_description ??= this.description       // can be seen when inside the entity
-    this.location_description ??= this.interior_description
+    // this.interior_description --> not initialized here, but Entity.get() defaults to description
+                                   //  can be seen when inside the entity
     
     this.clues ??= []
     this.location_clues ??= []
@@ -334,6 +334,9 @@ class Entity {
       else
         return this.get('tier')
     }
+    if(x=='interior_description') { // && there is no such field (implicit)
+      return this.get('description')
+    }
     
     throw `don't know how to get ${x}`;
   }
@@ -421,6 +424,9 @@ class Entity {
       this.remove_tag('character')
       this.set_tag('remains')
       this.name += "'s remains"      
+    }
+    if( this.is('player') && options.end_game_on_player_down ) { // TODO: check if ALL players went down
+      game.end_game()
     }
   }
   

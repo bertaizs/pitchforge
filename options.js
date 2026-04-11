@@ -5,7 +5,7 @@ options.pictures_location = 'pics/'
 if(String(document.location).match(/^https/))
   options.pictures_location = 'https://storage.googleapis.com/static-revamped-berta-hu/pics'
 // options.pictures_location = 'https://storage.googleapis.com/static-revamped-berta-hu/pics/'
-options.picture_ext = 'jpg'
+options.picture_ext = 'png'
 
 options.log_clicks_on_verbs = true
 options.log_clicks_on_entities = true
@@ -32,7 +32,7 @@ options.log_commands = true
 options.log_player_turn_milestones = true
 options.log_events = true       // also log anything outputted as an event
 
-options.show_tags = true,
+options.show_tags = true
 
 
 
@@ -40,6 +40,8 @@ options.debug = false    // debug mode
 
 options.npcs_passive = false // if true, npcs do not act
 options.no_ticks = false // if true, ticks/time is turned off
+
+options.end_game_on_player_down = true
 
 options.show_full_knowledge = true  // quests/journal shows the full Info block as JSON
 

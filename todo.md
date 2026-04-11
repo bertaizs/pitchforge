@@ -80,6 +80,8 @@ cemetery, ghost
 * initiative: revisit as it does not help now ???
   - if X enters a location, other entities should not be able to react to them if they are after them in initiative order
 
+### save and load game
+
 <!--* figure rules for movement, initiative and 
   attacks (if you enter, you always get auto-attacked)
   + you get one move and one action in your turn; action ends turn
