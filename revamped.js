@@ -673,6 +673,13 @@ new Entity({
 
 new Entity({
     tags: ['item'],
+    name: "almost accurate Earth globe",
+    description: `Interesting Earth globe, it has 'most' of the continents, mostly at the right place.`,
+    location: study,
+})
+
+new Entity({
+    tags: ['item'],
     name: "broken doll",
     description: `Someone has committed horrible things to this doll.`,
     location: ladies_bedroom,
@@ -774,7 +781,7 @@ let ham = new Entity({
   name: 'a ham',
   icon: 'ham.png',
   description: 'A delicious-looking ham.',
-  location: clearing_edge,
+  location: pantry,
   clues: [
     new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': Test.BASIC} }),
     new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': Test.MEDIUM} }),
@@ -785,7 +792,28 @@ let ham = new Entity({
     {verb: /consume|use/, op1: ham, op2: /knife|^$/},
     function(cmd) {
       ui.text(`You eat the ham. Finally, some food!`)
-      ham.destroy()
+      cmd.op1.destroy()
+      cmd.who.level_up()
+    },
+  )
+
+let whisky = new Entity({
+  tags: ['item', 'consumable'],
+  name: 'a bottle with mysterious liquid',
+  icon: 'whisky.png',
+  description: 'A bottle with some mysterious liquid inside. The label has been removed from the bottle.',
+  location: study,
+  clues: [
+    new Clue({ text: `It smells like alcohol...`, reqs: {'perception': Test.MUNDANE} }),
+    new Clue({ text: `This is definitely whisky! Some <i>very good</i> whisky!`, reqs: {'perception': Test.MEDIUM} }),
+  ],  
+})
+
+  game.add_trigger(
+    {verb: /consume|use/, op1: whisky, op2: /^$/},
+    function(cmd) {
+      ui.text(`The whisky burns your throat but gives you new strength!`)
+      cmd.op1.destroy()
       cmd.who.level_up()
     },
   )

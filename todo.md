@@ -123,7 +123,6 @@ doors
 • keyring - img
 
 items
-• whisky - img
 • broken samurai sword
 • broken pot
 • almost accurate earth globe
