@@ -539,6 +539,15 @@ new Entity({
 }, {template: 'lockpicks'} )
 
 new Entity({
+    name: "toolkit",
+    tags: ['tool', 'item'],
+    // icon: 'lockpicks.png',
+    description: `Various tools: screwdrivers, wrenches, hammers, etc.`, // hook pick
+}, {template: 'toolkit'} )
+
+
+
+new Entity({
     name: "crowbar",
     tags: ['tool', 'weapon', 'item'],
     icon: 'crowbar.png',
@@ -632,6 +641,7 @@ Entity.spawn( 'ghoul', shed )
 
 Entity.spawn( 'knife', kitchen )
 Entity.spawn( 'knife', shed )
+Entity.spawn( 'toolkit', shed )
 Entity.spawn( 'magnifying glass', study )
 Entity.spawn( "doctor's bag", master_bedroom )
 
@@ -739,6 +749,47 @@ let ladder = new Entity({
     }
 })
 
+  game.add_trigger(
+    {verb: /use/, op1: ladder, op2: /mansion|^$/},
+    function(cmd) {
+      if( cmd.who.get_location() == mansion_left || cmd.who.get_location() == mansion_right ) {
+        ui.add_event(`You lean the ladder against the wall.`)
+        ladder.move_to( cmd.who.get_location(), `A [ladder] has been leaned against the wall.` )
+        ladder.connect( cmd.who.get_location(), mansion_roof )
+        return true
+      }
+      if( cmd.who.get_location() == well ) {
+        ui.add_event(`You slip the ladder into the well, it now reaches the bottom.`)
+        ladder.move_to(well, `There is a [ladder] leading down into the well.`)
+        ladder.connect( well_bottom, well )
+        return true
+      }
+      ui.add_event(`There is no point in using the ladder here.`)
+      return true
+    }
+  )
+  
+let ham = new Entity({
+  tags: ['item', 'consumable'],
+  name: 'a ham',
+  icon: 'ham.png',
+  description: 'A delicious-looking ham.',
+  location: clearing_edge,
+  clues: [
+    new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': Test.BASIC} }),
+    new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': Test.MEDIUM} }),
+  ],  
+})
+
+  game.add_trigger(
+    {verb: /consume|use/, op1: ham, op2: /knife|^$/},
+    function(cmd) {
+      ui.text(`You eat the ham. Finally, some food!`)
+      ham.destroy()
+      cmd.who.level_up()
+    },
+  )
+  
 
 let idol = new Entity({
     tags: ['item', 'character'],
@@ -799,25 +850,7 @@ let idol = new Entity({
   
   
 
-  game.add_trigger(
-    {verb: /use/, op1: ladder},
-    function(cmd) {
-      if( cmd.who.get_location() == mansion_left || cmd.who.get_location() == mansion_right ) {
-        ui.add_event(`You lean the ladder against the wall.`)
-        ladder.move_to( cmd.who.get_location(), `A [ladder] has been leaned against the wall.` )
-        ladder.connect( cmd.who.get_location(), mansion_roof )
-        return true
-      }
-      if( cmd.who.get_location() == well ) {
-        ui.add_event(`You slip the ladder into the well, it now reaches the bottom.`)
-        ladder.move_to(well, `There is a [ladder] leading down into the well.`)
-        ladder.connect( well_bottom, well )
-        return true
-      }
-      ui.add_event(`There is no point in using the ladder here.`)
-      return true
-    }
-  )
+
 
 let vampire_eyes = new Entity({
     name: "red eyes",

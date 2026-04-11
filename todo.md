@@ -5,10 +5,6 @@
 
 ## core
 
-### end of game
-* player death / end of game
-  * ~~quest results
-
 ### talk to
 * single argument version
 
@@ -53,6 +49,8 @@ crafting lockpicks
 dog, can be freed
 
 cemetery, ghost
+
+### polish the end of game
 
 ## wrapping
 * generate pmrpg docs from help texts

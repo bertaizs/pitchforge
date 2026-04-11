@@ -23,6 +23,11 @@ a.entity {
     /*text-decoration: underline;*/
 }
 
+/* key messages related to the player's progress */
+.progress {
+    color: gold;
+}
+
 .hostile {
     color: red !important;
 }

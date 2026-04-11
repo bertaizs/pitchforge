@@ -501,6 +501,7 @@ class Entity {
     for (let i = 0; i < n; i++) {
       this.level++;
       this.cp += Entity.stat_points_at_level_up(this.level);
+      ui.text(`<span class="progress">`, this, ` has gained a level!</span>`)
     }
     return this;
   }

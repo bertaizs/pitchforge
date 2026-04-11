@@ -356,7 +356,7 @@ game.character_backgrounds = {
     sharp:  1,
     charm:  0,
     traits: ['crafting', 'repair'],
-    inventory: ['lockpicks', 'crowbar']
+    inventory: ['toolkit', 'crowbar']
   },
   office_worker: {
     label: `office worker`,
