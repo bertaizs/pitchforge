@@ -3,6 +3,24 @@
 
 # mvp
 
+## revamped - story
+
+door to the cellar
+  cellar key
+
+darkness
+- in cellar
+- light sources
+
+secret door in basement
+
+car, escape
+  car keys
+
+roof, clues:
+  - no escape route
+  - escape route after idol destroyed
+
 ## core
 
 ### talk to
@@ -12,24 +30,6 @@
 
 ### etc
   * proceed with work panel clickable/colored entities
-
-## revamped - story
-
-door to the cellar
-
-darkness
-- in cellar
-- light sources
-
-secret door in basement
-
-... some levelups
-
-car, escape
-
-roof, clues:
-  - no escape route
-  - escape route after idol destroyed
 
 ## wrapping
 :)
