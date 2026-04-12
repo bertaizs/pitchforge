@@ -27,7 +27,7 @@ let orc = new Entity({
     level: 1,
     description: `A bloodthirsty orc. It is thirsty for blood, but it is not hungry. Still, it has a pie. A yummy-yummy pie. This is an orc so it does not want to share.`,
     // epithet: "",
-    icon: 'orc1.jpeg',
+    icon: 'orc1.jpg',
     tough:  1,
     cool:   1,
     sharp:  1,
