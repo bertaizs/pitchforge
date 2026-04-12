@@ -1,11 +1,14 @@
 
 var options = {}
 
-options.pictures_location = 'pics/'
-if(String(document.location).match(/^https/))
-  options.pictures_location = 'https://storage.googleapis.com/static-revamped-berta-hu/pics'
-// options.pictures_location = 'https://storage.googleapis.com/static-revamped-berta-hu/pics/'
+options.pictures_location = 'pics'
 options.picture_ext = 'png'
+
+// check if running online
+if(String(document.location).match(/^https/)) {
+  options.pictures_location = 'https://storage.googleapis.com/static-files-revamped-berta-hu/pics'
+  options.picture_ext = 'jpg'
+}
 
 options.log_clicks_on_verbs = true
 options.log_clicks_on_entities = true
