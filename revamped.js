@@ -1264,7 +1264,7 @@ game.add_trigger(
   ui.text(`You knock on the mansion's door.`)
   if( the_staff.is_up() ) {
     ui.text(`You hear some movement from the outside, and after a while the door opens by an inch and an ${ui.e(butler, "elderly gentleman")} peeps at you.<br/>`,
-            ui.img('butler.png') ,
+            ui.img('butler_behind_door.png') ,
             `<i>Please leave. The master does not wish to be disturbed.</i>`
             )
     if( the_staff.knocked ) {
@@ -1282,17 +1282,16 @@ game.add_trigger(
 game.add_trigger(
   {verb: /talk/, op1: butler, op2: /^$/},
   function(cmd) {
-  // ui.text(`You knock on the mansion's door.`)
   if( the_staff.is_up() && the_staff.knocked ) {
     if( cmd.who.test('social', Test.EASY-the_staff.attitude) ) {
-      ui.text(ui.img('butler.png') ,
+      ui.text(ui.img('butler_behind_door.png') ,
               `<br/><i>Please come in, I shall announce your arrival to the master.</i>` )
-      ui.text(`He opens the mansion's door and lets you inside.`)
+      ui.text(`He moves away from the doorway, the mansion's door opens up and now you can enter.`)
       mansion_front_door.remove_tag('locked')
       mansion_front_door.remove_tag('closed')
       mansion_front_door.set_tag('open')
     } else {
-      ui.text(ui.img('butler.png') ,
+      ui.text(ui.img('butler_behind_door.png') ,
               `<br/><i>Please leave, tramps have absolutely no business here.` )
       ui.text(`He closes the door.`)
       the_staff.attitude--      
