@@ -5,10 +5,7 @@
 
 ## revamped - story
 
-door to the cellar
-  cellar key
-
-- destroy barrels with a crowbar (it now tries to force *open* them) --> make generic triggers run last
+knocking on the door
 
 car, escape
   car keys

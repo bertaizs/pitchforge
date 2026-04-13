@@ -83,6 +83,26 @@ let clearing_edge = new Entity({
   ]
 })
 
+let small_key = new Entity({
+  name: "small key",
+  tags: ['item', 'key',],
+  description: `<p>What lock will this key will open?</p>`,
+  clues: [
+    new Clue({ text: `The key does not look complicated, it probably opens some lock inside the mansion. Its simple design suggests it is less likely to open a bedroom door, rather a pantry or a cellar.`, reqs: {sharp: Test.ADVANCED, cool: Test.EASY} }),
+  ],
+})
+
+let cellar_door = new Entity({
+    name: "door to the cellar",
+    tags: ['door', 'closed', 'locked'],
+    // icon: 'mansion_front.png',
+    tough: 2,
+    cool: 2,
+    key: small_key,
+    description: `<p>This door leads down to the cellar below the mansion.</p>`,
+  })
+
+
   let copper_key = new Entity({
     name: "copper key",
     tags: ['item', 'key',],
@@ -91,7 +111,7 @@ let clearing_edge = new Entity({
       new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: Test.MEDIUM} }),
     ],
   })
-
+  
   let clue_knocking = new Clue({ text: `Knocking could be a way to get in, but may also draw unwanted attention.`, reqs: {sharp: Test.MEDIUM}, flag: '💡' })
   let mansion_front_door_knocker = new Entity({
     name: "knocker",
@@ -105,7 +125,8 @@ let clearing_edge = new Entity({
     name: "front door",
     tags: ['door', 'closed', 'locked'],
     // icon: 'mansion_front.png',
-    tough: 4,
+    tough: Test.ADVANCED,
+    cool: Test.MEDIUM,
     key: copper_key,
     description: `<p>A heavy wooden double door stands in the mansion's main entrance. There is a ${ui.e(mansion_front_door_knocker, "knocker")} on the door. You may want to consider knocking..</p>`,
     clues: [
@@ -116,7 +137,7 @@ let clearing_edge = new Entity({
                                 copper_key.move_to(mansion_front)
                                 return `You find a ${ui.e(copper_key)} under the door mat.`
                               } else return ''
-                            }, reqs: {perception: Test.ADVANCED} }),
+                            }, flag: true, reqs: {perception: Test.ADVANCED} }),
     ],
   })
   
@@ -324,7 +345,12 @@ let main_hall = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing in the main hall of the mansion.</p>
-  <p>A ${ui.print_entity(mansion_front_door, {label: "double door"})} leads to the outside.</p>
+  <p>There is a dining room next to the main hall, its door has been torn open, something huge must have come out through it... or maybe it went in.
+  There is another smaller room, with a destroyed door, it is probably a study of some sort.
+  </p>
+  <p>A ${ui.e(mansion_front_door, "double door")} leads to the outside.
+  There is a ${ui.e(cellar_door, "small door")} leading to the cellar below the mansion.</p>
+  <p>The staircase leading up to the gallery is in rather good shape, one may risk climbing it.</p>
   `,
 })
 
@@ -362,7 +388,7 @@ let pantry = new Entity({
       location: pantry,
       position: `[Braids of garlic] hang on the walls.`
   })
-
+  
   let secret_barrel = new Entity({
     name: "strange barrel",
     description: `You wonder why this huge barrel has been bolted to the far wall of the cellar. When you knock on it, it gives a hollow sound, so it is probably empty. This makes no sense.`,
@@ -399,7 +425,7 @@ let pantry = new Entity({
   
   
 let cellar = new Entity({
-  name: "Winecellar",
+  name: "winecellar",
   icon: 'mansion_cellar.png',
   // description: `<p></p>`,
   interior_description: 
@@ -408,6 +434,9 @@ let cellar = new Entity({
   You also see bottles of wine all over the cellar.
   This place has clearly been preserved in much better shape than the rest of the mansion.</p>
   `,
+  location_clues: [
+    new Clue({text: `You notice a secret passage inside one of the barrels!`, reqs: {perception: Test.MEDIUM},}),
+  ],
 })
 
   // prop
@@ -417,7 +446,7 @@ let cellar = new Entity({
     icon: 'mansion_coffin.png',
     description: `<p>A coffin...?</p>`,
     interior_description: 
-    `<p>You are inside a coffing??</p>
+    `<p>You are inside a coffin??</p>
     `,
   })
   
@@ -456,6 +485,7 @@ let master_bedroom = new Entity({
   `<p>Master Bedroom.</p>
   `,
 })
+master_bedroom.add(small_key)
 
 let ladies_bedroom = new Entity({
   name: "Bedroom",
@@ -502,6 +532,7 @@ let ladies_bedroom = new Entity({
   new Path({
     from: main_hall, 
     to: cellar, 
+    door: cellar_door,
     text: `go downstairs into the cellar`,
   }, {
     text: `walk up the stairs to go back to the main hall`,  
@@ -1050,6 +1081,19 @@ let the_staff = new Entity({
     description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`,
     location: the_staff,
   })
+  
+  game.add_trigger(
+    {verb: /use/, op1: keyring, op2: /door/},
+    function(cmd) {
+      if( cmd.op2.is('locked') ) {
+        ui.text(`Going through the keyring you eventually find the right key to open the lock on the `, cmd.op2, '.' )
+        cmd.op2.remove_tag('locked')
+        return true
+      }
+      ui.text(cmd.op2,` is not locked.`)
+      return true
+    }
+  )
 
   game.add_trigger(
     {verb: /move/, op1: study},
