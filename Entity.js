@@ -546,8 +546,8 @@ class Entity {
     
     if( 'knowledge' in background )
       for( let k in background.knowledge ) {
-        console.log(background.knowledge[k])
-        this.gain_knowledge( background.knowledge[k] ) 
+        // console.log(background.knowledge[k])
+        this.gain_info( background.knowledge[k] ) 
       }
 
     return this

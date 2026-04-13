@@ -218,9 +218,10 @@ class UI {
       s+= `<div class="description">${location.get_interior_description()}</div>`
       
       for( let clue of location.location_clues ) {
-        if( entity.meets_requirements(clue.reqs) && clue.enabled )
+        if( entity.meets_requirements(clue.reqs) && clue.enabled ) {
           s += this.print_clue(clue)
-          player.find_clue(clue)    // TODO: should not be in UI, but in the data model
+          player.find_clue(clue)    // TODO: should not be in UI, but in the data model          
+        }
       }
       
       if( ! entity.get_location().is('abstract') ) {
@@ -335,7 +336,6 @@ class UI {
       }
       s+= `</td><td style="vertical-align: top;">`
       
-      // let s = `<div>`
       s+= this.print_entity(entity)
       if( options.show_tags ) {
         s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
@@ -344,9 +344,10 @@ class UI {
       
       // TODO: the below refers to the player, while perception does not; this is inconsistent, let's fix it!
       for( let clue of entity.clues ) {
-        if( game.get_player().meets_requirements(clue.reqs) && clue.enabled )
+        if( game.get_player().meets_requirements(clue.reqs) && clue.enabled ) {
           s += this.print_clue(clue)
-          player.find_clue(clue)    // TODO: should not be in UI, but in the data model
+          player.find_clue(clue)    // TODO: should not be in UI, but in the data model          
+        }
       }
       
       // from here on, the sheet is viewed in a table

@@ -8,11 +8,7 @@
 door to the cellar
   cellar key
 
-darkness
-- in cellar
-- light sources
-
-secret door in basement
+- destroy barrels with a crowbar (it now tries to force *open* them) --> make generic triggers run last
 
 car, escape
   car keys
@@ -40,7 +36,7 @@ roof, clues:
   - only increase is possible during level-up (part of it is already implemented but not working)
 
 
-## revamped story items
+## revamped story
 
 restoring power
 
@@ -60,6 +56,10 @@ cemetery, ghost
   - makefile to generate these
 
 ## core function, in next release
+
+?? darkness
+- in cellar
+- light sources
 
 * weapon reqs, penalties
   weapon bonuses

@@ -398,10 +398,10 @@ game.character_backgrounds = {
     sharp:  1,
     charm:  4,
     traits: ['occultism', 'sixth sense', 'creepy'],
-    knowledge: {
-      'vampires': {slaying: `You can slay a vampire by driving a stake through their heart. They can also be slain if you incinerate them. Exposure to direct sunlight shall burn them.`},
-      'ghouls': {what: `Ghouls are stupid undead creatures.`, slaying: `Ghouls can be killed if you hit them hard.`},      
-    }
+    knowledge: [
+      { tag: 'slaying_vampires',
+        text: `As an occultist, you know how to slay creatures of the night. For example, ghouls are simple creatures, you just need to beat them and they go down. However, to slay a vampire you need to drive a stake through their heart. You can also destroy them if you incinerate them completely, either by fire or by exposure to direct sunlight.` }
+    ]
   },
   sandwichman: {
     label: `sandwichman`,

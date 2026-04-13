@@ -11,7 +11,7 @@ let gloomy_forest = new Entity({
   icon: 'forest.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>Who know how long you have been wandering in this dark, gloomy forest?
+  `<p>Who knows how long you have been wandering in this dark, gloomy forest?
   Was it hours or days? You have lost track of time for a while, 
   you are so hungry you kill for a burger or a glass of beer, 
   and you <i>really</i> need to sleep soon.</p>
@@ -363,13 +363,50 @@ let pantry = new Entity({
       position: `[Braids of garlic] hang on the walls.`
   })
 
+  let secret_barrel = new Entity({
+    name: "strange barrel",
+    description: `You wonder why this huge barrel has been bolted to the far wall of the cellar. When you knock on it, it gives a hollow sound, so it is probably empty. This makes no sense.`,
+    clues: [
+      new Clue({text: `When you push the lid of the barrel, it opens, and you see there is a secret passage inside it!`, flag: true,
+        reqs: {perception: Test.EASY},
+        info: new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) })
+    ],
+  })
+  
+  let barrels = new Entity({
+    name: "barrels",
+    description: `There are lots of barrels in this cellar, some big, some small, but none seem interesting.
+    However, there is a huge ${ui.e(secret_barrel, "strange barrel")} at the far end of the cellar, which looks very suspicious.`
+  })
+  
+  game.add_trigger(
+    {verb: /use/, op1: /axe/, op2: barrels},
+    function(cmd) {
+      ui.text(`It makes no sense in whacking those barrels. It would take time to break them and you would be swimming in wine.`)
+      return true
+    }
+  )
 
+  game.add_trigger(
+    {verb: /use/, op1: /axe/, op2: secret_barrel},
+    function(cmd) {
+      ui.text(`You break the empty barrel and reveal a secret passage inside!`)
+      barrels.description = `There are many barrels here. One of them is bolted to the wall at the far end of the cellar, it is broken open, and there is a hidden passage inside.`
+      cmd.who.gain_info( new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) )
+      return true
+    }
+  )
+  
+  
 let cellar = new Entity({
   name: "Winecellar",
   icon: 'mansion_cellar.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are in the winecellar under the mansion.</p>
+  `<p>You are in the winecellar under the mansion. People use winecellars to store their wine, so the cellar has many-many ${ui.e(barrels)} inside.
+  The barrels are lined up against the walls, both on the side and at the far end of the cellar.
+  You also see bottles of wine all over the cellar.
+  This place has clearly been preserved in much better shape than the rest of the mansion.</p>
   `,
 })
 
@@ -473,7 +510,7 @@ let ladies_bedroom = new Entity({
   new Path({
     from: cellar, 
     to: coffin_room, 
-    text: `explore a secret passage behind the barrels`,
+    text: `explore the secret passage behind the barrels`,
     reqs: [
       {perception: Test.MEDIUM},
       {knowledge: 'secret_passage'},
@@ -714,7 +751,7 @@ new Entity({
     `,
     location: ladies_bedroom,
     clues: [
-      new Clue({text: `The section about the secret passage is particularly interesting!`, 
+      new Clue({text: `The section about the secret passage is particularly interesting!`, flag: true, 
         info: new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) })
     ],
 })
@@ -817,6 +854,7 @@ let ham = new Entity({
     {verb: /consume|use/, op1: ham, op2: /knife|^$/},
     function(cmd) {
       ui.text(`You eat the ham. Finally, some food!`)
+      player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You found food, you are no longer hungry."})
       cmd.op1.destroy()
       cmd.who.level_up()
     },
@@ -893,7 +931,7 @@ let idol = new Entity({
   )
 
   game.add_trigger(
-    {verb: /use/, op1: /woodsman's axe/, op2: idol},
+    {verb: /use/, op1: /axe/, op2: idol},
     function(cmd) {
       ui.text(`You crush the evil idol.`)
       idol.go_down()
@@ -1037,6 +1075,8 @@ let dead_woodsman = new Entity({
 let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
 
+Entity.spawn( 'axe', shed, {name: "axe"} )
+
 let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] is stuck in a tree."} )
 
 
@@ -1132,6 +1172,3 @@ game.ending.description = function() {
 
 player.gain_info({tag: 'quest', category: "Quest", text: "You need to find a way out of this accursed place."})
 player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You are hungry."})
-
-player.gain_info({tag: 'alma', category: "Quest", value: 1})
-player.gain_info({tag: 'korte', category: "Quest", value: "malac"})
