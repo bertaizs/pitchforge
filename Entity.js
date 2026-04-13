@@ -268,7 +268,8 @@ class Entity {
   is_hostile_to(other_entity) {
     if(this.id == other_entity.id)
       return false    // no one is hostile to themselves :)
-    
+
+    // only characters can be hostile to each other
     if(!this.is_character() || !other_entity.is_character())
       return false
     

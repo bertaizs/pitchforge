@@ -5,8 +5,6 @@
 
 ## revamped - story
 
-knocking on the door
-
 car, escape
   car keys
 

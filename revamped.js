@@ -1054,7 +1054,19 @@ let vampire = new Entity({
       throw `this should not happen, the vampire is already dead`
     }
   )
-  
+
+let butler = new Entity({
+  name: "the butler",
+  // tags: ['character'],
+  description: `An elderly gentleman with a monocle, probably part of the staff who serves at the mansion.`,
+  // tough: 1,
+  // cool:  2,
+  // sharp: 2,
+  // charm: 2,
+  clues: [
+    new Clue({ text: `There is something more to this person... You are feeling uneasy.`, reqs: {'sixth sense': Test.MEDIUM}, flag: true }),
+  ],
+})
   
 let the_staff = new Entity({
     name: "the staff",
@@ -1072,7 +1084,8 @@ let the_staff = new Entity({
     // location: player_ship,
     clues: [
       new Clue({ text: `One of the arms of the creature is holding a keyring, this might be useful.`, reqs: {perception: Test.EASY}, flag: true }),
-    ]
+    ],
+    knocked: false,
 })
 
   let keyring = new Entity({
@@ -1188,6 +1201,50 @@ game.add_trigger(
     } else {
       ui.text(`You do not feel confident to stand up against the `,vampire,`.`)      
     }
+  }
+)
+
+game.add_trigger(
+  {verb: /use/, op1: mansion_front_door_knocker, op2: /^$/},
+  function(cmd) {
+  ui.text(`You knock on the mansion's door.`)
+  if( the_staff.is_up() ) {
+    ui.text(`You hear some movement from the outside, and after a while the door opens by an inch and an ${ui.e(butler, "elderly gentleman")} peeps at you.<br/>`,
+            ui.img('butler.png') ,
+            `<i>Please leave. The master does not wish to be disturbed.</i>`
+            )
+    if( the_staff.knocked ) {
+      the_staff.attitude--
+      ui.text(`He looks very disappointed.`)
+    }
+    the_staff.knocked = true            
+  } else
+    ui.text(`There is no response.`)
+  
+  return true
+  }
+)
+
+game.add_trigger(
+  {verb: /talk/, op1: butler, op2: /^$/},
+  function(cmd) {
+  // ui.text(`You knock on the mansion's door.`)
+  if( the_staff.is_up() && the_staff.knocked ) {
+    if( cmd.who.test('social', Test.EASY-the_staff.attitude) ) {
+      ui.text(ui.img('butler.png') ,
+              `<br/><i>Please come in, I shall announce your arrival to the master.</i>` )
+      ui.text(`He opens the mansion's door and lets you inside.`)
+      mansion_front_door.remove_tag('locked')
+      mansion_front_door.remove_tag('closed')
+      mansion_front_door.set_tag('open')
+    } else {
+      ui.text(ui.img('butler.png') ,
+              `<br/><i>Please leave, tramps have absolutely no business here.` )
+      ui.text(`He closes the door.`)
+      the_staff.attitude--      
+    }
+  }
+  return true
   }
 )
 
