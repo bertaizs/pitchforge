@@ -5,12 +5,10 @@
 
 ## revamped - story
 
-car, escape
-  car keys
+! write texts for mvp
+! clean up mobile interface -- leszed?
 
-roof, clues:
-  - no escape route
-  - escape route after idol destroyed
+? sneaking ??
 
 ## core
 
@@ -34,6 +32,10 @@ roof, clues:
 ## revamped story
 
 restoring power
+
+?? roof, clues:
+  - no escape route
+  - escape route after idol destroyed
 
 crafting lockpicks
 

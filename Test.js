@@ -63,6 +63,7 @@ const TESTS = {
   'pickpocket': new Test({stat: "cool", spec: 'thievery'}),
 
   'climbing': new Test({stat: 'cool', spec: 'climbing'}),
+  'crafting': new Test({stat: 'cool', spec: 'crafting'}),
 
   'social': new Test({stat: "charm", spec: 'social'}),
   'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),

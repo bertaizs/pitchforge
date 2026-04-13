@@ -226,12 +226,65 @@ let bushes = new Entity({
   `,
 })
 
+  let car_keys = new Entity({
+    name: "car keys",
+    tags: ['item', 'key'],
+    description: `These keys belong to a car.`,
+    // location: study,
+  })
+
+  let car = new Entity({
+    name: "old car",
+    tags: ['prop'],
+    icon: 'garage_interior.png',
+    // description: `<p></p>`,
+    description: function() {
+      if( !this.is('running') ) {
+        return  `<p>This old car has seen better times, let's hope it is still functional. The car's door is open.</p>`
+      } else {
+        return  `<p>The engine of the car is running. All you need to do is <i>use</i> the car and you can get out of here!</p>`
+      }
+    },
+    clues: [
+      new Clue({text: `This car is a possible way to get away from this awful place!`, reqs: {sharp: Test.EASY}, flag: true})
+    ]
+  })
+
+  game.add_trigger(
+    {verb: /use/, op1: car, op2: car_keys },
+    function(cmd) {
+      ui.text(`You start the engine. The car is old, but it is working!`)
+      ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)
+      car.set_tag('running')
+      return true
+    })
+  
+  game.add_trigger(
+    {verb: /use/, op1: car, op2: /^$/ },
+    function(cmd) {
+      if( !car.is('running')) {
+        if( cmd.who.test('crafting', Test.ADVANCED) ) {
+          ui.text(`You have hotwired the car. Cool! The engine is running.`)
+          ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)        
+          car.set_tag('running')
+        } else {
+          ui.text(`You have no idea how to hotwire the car. You will need to use keys.`)
+        }
+      } else {
+        ui.text(`You hop into the car and drive on. Time to say goodbye to this accursed place!`)
+        player.move_to(game.ending)
+      }
+      return true
+    })
+
+
 let garage = new Entity({
   name: "Garage",
   icon: 'garage_interior.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>Inside the garage behind the mansion.</p>
+  <p>An ${ui.e(car)} is gathering dust here.</p>
   `,
 })
 
@@ -467,6 +520,7 @@ let study = new Entity({
   `<p>This room could have been the study of the master.</p>
   `,
 })
+study.add( car_keys )
 
 let gallery = new Entity({
   name: "On the Gallery, above the Main Hall",
@@ -1247,6 +1301,13 @@ game.add_trigger(
   return true
   }
 )
+
+game.add_trigger(
+  {verb: /attack/, op1: butler },
+  function(cmd) {
+    ui.text(`The butler has no intention to fight, he just closes the door.`)
+    the_staff.attitude = -Infinity
+  })
 
 
 game.ending.description = function() {
