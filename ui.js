@@ -220,6 +220,7 @@ class UI {
       for( let clue of location.location_clues ) {
         if( entity.meets_requirements(clue.reqs) && clue.enabled )
           s += this.print_clue(clue)
+          player.find_clue(clue)    // TODO: should not be in UI, but in the data model
       }
       
       if( ! entity.get_location().is('abstract') ) {
@@ -345,6 +346,7 @@ class UI {
       for( let clue of entity.clues ) {
         if( game.get_player().meets_requirements(clue.reqs) && clue.enabled )
           s += this.print_clue(clue)
+          player.find_clue(clue)    // TODO: should not be in UI, but in the data model
       }
       
       // from here on, the sheet is viewed in a table
@@ -451,21 +453,24 @@ class UI {
       for( let i in knowledge ) {
         let info = knowledge[i]
         s+= `<div>`
-          s+= `<b>${info.name}</b><br/>`
-          let t = info.summarize()
-          if( t.length>0 )
-            s+= `<ul>`+t.map(x=>`<li>${x}</li>`).join("\n")+`</ul>`
-          // s+= `<div>${info.get_text()}</div>`
-          if( options.show_full_knowledge )
-            s+= `<div>`+JSON.stringify(info)+`</div>`
-          s+= `<div>&nbsp</div>`
+          // s+= `<b>${info.name}</b><br/>`
+          s += info.summarize()
+          // if( t.length>0 )
+          //   s+= `<ul>`+t.map(x=>`<li>${x}</li>`).join("\n")+`</ul>`
+          // // s+= `<div>${info.get_text()}</div>`
+          // if( options.show_full_knowledge )
+          //   s+= `<div>`+JSON.stringify(info)+`</div>`
+          // s+= `<div>&nbsp</div>`
         s+= `</div>`
+      }
+      if(s=='') {
+        s+= `You have not found anything noteworthy.`        
       }
       return s
     }
     
     show_quests() {
-      document.getElementById('work')
+      document.getElementById('work').innerHTML = this.print_quests()
     }
     
     show_main() {

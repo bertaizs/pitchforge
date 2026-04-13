@@ -4,38 +4,56 @@
 // Knowledge also functions as journal/quests, where one can track progress.
 
 class Info {
+  
   constructor(value = {}, params = {}) {
+    if( typeof value == 'string' )
+      value = {tag: value, value: true}
+    
     for( let i in value )
         this[i] = value[i]
-    // if( !('name' in this) ) throw `Info block needs a name` // Info.name identifies the subject of the info
+    if( !('tag' in this) ) throw `Info block needs a tag` // Info.name identifies the subject of the info
+    // this.tag         // is a unique id of what the info is about
+    // this.category    // info may belong to a category, so that similar infos can be displayed together
+    // this.text        // textual description of the info, optional
+    this.value ??= true // actual value of the information
   }
   
   // returns a list of printable data strings that can be displayed
+  // redefine this if needed
   summarize() {
-    let t = []
-    // for( let i of Object.keys(this).sort() )
-    for( let i in this )
-      if( typeof this[i]=='string' && !i.match(/^_/) )
-        t.push(this[i])
-    return t
-  }
-    
-  // extends this Info with the (tag=>value) pairs in attrs
-  gain( attrs = {} ) {
-    for( let i in attrs ) {
-      this[i] = attrs[i]
-    }
-    return this
+    if( 'text' in this )
+      return this.text
+    else
+      return this.tag+`: `+this.value
   }
   
-  // true, if this Info contains all the tags in attrs
-  contains( attrs = {} ) {
-    for( let i in attrs ) {
-      if( !(i in this) ) {
-        return false
-      }
-    }
-    return true
+  contains( other_info ) {
+    if( !(other_info instanceof Info) ) 
+      other_info = new Info(other_info)
+    
+    console.log(other_info)
+    
+    if( this.tag != other_info.tag ) return false
+    
+    if( other_info.value === true )
+      return true
+    
+    if( typeof this.value == 'number' && typeof other_info.value == 'number' )
+      return (this.value >= other_info.value)
+    
+    return (this.value == other_info.value)
   }
-
+  
+  // extends this Info's value with the received one
+  // numbers are added
+  // everything else is overwritten
+  extend_with( value ) {
+    if( typeof this.value=='number' && typeof value=='number' )
+      this.value += value
+    else
+      this.value = value
+    return this.value
+  }
+    
+    
 } // class Info

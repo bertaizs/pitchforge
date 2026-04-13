@@ -79,7 +79,7 @@ let clearing_edge = new Entity({
   <p>There is absolutely no point in going back into the forest. You would just die there among the trees.
   `,
   location_clues: [
-    new Clue({ text: `Something has been dragged in to the bushes.`, reqs: {perception: Test.BASIC} }),
+    new Clue({ text: `Tracks on the ground show something has been dragged into the bushes.`, reqs: {perception: Test.BASIC} }),
   ]
 })
 
@@ -282,7 +282,7 @@ let shed = new Entity({
     from: clearing_edge, 
     to: bushes, 
     text: `follow the trail into the bushes`,
-    reqs: {perception: 1},
+    reqs: {perception: Test.BASIC},
   }, {
     text: `back to the clearing`,
     reqs: {},
@@ -474,8 +474,13 @@ let ladies_bedroom = new Entity({
     from: cellar, 
     to: coffin_room, 
     text: `explore a secret passage behind the barrels`,
+    reqs: [
+      {perception: Test.MEDIUM},
+      {knowledge: 'secret_passage'},
+    ]
   }, {
     text: `go back through the winecellar via the not-so-secret passage`,  
+    reqs: [],
   })
   
   new Path({
@@ -694,6 +699,25 @@ let cross = new Entity({
 })
 
 
+new Entity({
+    tags: ['item', 'book'],
+    name: "Dear Diary",
+    icon: 'book.png',
+    description: `<p>This book is a diary. Some recent entries:</p>
+    <i>
+      <p>Daddy has been acting very strange since he returned from the expedition. He is very secretive about the statue he has brought back. I took a sneak peak on it but it felt... very uncomfortable...</p>
+      ...
+      <p>He built a hidden room in the cellar. He walled away a part of the cellar, but there is a secret entrance via an empty barrel. I figured out how to open it but had nothing but a strange coffin inside. Weird.</p>
+      ...
+      <p>Daddy has been very obsessed with blood, and I really don't like this. I ordered a book from a certain Professor Van Helsing from Amsterdam to read about the subject. I don't want Daddy to find it so I hid it well.</p>
+    </i>
+    `,
+    location: ladies_bedroom,
+    clues: [
+      new Clue({text: `The section about the secret passage is particularly interesting!`, 
+        info: new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) })
+    ],
+})
 
 new Entity({
     tags: ['item', 'book'],
@@ -724,7 +748,8 @@ new Entity({
     location: mansion_roof,
     clues: [
       new Clue({text: `While most of the book is academic, there is a really practical advice which shines through all parts:<br/>
-        <i>By all means, do NOT look into the eyes of a vampire!</i>`, reqs: {sharp: Test.EASY} })
+        <i>By all means, do NOT look into the eyes of a vampire!</i>`, reqs: {sharp: Test.EASY},
+        info: new Info({tag: 'slaying_vampires', text: `Vampires can be slain by driving a stake through their heart or by complete incineration.`}) })
     ],
 })
 
@@ -734,7 +759,7 @@ let ladder = new Entity({
     icon: 'ladder.png',
     description: `Someone has committed horrible things to this doll.`,
     location: mansion_right,
-    position: `A [ladder] is lying next to the mansion's wall.`,
+    position: `There is a [ladder] lying on the ground by the mansion's wall.`,
     path_up:   new Path({
       from: game.universe, 
       to: game.universe, 
@@ -1087,9 +1112,9 @@ game.ending.description = function() {
   let s = `<p>Your adventure has ended.</p>`
   
   if( game.get_player().is_up() ) 
-    s+= `<p>You have survived the adventure.</p>`
+    s+= `<p>You have survived the adventure. 😄</p>`
   else
-  s+= `<p>You are dead.</p>`
+  s+= `<p>You are dead. 💀</p>`
 
   if( !vampire.is_up() )
     s+= `<p>You have successfully destroyed the vampire.</p>`
@@ -1104,3 +1129,9 @@ game.ending.description = function() {
   
   return s
 }
+
+player.gain_info({tag: 'quest', category: "Quest", text: "You need to find a way out of this accursed place."})
+player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You are hungry."})
+
+player.gain_info({tag: 'alma', category: "Quest", value: 1})
+player.gain_info({tag: 'korte', category: "Quest", value: "malac"})

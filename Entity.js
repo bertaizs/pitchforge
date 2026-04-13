@@ -555,33 +555,38 @@ class Entity {
   
   // adds the given info block to the knowledge of this entity
   // parameter info can be: string, object, Info -- all will be converted to Info
-  gain_knowledge( info ) {
-    if( typeof info == 'string' )
-      info = new Info({name: info})
+  gain_info( info ) {
     if( !(info instanceof Info) )
       info = new Info(info)
-      // throw `Entity.gain_knowledge called with wrong parameter: `+knowledge
     
-    let name = info.name
-    if(name in this.knowledge)
-      this.knowledge[name].gain(info)  // if there is knowledge on the given subject, the knowledge is extended
+    let tag = info.tag
+    if(tag in this.knowledge)
+      this.knowledge[tag].extend_with(info.value)  // if there is knowledge on the given subject, the knowledge is extended
     else
-      this.knowledge[name] = info  // if this entity does not know anything about the given subject, the knowledge is established
+      this.knowledge[tag] = info  // if this entity does not know anything about the given subject, the knowledge is established
   }
   
   // checks if this entity has certain knowledge
   // true if this entity's knowledge block 'contains' the info block knowledge
   // where 'contains' mean it contains at least the same info or more
-  has_knowledge( knowledge ) {
-    if( typeof knowledge == 'string' )
-      knowledge = new Info({name: knowledge})
-    // if( !(knowledge instanceof Info) )
-      // throw `Entity.has_knowledge called with wrong parameter: `+knowledge
-    if( typeof knowledge == 'object' && !(knowledge instanceof Info) )
-      knowledge = new Info(knowledge)
-    
-    let name = knowledge.name
-    return (name in this.knowledge) && this.knowledge[name].contains(knowledge)
+  has_info( info ) {
+    if( typeof info == 'string' )
+      info = new Info(info)    
+    return (info.tag in this.knowledge) && this.knowledge[info.tag].contains(info)
+  }
+  // has_knowledge(info) { return this.has_info(info) }
+  
+  get_info_on(tag) {
+    if( tag in this.knowledge )
+      return this.knowledge[tag]
+    return false
+  }
+  get_info(tag) {return this.get_info_on(tag)}
+  
+  find_clue(clue) {
+    if( !(clue instanceof Clue) ) throw `find_clue called without a Clue`
+    for( let i of clue.get_info() )
+      this.gain_info(i)      
   }
   
   // returns true if meets one of the requirement set_start_location
@@ -600,7 +605,12 @@ class Entity {
       return true
     
     for( let req of reqs ) {
+      // console.log(reqs)
       req.traits ??= {}
+      req.knowledge ??= []
+      if( !(req.knowledge instanceof Array) )
+        req.knowledge = [req.knowledge]
+      
       let fail = false
 
       for( let i in req ) {
@@ -611,12 +621,17 @@ class Entity {
         for( let t in req.traits )
           if( !this.has_trait(t) )
             fail = true
-
-        if( 'knowledge' in reqs ) {
-          if( reqs instanceof Info ) {
-            
+      }
+      if( !fail ) {
+        // console.log("tiszta", req)
+        for( let k of req.knowledge ) {
+          if(!(k instanceof Info)) {
+            console.log(k)
+            k = new Info(k)
           }
-            // if( ! reqs.knowledge.)
+            
+          if( !this.has_info(k) )
+            fail = true
         }
       }
       // if all is met in this req object, return true
