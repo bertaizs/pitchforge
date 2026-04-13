@@ -414,6 +414,10 @@ game.character_backgrounds = {
 }
 
 
+//
+// GENERIC TRIGGERS
+// these should work similarly in all games
+// 
 
 // doors: opening and closing
 game.add_trigger(
@@ -441,7 +445,7 @@ game.add_trigger(
       }
     }
     return false
-  } )
+  }, 999 )
 
 // lockpicking
 game.add_trigger(
@@ -463,7 +467,7 @@ game.add_trigger(
     }
     ui.text( cmd.op2, ` is not locked.`)
     return true
-  } )
+  }, 999 )
 
 // forcing a door with a crowbar
 game.add_trigger(
@@ -487,7 +491,7 @@ game.add_trigger(
     }
     ui.text( cmd.op2, ` is not locked.`)
     return true
-  } )
+  }, 999 )
 
 // unlocking or locking a door with a key
 game.add_trigger(
@@ -527,4 +531,4 @@ game.add_trigger(
     }
     // ui.text( cmd.op2, ` is not locked.`)
     return false
-  } )
+  }, 999)

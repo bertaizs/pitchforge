@@ -380,7 +380,7 @@ let pantry = new Entity({
   })
   
   game.add_trigger(
-    {verb: /use/, op1: /axe/, op2: barrels},
+    {verb: /use/, op1: /crowbar|axe/, op2: barrels},
     function(cmd) {
       ui.text(`It makes no sense in whacking those barrels. It would take time to break them and you would be swimming in wine.`)
       return true
@@ -388,7 +388,7 @@ let pantry = new Entity({
   )
 
   game.add_trigger(
-    {verb: /use/, op1: /axe/, op2: secret_barrel},
+    {verb: /use/, op1: /crowbar|axe/, op2: secret_barrel},
     function(cmd) {
       ui.text(`You break the empty barrel and reveal a secret passage inside!`)
       barrels.description = `There are many barrels here. One of them is bolted to the wall at the far end of the cellar, it is broken open, and there is a hidden passage inside.`
