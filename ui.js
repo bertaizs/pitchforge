@@ -217,11 +217,13 @@ class UI {
       let entities = game.list_entities_at(location).filter(x=>x.id!=entity.id).sort()
 
       // style="width: 100%;"
-      let s = `<table><tr><td style="vertical-align: top;">`
-        if( location.get('interior_icon') ) {
-          s+= this.img(location.get('interior_icon'))
-        }
-      s+= `</td><td style="vertical-align: top;">`
+      // let s = `<table><tr><td style="vertical-align: top;">`
+      let s = `<div class='container'>`
+      if( location.get('interior_icon') ) {
+        s+= this.img(location.get('interior_icon'))
+      }
+      // s+= `</td><td style="vertical-align: top;">`
+      s+= `<div class='content'>`
       s+= `<div>${this.print_entity(location)}</div>`
       s+= `<div class="description">${location.get_interior_description()}</div>`
       
@@ -257,8 +259,10 @@ class UI {
         )          
         s+= `</table>`
       }
+      s+= `</div>`  // w/ class: content
+      s+= `</div>`  // w/ class: container
 
-      s+= `</td></tr></table>\n`
+      // s+= `</td></tr></table>\n`
       return s
     } // print_look_around
     

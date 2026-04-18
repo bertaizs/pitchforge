@@ -64,6 +64,29 @@ a.entity {
     /*font-style: italic;*/
 }
 
+/* contains both the image and the textx */
+.container {
+    display: flex;
+    flex-direction: column; /* Mobile first: Stacked vertically */
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+/* text that appears next to or under the image */
+.content {
+    flex: 1; /* Allows text to take up remaining space on desktop */
+    line-height: 1.6;
+}
+@media (min-width: 650px) {
+    .container {
+        flex-direction: row; /* Switch to horizontal */
+        align-items: flex-start; /* Align text to top of image */
+    }
+}
+
 
 .btn {
   border: 0;
