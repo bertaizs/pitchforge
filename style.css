@@ -1,7 +1,8 @@
 :root {
 /* Mobile Sizes (Larger for readability) */
 	--big-text: 2rem;
-	--big-text-td: 1.9rem;
+	--big-text-td: 3rem;
+	--big-text-padding: 1.5rem;
 	--standard-text: 1.5rem;
 }
 
@@ -23,7 +24,9 @@ a.verb {
     font-size:var(--big-text);
     white-space: nowrap;
     cursor: pointer;
-    padding: 0.3rem;
+/*    padding: var(--big-text-padding);*/
+/*    margin: var(--big-text-padding); */
+    margin: 1rem;
 }
 
 a.entity {
@@ -47,6 +50,7 @@ a.entity {
 .path {
     color: lightgreen;
     cursor: pointer;
+    margin-bottom: 0.5rem;
 }
 .path:hover {
     text-decoration: underline;
@@ -85,14 +89,12 @@ a.entity {
 /* text that appears next to or under the image */
 .content {
     flex: 1; /* Allows text to take up remaining space on desktop */
-    line-height: 1.6;
     font-size: var(--standard-text);
 }
 
 .btn {
   border: 0;
   line-height: 1.5;
-  /*padding: 0 12px;*/
   padding-left: 15px;
   padding-right: 20px;
   font-size: var(--big-text);
@@ -127,7 +129,7 @@ a.entity {
     /*border-right: 1px solid gray;*/
     width: 6em;
     padding-bottom: 8px;
-    height: var(--big-text-td);
+    /* height: var(--big-text-td); */
     /*border: 1px solid green;*/
 }
 
@@ -167,6 +169,7 @@ td, th { /* table cells */
 
 img.entity_image {
     width: 300px;
+    width: 25rem;
     display: inline-block;
     margin-right: 5px;
     margin-bottom: 10px;
@@ -251,6 +254,8 @@ img.combat_icon {
 @media (min-width: 1000px) {
     :root {
 	--big-text: 1.3rem;
+	--big-text-td: 2rem;
+	--big-text-padding: 0.5rem;
 	--standard-text: 1rem;
     }
     .container {

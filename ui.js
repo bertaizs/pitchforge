@@ -172,12 +172,12 @@ class UI {
     }
 
     print_path(path) {
-      let t = path.text.match(/(.*)\[(.*)\](.*)/)
-      if( !t || t.length<4 )
-        return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a>`
-      else {
-        return t[1]+`<a class="path" onclick="ui.click_path(${path.id})">${t[2]}</a>`+t[3]
-      }
+//      let t = path.text.match(/(.*)\[(.*)\](.*)/)
+//      if( !t || t.length<4 )
+        return `<a class="path" onclick="ui.click_path(${path.id})">${path.text}</a><br/>`
+//      else {
+//        return t[1]+`<a class="path" onclick="ui.click_path(${path.id})">${t[2]}</a>`+t[3]
+//      }
     }
     
     print_clue(clue) {
@@ -541,9 +541,7 @@ class UI {
     
     verb(v) {
       let verb = VERBS[v]
-      let s = `<span>
-      <a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${UI.icon(verb.name)+verb.get_label()}</a>
-      </span>\n`
+      let s = `<a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${UI.icon(verb.name)+verb.get_label()}</a>`
       return s
     }
     
@@ -554,9 +552,10 @@ class UI {
 
       let s = ``
       if( !params.optional || verbs.length>0 ) {
-        s+= `<tr><td class="table_left">${params.label}</td><td>`
+        s+= `<tr><td class="table_left">${params.label}</td><td class="table_right">`
         for( let i in verbs ) {
-          s+= ``+this.verb(verbs[i])+`&nbsp;`
+//          s+= ``+this.verb(verbs[i])+`&nbsp;`
+          s+= ``+this.verb(verbs[i])
         }
         s+= `</td>`
         s+= `</tr>`        
@@ -574,7 +573,8 @@ class UI {
       // s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
       // s+= this.filtered_verbs(verbs, 'misc')
       if( options.debug ) {
-        let d = `<table><tr>`
+        let d = ''
+	d+= `<table><tr>`
         d+= this.filtered_verbs(verbs, 'debug')
         d+= `</tr></table>`
         document.getElementById('debug').innerHTML += d
@@ -746,7 +746,7 @@ class UI {
       s+= this.img(game.get_player().get('icon'), 'id="chr_icon"')
       s+= `<br/>`
       for( let img of game.character_icons ) {
-        s+= this.img(img, `style="width: 50px;" onclick="document.getElementById('chr_icon').src='${this.img_url(img)}'; game.get_player().icon = '${img}'" `)
+        s+= this.img(img, `style="width: 5rem;" onclick="document.getElementById('chr_icon').src='${this.img_url(img)}'; game.get_player().icon = '${img}'" `)
       }
 
       s+= `<div>Through many years of sacrifice, you have learned to become `
