@@ -5,7 +5,7 @@ options.pictures_location = 'pics'
 options.picture_ext = 'png'
 
 // check if running online
-if(String(document.location).match(/^https/)) {
+if(String(document.location).match(/^http/)) {
   options.pictures_location = 'https://storage.googleapis.com/static-files-revamped-berta-hu/pics'
   options.picture_ext = 'jpg'
 }

@@ -647,7 +647,7 @@ class UI {
         s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> | `
         s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', quick: true}))">quests</span> | 
         <span class="menuitem" onclick="ui.refresh()">refresh</span> | 
-        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart ⏻</span>
+        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
         `
         document.getElementById('menu').innerHTML = s
       }

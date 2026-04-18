@@ -20,4 +20,9 @@ png2jpg:
 upload_jpgs:
 	gsutil -m rsync -r $(JPG_DIR)/ gs://static-files-revamped-berta-hu/pics/
 
+test:
+	mkdir -p tmp/
+	cp *.html *.js *.css tmp/
+	gsutil -m -h "Cache-Control:no-store" rsync -r tmp/  gs://revamped-test.berta.hu/
+
 
