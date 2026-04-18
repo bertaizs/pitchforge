@@ -29,7 +29,7 @@ class Entity {
     this.location_clues ??= []
     
     this.icon ??= false,
-    this.interior_icon ??= this.icon,
+    // this.interior_icon ??= this.icon,
 
     this.level ??= 0;
     this.cp ??= 0;
@@ -337,6 +337,9 @@ class Entity {
     }
     if(x=='interior_description') { // && there is no such field (implicit)
       return this.get('description')
+    }
+    if(x=='interior_icon') { // && there is no such field (implicit)
+      return this.get('icon')
     }
     
     throw `don't know how to get ${x}`;

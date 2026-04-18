@@ -176,7 +176,14 @@ let mansion_left = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing on the left side of the dilapidated ${ui.print_entity(mansion)}.
-  The ${ui.print_entity(trees)} circle the mansion as if the haunted forest was trying to consume it.</p>
+  The ${ui.print_entity(trees)} circle the mansion as if the haunted forest was trying to consume it.
+  </p>
+  <p>The mansion has stone walls are in better condition here, you can see nothing but darkness through the windows.
+  Its ground floor is slightly above your level, while there is a first floor built on it.
+  The mansion's roof is in very bad shape, there are many tiles missing, there are some broken tiles here on the ground.
+  </p>
+  <p>From here you can see where you arrived at the clearing. You can also see a wooden building attached to the back of the mansion, but from here you cannot make it out what it could be.
+  </p>
   `,
 })
 
@@ -199,32 +206,60 @@ let mansion_roof = new Entity({
   `,
 })
 
+
 let well = new Entity({
+  name: "the well",
+  interior_icon: 'well_bottom.png',
+  interior_description: 
+  `<p>Well, you have hit the bottom...</p>
+  <p>Absolutely no sign of any water here, just darkness, wet stones and moss. 
+  Roots have breached the side of the well at certain points, and there are some plants growing from the ground too.</p>
+  <p>When you look up, you see the beak, dark gray sky and top of the dying trees.</p>
+  `,
+  icon: 'well.png',
+  // description: `<p></p>`,
+  description: `<p>A sad, lone well, at the forest edge. 
+  There is no sign of water inside. When you look down, pure darkness looks back at you.
+  </p>`,
+})
+
+let well_area = new Entity({
   name: "At the Well",
   icon: 'well.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing at the well.</p>
+  `<p>A lone ${ui.e(well, "well")} is standing by the mansion, near the forest edge. Its roof has collapsed, and fits right into this dying place.</p>
+  <p>The ${ui.e(mansion)} towers above you, while the ${ui.e(trees)} look just as dead as everything else.</p>
   `,
 })
+  .add(well)
 
-let well_bottom = new Entity({
-  name: "Bottom of the Well",
-  icon: 'well.png',
-  // description: `<p></p>`,
-  interior_description: 
-  `<p>Well, you are at the bottom...</p>
-  `,
-})
+// let well_bottom = new Entity({
+//   name: "Bottom of the Well",
+//   icon: 'well.png',
+//   // description: `<p></p>`,
+//   interior_description: 
+//   `<p>Well, you are at the bottom...</p>
+//   `,
+// })
+
+  let dead_woodsman = new Entity({
+      name: "dead woodsman",
+      tags: ['prop', 'remains', 'container', 'open'],
+      description: `The dead and partially eaten body of a woodsman. A middle-aged male with a beard. Whatever killed him must have had large teeth and claws, and it has torn the lower part of his body into pieces.`,
+      // location: bushes,
+  })
 
 let bushes = new Entity({
   name: "In the Bushes",
   icon: 'forest.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>Behind the bushes lies a dead body.</p>
+  `<p>Behind the bushes lies a ${ui.e(dead_woodsman, "dead body")}. There is a lot of blood all over the place, with internal organs spilled out.</p>
   `,
 })
+  .add(dead_woodsman)
+// dead_woodsman.move_to(bushes)
 
   let car_keys = new Entity({
     name: "car keys",
@@ -346,12 +381,22 @@ let shed = new Entity({
 
   new Path({
     from: mansion_left, 
-    to: well, 
+    to: well_area, 
     text: `walk to the well`,
   }, {
     text: `back to the mansion`,  
   })
 
+  new Path({
+    from: well_area, 
+    to: well, 
+    text: `climb down the stony side of the well`,
+    reqs: {climbing: Test.VERYHARD},  
+  }, {
+    text: `climb up the stones on the well's side`,  
+  })
+  
+  
   new Path({
     from: clearing_edge, 
     to: bushes, 
@@ -817,7 +862,7 @@ let cross = new Entity({
     tags: ['item'],
     icon: 'cross.png',
     description: `A simple cross.`,
-    location: well_bottom,
+    location: well,
 })
 
 
@@ -912,10 +957,10 @@ let ladder = new Entity({
         ladder.connect( cmd.who.get_location(), mansion_roof )
         return true
       }
-      if( cmd.who.get_location() == well ) {
+      if( cmd.who.get_location() == well_area ) {
         ui.add_event(`You slip the ladder into the well, it now reaches the bottom.`)
-        ladder.move_to(well, `There is a [ladder] leading down into the well.`)
-        ladder.connect( well_bottom, well )
+        ladder.move_to(well_area, `There is a [ladder] leading down into the well.`)
+        ladder.connect( well, well_area )
         return true
       }
       ui.add_event(`There is no point in using the ladder here.`)
@@ -1176,12 +1221,6 @@ let the_staff = new Entity({
   )
 
 
-let dead_woodsman = new Entity({
-    name: "dead woodsman",
-    tags: ['prop', 'remains', 'container', 'open'],
-    description: `The dead and partially eaten body of a woodsman.`,
-    location: bushes,
-})
 
 let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )

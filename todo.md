@@ -1,33 +1,24 @@
-# todo
-======
+todo
+====
 
 # mvp
 
 ## revamped - story
-
 ! write texts for mvp
+
+## core, mvp
 ! clean up mobile interface -- leszed?
-
 ? sneaking ??
+? hints for mobile
+? explanations ?
 
-## core
-
-### talk to
-* single argument version
-
-### stealth
-
-### etc
-  * proceed with work panel clickable/colored entities
-
-## wrapping
-:)
+* proceed with work panel clickable/colored entities
 
 # future releases  
 
 ## bugs
-  - only increase is possible during level-up (part of it is already implemented but not working)
 
+  - only increase is possible during level-up (part of it is already implemented but not working)
 
 ## revamped story
 

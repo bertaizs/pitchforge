@@ -258,7 +258,7 @@ new Verb({
 
 new Verb({
   name: 'equip',  // as weapon
-  icon: '🧢',
+  icon: '🧤', // 🧤🧢
   text: `Wield the given item as a weapon or equip it as armour.`,
   type: 'inventory',
   test: false,
