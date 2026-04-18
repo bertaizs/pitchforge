@@ -72,11 +72,16 @@ class Path {
     return true // TODO, not implemented
   }
   
+  // called when moving through this path; redefine if you need a custom event
+  on_move_through(cmd) {}
+  
   move_through(entity, endpoint_id = false) {
     entity = game.entity(entity)
     
     if(!this.can_pass_through(entity))
       throw `${entity} cannot pass through ${this}`
+    
+    this.on_move_through()
     
     entity.move_to(this.to)
   }

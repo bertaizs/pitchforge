@@ -168,7 +168,7 @@ class UI {
       if( ! path.can_pass_through(game.get_player()) )
         throw `${game.get_player()} cannot pass through this.`
       
-      ui.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to)}) )
+      ui.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to), path: path}) )
     }
 
     print_path(path) {

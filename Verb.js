@@ -54,6 +54,7 @@ new Verb({
   text: `Go somewhere.`,
   debug: true,
   on_success: function(cmd) {
+    cmd.path.on_move_through(cmd)
     cmd.who.move_to(cmd.op1)
   },
 })

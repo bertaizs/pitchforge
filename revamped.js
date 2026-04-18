@@ -170,8 +170,10 @@ let mansion_back = new Entity({
   `,
 })
 
+
+
 let mansion_left = new Entity({
-  name: "Left of the Mansion",
+  name: "On the left side of the Mansion",
   icon: 'mansion_left.png',
   // description: `<p></p>`,
   interior_description: 
@@ -187,13 +189,32 @@ let mansion_left = new Entity({
   `,
 })
 
+
+let foggy_road = new Entity({
+  name: "foggy road",
+  icon: 'foggy_road.png',
+  description: 
+  `<p>A foggy road leads away from the mansion.
+  </p>`,
+  interior_icon: 'foggy_road2.png',
+  interior_description: 
+  `<p>You are walking in the fog, but do not even feel getting away from the mansion or arriving anywhere.
+  Is this a curse? The fog is dense, and you walk on, but there seems to be no point.
+  The shape of the mansion is still looms behind you in the fog.</p>
+  `,
+})
+
 let mansion_right = new Entity({
-  name: "Right side of the Mansion",
+  name: "On the right side of the Mansion",
   icon: 'mansion_right.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing on the right side of the dilapidated ${ui.print_entity(mansion)}.
-  There are ${ui.print_entity(trees)} everywhere.</p>
+  There are huge cracks in the stone walls here, but the walls stand firm. 
+  The ground floor is slightly above your level, while there the first floor is much higher above.
+  You can see the path where you arrived to the clearing, and there are some wooden building attached to the back of the mansion. A garage, perhaps?</p>
+  <p> There are ${ui.e(trees)}, trees and trees everywhere, 
+  but there is a ${ui.e(foggy_road)} leading away from the mansion.</p>
   `,
 })
 
@@ -363,6 +384,26 @@ let shed = new Entity({
     text: `go back to the front of the mansion`,  
   })
 
+  new Path({
+    from: mansion_right,
+    to: foggy_road, 
+    text: `take the foggy road and start walking away from the mansion`,
+  }, {
+    text: `give up and go back to the mansion`,  
+  })
+  
+  new Path({
+    from: foggy_road,
+    to: foggy_road, 
+    text: `carry on walking in the fog, hoping to get somewhere`,
+    on_move_through: function(cmd) {
+      ui.text(`You feel hope slipping away... Is this a curse?`)
+      cmd.who.take_damage({value: 1, type: 'spirit'})
+    }
+  })  
+
+
+  
   new Path({
     from: mansion_left, 
     to: mansion_back, 
