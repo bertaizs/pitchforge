@@ -187,15 +187,23 @@ class UI {
         s = `<p>${clue.flag+" "}${text}</p>`
       return s
     }
+    
+    // returns the url for an image file
+    img_url(filename) {
+      if( options.picture_ext=='jpg' && filename.match(/png$/) )  // if extension is png, replace it with jpg, if needed
+        filename = filename.replace( /png$/, 'jpg' )
+      
+      if( ! filename.match(/\./) )    // if no extension, add the default
+        filename += '.'+options.picture_ext
+      
+      return options.pictures_location+'/'+filename
+    }
 
     img(filename, params = "", cl="entity_image") {
       if( typeof params != 'string') throw `only string params are supported in ui.img()`
       // TODO: support a hash here and map it, e.g. as {onclick: "alert(1)"}
       
-      if( options.picture_ext=='jpg' && filename.match(/png$/) )
-        filename = filename.replace( /png$/, 'jpg' )
-      
-      return `<img class='${cl}' src="${options.pictures_location}/${filename}" ${params}></img>`
+      return `<img class='${cl}' src="${this.img_url(filename)}" ${params}></img>`
     }
     
     // returns what the player entity sees when looking around in a location
@@ -734,7 +742,7 @@ class UI {
       s+= this.img(game.get_player().get('icon'), 'id="chr_icon"')
       s+= `<br/>`
       for( let img of game.character_icons ) {
-        s+= this.img(img, `style="width: 50px;" onclick="document.getElementById('chr_icon').src='${options.pictures_location}/${img}'; game.get_player().icon = '${img}'" `)
+        s+= this.img(img, `style="width: 50px;" onclick="document.getElementById('chr_icon').src='${this.img_url(img)}'; game.get_player().icon = '${img}'" `)
       }
 
       s+= `<div>Through many years of sacrifice, you have learned to become `
