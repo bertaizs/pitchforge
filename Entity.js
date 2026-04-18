@@ -29,7 +29,7 @@ class Entity {
     this.location_clues ??= []
     
     this.icon ??= false,
-    // this.interior_icon ??= this.icon,
+    // this.interior_icon // defaults to this.icon
 
     this.level ??= 0;
     this.cp ??= 0;
@@ -422,12 +422,20 @@ class Entity {
     return this.add_status({name: 'wound', magnitude: n, timer: false})
   }
   
+  // insta-kill this Entity/character
+  // standard actions that happen when a character dies
+  kill() {
+    this.remove_tag('character')
+    this.set_tag('remains')
+    this.name += "'s remains"          
+  }
+  
+  // called when this entity would down due to damage;
+  // redefine if you want something else to happen
   go_down() {
     ui.add_event(`${this} goes down.`)
     if( this.is_character() ) {
-      this.remove_tag('character')
-      this.set_tag('remains')
-      this.name += "'s remains"      
+      this.kill() // call this.kill by default
     }
     if( this.is('player') && options.end_game_on_player_down ) { // TODO: check if ALL players went down
       game.end_game()

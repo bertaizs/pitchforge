@@ -255,15 +255,6 @@ let well_area = new Entity({
 })
   .add(well)
 
-// let well_bottom = new Entity({
-//   name: "Bottom of the Well",
-//   icon: 'well.png',
-//   // description: `<p></p>`,
-//   interior_description: 
-//   `<p>Well, you are at the bottom...</p>
-//   `,
-// })
-
   let dead_woodsman = new Entity({
       name: "dead woodsman",
       tags: ['prop', 'remains', 'container', 'open'],
@@ -284,6 +275,7 @@ let bushes = new Entity({
 
   let car_keys = new Entity({
     name: "car keys",
+    icon: 'car_keys.png',
     tags: ['item', 'key'],
     description: `These keys belong to a car.`,
     // location: study,
@@ -478,12 +470,39 @@ let shed = new Entity({
   
 // inside
 
+let bell_pull = new Entity({
+  name: "servant bell pull",
+  tags: ['prop'],
+  // icon: 'chandelier.png',
+  description: 'This rope is connected to some bells for signalling servants. You wonder if there are any servants alive would could be alerted.'
+})
+
+game.add_trigger(
+  {verb: /use/, op1: bell_pull, op2: /^$/},
+  function(cmd) {
+    ui.text(`A bell rings somewhere to signal the servants.`)
+    if( the_staff.is_up() ) {
+      ui.text(`The lumbering figure of the staff appears.`)
+      the_staff.move_to( cmd.who.get_location() )
+      return false
+    } else 
+    ui.text(`Nothing happens.`)
+    return true
+  }
+)
+
+
 let main_hall = new Entity({
   name: "Main Hall",
   icon: 'mansion_interior.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing in the main hall of the mansion.</p>
+  `<p>You step into a vast, once-grand hall, and the first thing that strikes you is the silence — heavy, unnatural, pressing against your ears. 
+  The ceiling arches high above, painted long ago with elegant murals that are now cracked and fading. Jagged holes tear through the roof, letting pale daylight spill in, illuminating drifting dust and patches of creeping moss. 
+  The mansion’s former elegance still lingers in the carved stone walls and decorative railings, but it’s all unraveling, piece by piece.</p>
+  
+  <p>Your gaze is pulled toward the sweeping staircase ahead, its wooden steps worn and partially overtaken by green growth. It leads up to a gallery that wraps around the room. Below, a tall grandfather clock stands against the wall, silent like the rest of the house, while scattered chairs and broken debris suggest abandonment rather than decay alone.</p>
+  
   <p>There is a dining room next to the main hall, its door has been torn open, something huge must have come out through it... or maybe it went in.
   There is another smaller room, with a destroyed door, it is probably a study of some sort.
   </p>
@@ -499,6 +518,7 @@ let dining_room = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>You are in the dining room of the mansion.</p>
+  <p>A ${ui.e(bell_pull, "purple silk chord")} is hanging from an opening in a wall.</p>
   `,
 })
 
@@ -603,18 +623,47 @@ let study = new Entity({
   icon: 'mansion_study.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>This room could have been the study of the master.</p>
+  `<p>You step into a small chamber in the mansion, a study of the master, perhaps. The air thick with dust and the faint smell of rot. The once-solid structure now buckling under time and neglect.</p>
+  <p>Your eyes drift across the wreckage. In the center of the room, a heavy wooden desk still stands, though scarred and dusty. Papers, books, and small scattered objects lie across its surface, as if someone had been working here… and never returned. A worn leather chair sits behind it, one of its legs is missing.</p>
+  <p>Cobwebs cling to every corner. The silence presses in, broken only by the faint creak of wood overhead—as if the mansion is still settling... or watching.</p>
   `,
 })
 study.add( car_keys )
 
+  let chandelier = new Entity({
+    name: "chandelier",
+    tags: ['item'],
+    icon: 'chandelier.png',
+    description: 'A huge, grandiose chandelier.'
+  })
+
+  let chandelier_holder = new Entity({
+    name: "rope holding the chandelier",
+    tags: ['prop'],
+    // icon: 'chandelier.png',
+    description: 'The chandelier is held by this rope. The rope turns on a pulley on the ceiling, and ends on hook on the gallery, so that one can lower the chandelier or adjust its height.'
+  })
+  
 let gallery = new Entity({
   name: "On the Gallery, above the Main Hall",
   icon: 'mansion_interior.png',
   // description: `<p></p>`,
-  interior_description: 
-  `<p>You are standing on the gallery, above the main hall.</p>
-  `,
+  interior_description: function() {
+    let s = `<p>You are standing on the gallery, above the main hall.
+    The broken ceiling feels closer here, its jagged edges framing the pale sky above, and the beams of light cut sharper lines across the floor below.
+    </p>
+    <p>Leaning slightly over the railing, you notice the floor is more fractured than it seemed, with fine cracks spidering outward from the heavier piles of stone. The grandfather clock stands in deeper shadow now, its face barely visible, and the open doorways feel darker—less like empty passages and more like watching mouths.
+    </p>`
+    if( !chandelier.is('remains') ) {
+      s+= `<p>A huge, grandiose ${ui.e(chandelier)} is hanging from the a part of the ceiling which remained sturdy for some reason. 
+      It is held by a ${ui.e(chandelier_holder, "rope")}, which ends here on the gallery.</p>`
+    }
+    s+= `<p>Two doors open from the gallery, possibly to two bedrooms, both are ajar. There are two more doorways, but those look completely blocked by rubble.</p>`
+    if( the_staff.get_location()==main_hall && the_staff.is_up() ) {
+      s+= `<p>A huge, grotesque ${ui.e(the_staff, "creature")} is lumbering down in the foyer.</p>`
+    }
+    return s
+  },
 })
 
 let master_bedroom = new Entity({
@@ -623,6 +672,7 @@ let master_bedroom = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>Master Bedroom.</p>
+  <p>A ${ui.e(bell_pull, "purple silk chord")} is hanging from an opening in a wall.</p>
   `,
 })
 master_bedroom.add(small_key)
@@ -633,6 +683,7 @@ let ladies_bedroom = new Entity({
   // description: `<p></p>`,
   interior_description: 
   `<p>This bedroom could have belonged to a young lady.</p>
+  <p>A ${ui.e(bell_pull, "purple silk chord")} is hanging from an opening in a wall.</p>
   `,
 })
 
@@ -1251,7 +1302,7 @@ let the_staff = new Entity({
   game.add_trigger(
     {verb: /move/, op1: study},
     function(cmd) {
-      if( the_staff.is_up() ) {
+      if( the_staff.is_up() && the_staff.get_location()==main_hall ) {
         ui.add_event(`The staff does not let you enter the study.`)
         return true
       }
@@ -1275,6 +1326,7 @@ let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] 
 //
 // GLOBAL TRIGGERS
 //
+
 
 game.add_trigger(
   {verb: /use/, op1: trees},
@@ -1323,6 +1375,28 @@ game.add_trigger(
     return true
   }
 )
+
+game.add_trigger(
+  {verb: /use/, op1: chandelier_holder, op2: /^$/},
+  function(cmd) {
+    ui.text(`You adjust the height of the chandelier. You wonder why you did this.`)      
+    return true
+  }
+)
+
+game.add_trigger(
+  {verb: /use/, op1: chandelier_holder, op2: /knife|axe/},
+  function(cmd) {
+    ui.text(`You cut the rope and the chandelier falls down.`)
+    chandelier.set_tag('remains')
+    if( the_staff.get_location()==main_hall ) {
+      ui.text(`The chandelier crushes the creature below.`)
+      the_staff.kill()
+    }
+    return true
+  }
+)
+
 
 game.add_trigger(
   {verb: /use/, op1: cross, op2: vampire},
@@ -1392,8 +1466,10 @@ game.add_trigger(
 game.ending.description = function() {
   let s = `<p>Your adventure has ended.</p>`
   
-  if( game.get_player().is_up() ) 
-    s+= `<p>You have survived the adventure. 😄</p>`
+  if( game.get_player().is_up() )  {
+    s+= `<p>You have survived the adventure. 😄</p>`    
+    s+= `<p>${ui.img('escape.png')}</p>`    
+  }
   else
   s+= `<p>You are dead. 💀</p>`
 
