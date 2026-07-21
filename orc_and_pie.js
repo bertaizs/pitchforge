@@ -1,7 +1,6 @@
 game.set_title("The orc and the pie (a very simple but classic adventure)")
 
-
-game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'examine'])
+// game.enable_verbs_only(['attack', 'pick up', 'drop', 'use', 'consume', 'examine'])
 
 let room = new Entity({
   name: "in the middle of somewhere",
@@ -21,6 +20,23 @@ let pie = new Entity({
     description: `A delicious pie.`,
 }).move_to(room)
 
+pie.choices.push( new Choice({
+    label: "eat the pie",
+    fn: ()=>{
+      if( orc.is_up() ) {
+        ui.add_event(`The orc does not let you eat the pie. You need to get rid of the orc first!`)
+        // return true
+      }
+      else {
+        // game.get_player().move_to(game.universe)
+        let text = `Congratulations, you have eaten the pie and completed this game! 😁`
+        ui.add_event(text)
+        room.interior_description = text
+        // return true
+      }
+    }
+  })  )
+
 let orc = new Entity({
     name: "orc",
     tags: ['character', 'orc'],
@@ -37,6 +53,23 @@ let orc = new Entity({
     traits: {},
     location: room,
 })
+orc.choices.push( new Choice({
+    label: "kill the orc!!!",
+    fn: ()=>{
+      if(orc.is_up()) {
+        orc.kill()
+        ui.add_event("poor orc :(")
+        return `With one mighty blow you kill the orc, who falls dead on the ground.`        
+      } else 
+        return `Come on, the orc is already dead!`
+    }
+  })  )
+
+orc.choices.push( new Choice({
+    label: "eat the orc",
+    fn: ()=>"No, it is not the orc you are supposed to eat. Hint: try eating the pie instead!"
+  })  )
+
 
 let player = new Entity({
     name: "Player",
@@ -53,22 +86,9 @@ let player = new Entity({
     location: room
 })
 
-game.add_trigger(
-  {who: player, verb: /consume/, op1: orc},
-  function(cmd) {
-    ui.add_event(`No, it is not the orc you are supposed to eat. (Try eating the pie instead.)`)
-    return true
-  }
-)
 
-game.add_trigger(
-  {who: player, verb: /use/, op1: orc},
-  function(cmd) {
-    ui.add_event(`How exactly are you planning to use the orc?`)
-    return true
-  }
-)
 
+// !!! remove
 game.add_trigger(
   {who: player, verb: /pick up|examine/, op1: pie},
   function(cmd) {
@@ -80,23 +100,11 @@ game.add_trigger(
   } 
 )
 
-game.add_trigger(
-  {who: player, verb: /(use|consume)/, op1: pie},
-  function(cmd) {
-    if( orc.is_up() ) {
-      ui.add_event(`The orc does not let you eat the pie. You need to get rid of the orc first!`)
-      return true
-    }
-    else {
-      cmd.op1.move_to(game.universe)
-      let text = `Congratulations, you have eaten the pie and completed this game! 😁`
-      ui.add_event(text)
-      room.interior_description = text
-      return true
-    }      
-  }
-)
 
+
+//
+// the below are NOT part of the adventure, just made for testing...
+// 
 
 let backroom = new Entity({
   name: "another place",
@@ -108,7 +116,6 @@ let backroom = new Entity({
   
   <p>Hint: You are supposed to kill the orc to eat the pie.</p>`,
 })
-
 
 new Path({
   from: room, 

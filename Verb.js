@@ -414,12 +414,9 @@ new Verb({
   test: false,
   // fn: ()=>"custom action",
   on_success: function(cmd) {
-    console.log('zzzz')
-    let r = cmd.fn(cmd)
-    ui.add_event(r)
-    // return r
-    // ui.add_event(`${cmd.who} starts sneaking.`)
-    // cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
+    let r = cmd.fn(cmd)   // execute a custom function
+    if( r && typeof r == 'string')
+      ui.add_event(r)
   },
   sortkey: 0,
 })

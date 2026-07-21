@@ -24,7 +24,9 @@ class Entity {
     this.description ??= false;    // can be seen when looking at the entity (or on charsheet)
     // this.interior_description --> not initialized here, but Entity.get() defaults to description
                                    //  can be seen when inside the entity
-    
+
+    this.choices ??= []            // any custom Choices for the entity -- of class Choice
+                                   
     this.clues ??= []
     this.location_clues ??= []
     
@@ -92,7 +94,7 @@ class Entity {
       game.select_player(this)
     if( this.is_location() && this.is('start') )
       game.set_start_location(this)
-  }
+  } // constructor
 
   static spawn(template, where = false, changes = {} ) {
       if( !(template in game.templates) ) throw `no such template: ${template}`
@@ -871,8 +873,15 @@ class Entity {
     }) )          
 
     c.push( new Choice({label: `ignore ${this}`}) )          
+
+    c = c.concat(this.choices)
+    c = c.concat(this.get_custom_choices())
     
     return c
+  }
+
+  get_custom_choices() {
+    return []
   }
   
 } // Entity

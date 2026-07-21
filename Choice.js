@@ -4,6 +4,7 @@ class Choice {
     for (let i in value) this[i] = value[i];
 
     this.label ??= `choose me`
+    this.sortkey ??= 0
 
     this.fn ??= (cmd)=>"nothing happens"
   }
