@@ -1,6 +1,14 @@
 todo
 ====
 
+# rework as multiple-choice
+
+- restore combat loop
+
+- common actions
+  * combat
+
+
 # mvp
 
 ## revamped - story
