@@ -39,6 +39,16 @@ function sentence( str, str2 = "" ) {
     return str.charAt(0).toUpperCase() + str.slice(1) + " " + str2;
 }
 
+function starts_with_capital(str) {
+  return /^[A-Z]/.test(str);
+}
+
+function the(noun) {
+  if(starts_with_capital(noun))
+    return noun
+  return "the "+noun
+}
+
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
 }

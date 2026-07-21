@@ -72,12 +72,13 @@ class UI {
   show_entity_choices(id) {
     let entity = game.entity(id)
 
-    let s = `entity menu for ${entity} #${id}`
+    let s = `` // `entity menu for ${entity} #${id}`
 
     // show entity icon & description
     s+= `<table><tr><td style="vertical-align: top;">`
     if( entity.get('icon') ) {
-      s+= this.img(entity.get('icon'))
+      s+= this.img(entity.get('icon'), '', "combat_icon")
+      s+= `&nbsp;&nbsp;`
     }
     s+= `</td><td style="vertical-align: top;">`
     
@@ -86,6 +87,7 @@ class UI {
       s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
     }
     s+= entity.get_description() ? `<div>`+entity.get_description()+`</div>` : ''
+    s+= `</td></tr></table>`
 
     // show choices for entity
     let choices = entity.get_choices(ui.cmd)

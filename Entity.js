@@ -850,13 +850,13 @@ class Entity {
     let c = []
 
     if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
-      c.push( new Choice({label: `pick up ${this}`,
+      c.push( new Choice({label: `pick up ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'pick up', op1: this}
       }) )
     }
 
     if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {
-      c.push( new Choice({label: `drop ${this}`,
+      c.push( new Choice({label: `drop ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'drop', op1: this}
       }) )
     }
