@@ -25,7 +25,7 @@
   </head>
   <body ondblclick="javascript:ui.exec()" onclick="ui.click_somewhere()">
 
-    <table style="border-bottom: 2px dashed red; width=100%;">
+    <table style="width=100%;">
         <tr><td>    
             <!-- game title & top menu -->
             <div id="title">title</div>             <div id="menu">menu</div>            
@@ -35,17 +35,19 @@
             <div id="main">location description appears here</div>
         </div>
         </td></tr><tr><td>
-            <div id="choices">  <!-- choices appear here -->
+            <div id="entity_choices">  <!-- choices appear here for the entity you click -->
                 this is where choices appear
             </div>
+        </td></tr><tr><td>
+            <div id="inventory" >inventory</div>
         </td></tr>
     </table>
 
 
     <!-- hide all these, not needed -->
-    <div id="cmd" >cmd</div>
+    <!--<div id="cmd" >cmd</div>-->
     
-    <div id="expl" >&nbsp;</div>
+    <!--<div id="expl" >&nbsp;</div>-->
     <div id="debug" ></div>
 
   </body>

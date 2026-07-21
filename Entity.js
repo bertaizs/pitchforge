@@ -847,15 +847,28 @@ class Entity {
 
     let c = []
 
-    if( this.is_takeable() ) {
-      c.push( new Choice({label: `pick up ${this}`}) )
+    if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
+      c.push( new Choice({label: `pick up ${this}`,
+          cmd: {who: game.get_player(), verb: 'pick up', op1: this}
+      }) )
     }
 
+    if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {
+      c.push( new Choice({label: `drop ${this}`,
+          cmd: {who: game.get_player(), verb: 'drop', op1: this}
+      }) )
+    }
+
+    
     if( this.is_creature() ) {
-      c.push( new Choice({label: `say hello to ${this}`}) )      
+      c.push( new Choice({label: `say hello to ${this}`,
+          fn: (cmd)=>`${this} also says hello to you`
+      }) )
     }
 
-    c.push( new Choice({label: `examine ${this}`}) )          
+    c.push( new Choice({label: `examine ${this}`,
+          cmd: {who: game.get_player(), verb: 'examine', op1: this}
+    }) )          
 
     c.push( new Choice({label: `ignore ${this}`}) )          
     

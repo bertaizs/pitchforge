@@ -5,12 +5,28 @@ class Choice {
 
     this.label ??= `choose me`
 
-    this.action ??= (cmd)=>"nothing happens"
+    this.fn ??= (cmd)=>"nothing happens"
   }
 
   make(cmd) {
     console.log(`making choice: ${this.label}`)
-    return this.action(cmd)
+
+    if( 'cmd' in this ) {
+      game.get_player().exec(this.cmd)
+    } else {
+      cmd.verb = 'custom'
+      cmd.fn = this.fn
+      cmd = new Cmd(cmd)
+      
+      console.log(`command`, cmd)
+      
+      let r = cmd.who.exec(cmd)      
+    }
+
+    // console.log( `r`, r)
+    // console.log('*******')
+    
+    // return this.action(cmd)
   }
 
 }

@@ -402,3 +402,24 @@ new Verb({
   },
   sortkey: 6,
 })
+
+
+
+// !!! place properly
+new Verb({
+  name: 'custom',
+  // icon: '🥷',
+  text: `custom verb.`,
+  type: 'action',
+  test: false,
+  // fn: ()=>"custom action",
+  on_success: function(cmd) {
+    console.log('zzzz')
+    let r = cmd.fn(cmd)
+    ui.add_event(r)
+    // return r
+    // ui.add_event(`${cmd.who} starts sneaking.`)
+    // cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
+  },
+  sortkey: 0,
+})
