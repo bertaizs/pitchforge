@@ -39,16 +39,17 @@ class UI {
   static numfield(text) { return `<span class="numfield">${text}</span>` }
   
   constructor() {
-    this.cmd = new Cmd({verb: 'examine'}, {validate: false})
-    this.events = []
+    this.cmd = new Cmd({verb: 'examine'}, {validate: false})  // current command
+    this.events = []  // event queue; events to play when the UI refreshes
+    this.choices = [] // choices currently offered, can pick from this by #
   }
 
   refresh() {
     this.show_main()
     // this.show_sheet(game.get_player())
-    this.show_commands()
-    this.show_menu()
-    this.display_cmd()
+    // this.show_commands()
+    // this.show_menu()
+    // this.display_cmd()
     ui.show_events()
 
     window.scroll(0,0)
@@ -58,19 +59,65 @@ class UI {
     let entity = game.entity(id)
     options.log_clicks_on_entities && console.log( `clicked on Entity: ${entity} (#${entity.id})`)
 
-    // if( this.cmd.get_verb().op1 )
-    //   this.cmd.op1 = entity
-    if( this.cmd.get_verb().op1 && !this.cmd.op1 )
-      this.cmd.op1 = entity
-    else
-    if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
-      this.cmd.op1 = entity
-    else
-    if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
-      this.cmd.op2 = entity
-    
-    this.display_cmd()
+    this.show_entity_menu(id)
   }
+
+  choose(n) {
+    this.choices[n].make()
+  }
+  
+  show_entity_menu(id) {
+    let entity = game.entity(id)
+
+    let s = `entity menu for ${entity} #${id}`
+
+    // show entity icon & description
+    s+= `<table><tr><td style="vertical-align: top;">`
+    if( entity.get('icon') ) {
+      s+= this.img(entity.get('icon'))
+    }
+    s+= `</td><td style="vertical-align: top;">`
+    
+    s+= this.print_entity(entity)
+    if( options.show_tags ) {
+      s+= `<div class="tags">${entity.get('tags').join(" ")}</div>`
+    }
+    s+= entity.get_description() ? `<div>`+entity.get_description()+`</div>` : ''
+
+    // show choices for entity
+    let choices = entity.get_choices(ui.cmd)
+    // console.log(choices)
+    if( choices.length>0 ) {
+      for( let i in choices ) {
+        let choice = choices[i]
+        // console.log(choice)
+        s+= `<ul>`
+        s+= `<li class="path" onclick="ui.choose(${i})">${choice.label}</li>`
+        s+= `</ul>`
+      }
+    }
+
+    this.choices = choices
+    document.getElementById('choices').innerHTML = s
+  }
+  
+  // __obsolete_click_entity(id) {
+  //   let entity = game.entity(id)
+  //   options.log_clicks_on_entities && console.log( `clicked on Entity: ${entity} (#${entity.id})`)
+
+  //   // if( this.cmd.get_verb().op1 )
+  //   //   this.cmd.op1 = entity
+  //   if( this.cmd.get_verb().op1 && !this.cmd.op1 )
+  //     this.cmd.op1 = entity
+  //   else
+  //   if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
+  //     this.cmd.op1 = entity
+  //   else
+  //   if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
+  //     this.cmd.op2 = entity
+    
+  //   this.display_cmd()
+  // }
     
   entity_link(e) {
     let id = game.entity(e).id
@@ -269,7 +316,7 @@ class UI {
     sheet_click( stat, plusminus, entity ) {
         entity = game.entity(entity)
         entity.change_stat( stat, plusminus )
-        this.show_menu()
+        // this.show_menu()
         this.show_sheet( entity, {mode: ui.mode})
     }
 
@@ -632,64 +679,64 @@ class UI {
       }
     }
     
-    show_menu() {
-      if(game.get_player_location().is('abstract'))
-        document.getElementById('menu').innerHTML = ''
-      else {
-        let s = ``
-        if( game.get_player().get('cp')>0 ) {
-          s+= `<span class="menuitem" style="color: gold;" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'level-up'}, quick: true}))">spend ${UI.icon('cp')+game.get_player().get('cp')} character points</span> | `  
-        }
-        if( options.debug ) {
-          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'respec'}, quick: true}))">full respec</span> | `
-          s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> | `            
-        }
-        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> | `
-        s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', quick: true}))">quests</span> | 
-        <span class="menuitem" onclick="ui.refresh()">refresh</span> | 
-        <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
-        `
-        document.getElementById('menu').innerHTML = s
-      }
-    }
+    // show_menu() {
+    //   if(game.get_player_location().is('abstract'))
+    //     document.getElementById('menu').innerHTML = ''
+    //   else {
+    //     let s = ``
+    //     if( game.get_player().get('cp')>0 ) {
+    //       s+= `<span class="menuitem" style="color: gold;" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'level-up'}, quick: true}))">spend ${UI.icon('cp')+game.get_player().get('cp')} character points</span> | `  
+    //     }
+    //     if( options.debug ) {
+    //       s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'respec'}, quick: true}))">full respec</span> | `
+    //       s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, p: {mode: 'edit'}, quick: true}))">edit</span> | `            
+    //     }
+    //     s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'charsheet', op1: player, quick: true}))">character</span> | `
+    //     s+= `<span class="menuitem" onclick="ui.exec(new Cmd({verb: 'quests', quick: true}))">quests</span> | 
+    //     <span class="menuitem" onclick="ui.refresh()">refresh</span> | 
+    //     <span class="menuitem" onclick="if(confirm('restart the game from the beginning?')) location.reload() ">restart</span>
+    //     `
+    //     document.getElementById('menu').innerHTML = s
+    //   }
+    // }
     
-    show_commands() {
-      let s = ``
-      if( options.debug ) {
-        let d = ``
-        d+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
-        d+= ` <a onclick="ui.refresh()">refresh</a> |
-        <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
-        document.getElementById('debug').innerHTML = d
-      }
+    // show_commands() {
+    //   let s = ``
+    //   if( options.debug ) {
+    //     let d = ``
+    //     d+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
+    //     d+= ` <a onclick="ui.refresh()">refresh</a> |
+    //     <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
+    //     document.getElementById('debug').innerHTML = d
+    //   }
       
-      if( ! game.get_player().get_location().is('abstract') ) {
-        s+= `
-        <div>
-        <span id="who" class="cmd">who</span>: 
+    //   if( ! game.get_player().get_location().is('abstract') ) {
+    //     s+= `
+    //     <div>
+    //     <span id="who" class="cmd">who</span>: 
         
-        <span id="verb" class="cmd">verb</span>
-        <span id="prep" class="cmd" >preposition</span>
-        <span id="op1" class="cmd" >operand 1</span>
-        <span id="sep" class="cmd" >operand separator</span>
-        <span id="op2" class="cmd" >operand 1</span>
+    //     <span id="verb" class="cmd">verb</span>
+    //     <span id="prep" class="cmd" >preposition</span>
+    //     <span id="op1" class="cmd" >operand 1</span>
+    //     <span id="sep" class="cmd" >operand separator</span>
+    //     <span id="op2" class="cmd" >operand 1</span>
 
-        &nbsp; <button class="btn" onclick="ui.exec()">⏎</button>
-        <!-- &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button> -->
-        </div>
-        `
+    //     &nbsp; <button class="btn" onclick="ui.exec()">⏎</button>
+    //     <!-- &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button> -->
+    //     </div>
+    //     `
         
-        s+= `<table>`
-        s+= this.print_verbs( game.get_player() )
-        // s+= this.print_equipment( game.get_player() )
-        s+= this.print_list( game.get_player().get_equipped_items(),
-                            {label: "equipment", not_if_empty: false, display: ui.print_entity_ministatus} )
-        s+= this.print_list( game.get_player().get_nonequipped_items(),
-                            {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
-        s+= `</table>` 
-      }      
-      document.getElementById('cmd').innerHTML = s      
-    }
+    //     s+= `<table>`
+    //     s+= this.print_verbs( game.get_player() )
+    //     // s+= this.print_equipment( game.get_player() )
+    //     s+= this.print_list( game.get_player().get_equipped_items(),
+    //                         {label: "equipment", not_if_empty: false, display: ui.print_entity_ministatus} )
+    //     s+= this.print_list( game.get_player().get_nonequipped_items(),
+    //                         {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
+    //     s+= `</table>` 
+    //   }      
+    //   document.getElementById('cmd').innerHTML = s      
+    // }
     
     print_background( background ) {
       let s = sentence( background.label+" starts with " )

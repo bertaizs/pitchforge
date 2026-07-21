@@ -16,6 +16,7 @@
     <script src="Path.js"></script>
     <script src="Clue.js"></script>
     <script src="Verb.js"></script>
+    <script src="Choice.js"></script>
     <script src="Cmd.js"></script>
     <script src="game.js"></script>
 
@@ -24,12 +25,24 @@
   </head>
   <body ondblclick="javascript:ui.exec()" onclick="ui.click_somewhere()">
 
-    <div id="title">title</div>             <div id="menu">menu</div>
-    
-    <div id="output" name="output">
-        <div id="work"></div>
-        <div id="main">main</div>
-    </div>
+    <table style="border-bottom: 2px dashed red; width=100%;">
+        <tr><td>    
+            <!-- game title & top menu -->
+            <div id="title">title</div>             <div id="menu">menu</div>            
+        </td></tr><tr><td>
+        <div id="output" name="output"> <!-- main contains location description, work contains event queue  -->
+            <div id="work">events in the event queue unfold here</div>
+            <div id="main">location description appears here</div>
+        </div>
+        </td></tr><tr><td>
+            <div id="choices">  <!-- choices appear here -->
+                this is where choices appear
+            </div>
+        </td></tr>
+    </table>
+
+
+    <!-- hide all these, not needed -->
     <div id="cmd" >cmd</div>
     
     <div id="expl" >&nbsp;</div>

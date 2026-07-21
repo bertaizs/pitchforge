@@ -841,4 +841,25 @@ class Entity {
     this.autoattack()   // default action is an autoattack
   }
 
+  // get list of choices, considering the below command
+  get_choices(cmd) {
+    console.log("get_choices", cmd)
+
+    let c = []
+
+    if( this.is_takeable() ) {
+      c.push( new Choice({label: `pick up ${this}`}) )
+    }
+
+    if( this.is_creature() ) {
+      c.push( new Choice({label: `say hello to ${this}`}) )      
+    }
+
+    c.push( new Choice({label: `examine ${this}`}) )          
+
+    c.push( new Choice({label: `ignore ${this}`}) )          
+    
+    return c
+  }
+  
 } // Entity
