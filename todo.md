@@ -3,10 +3,16 @@ todo
 
 # rework as multiple-choice
 
+// - disable / customize certain actions
+
 - restore combat loop
+  * eliminate triggers
 
 - common actions
   * combat
+
+- add the() to Verbs
+
 
 
 # mvp

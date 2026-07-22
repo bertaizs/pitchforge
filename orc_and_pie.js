@@ -20,23 +20,25 @@ let pie = new Entity({
     description: `A delicious pie.`,
 }).move_to(room)
 
-pie.choices.push( new Choice({
-    label: "eat the pie",
-    fn: ()=>{
-      if( orc.is_up() ) {
-        ui.add_event(`The orc does not let you eat the pie. You need to get rid of the orc first!`)
-        // return true
+  pie.choices.add( new Choice({
+      label: "eat the pie",
+      fn: ()=>{
+        if( orc.is_up() ) {
+          ui.add_event(`The orc does not let you eat the pie. You need to get rid of the orc first!`)
+        }
+        else {
+          let text = `Congratulations, you have eaten the pie and completed this game! 😁`
+          ui.add_event(text)
+          room.interior_description = text
+        }
       }
-      else {
-        // game.get_player().move_to(game.universe)
-        let text = `Congratulations, you have eaten the pie and completed this game! 😁`
-        ui.add_event(text)
-        room.interior_description = text
-        // return true
-      }
-    }
-  })  )
+    })  )
 
+  pie.choices.add( new Choice({
+    label: 'pick the pie up',
+    fn: ()=>`The orc does not let you near the pie.`
+  }), 'pick up')
+  
 let orc = new Entity({
     name: "orc",
     tags: ['character', 'orc'],
@@ -52,23 +54,27 @@ let orc = new Entity({
     max_spirit: 1,
     traits: {},
     location: room,
+    go_down: function() {
+      this.kill()
+      pie.choices.remove('pick up')
+    },
 })
-orc.choices.push( new Choice({
-    label: "kill the orc!!!",
-    fn: ()=>{
-      if(orc.is_up()) {
-        orc.kill()
-        ui.add_event("poor orc :(")
-        return `With one mighty blow you kill the orc, who falls dead on the ground.`        
-      } else 
-        return `Come on, the orc is already dead!`
-    }
-  })  )
+  orc.choices.add( new Choice({
+      label: "kill the orc!!!",
+      fn: ()=>{
+        if(orc.is_up()) {
+          orc.kill()
+          ui.add_event("poor orc :(")
+          return `With one mighty blow you kill the orc, who falls dead on the ground.`        
+        } else 
+          return `Come on, the orc is already dead!`
+      }
+    })  )
 
-orc.choices.push( new Choice({
-    label: "eat the orc",
-    fn: ()=>"No, it is not the orc you are supposed to eat. Hint: try eating the pie instead!"
-  })  )
+  orc.choices.add( new Choice({
+      label: "eat the orc",
+      fn: ()=>"No, it is not the orc you are supposed to eat. Hint: try eating the pie instead!"
+    })  )
 
 
 let player = new Entity({

@@ -25,7 +25,8 @@ class Entity {
     // this.interior_description --> not initialized here, but Entity.get() defaults to description
                                    //  can be seen when inside the entity
 
-    this.choices ??= []            // any custom Choices for the entity -- of class Choice
+    // this.choices = []
+    this.choices ??= new ChoiceList()    // any custom Choices for the entity -- of class Choice
                                    
     this.clues ??= []
     this.location_clues ??= []
@@ -847,41 +848,52 @@ class Entity {
   get_choices(cmd) {
     console.log("get_choices", cmd)
 
-    let c = []
+    // let generic_choices = new ChoiceList()
+    let c = new ChoiceList()
 
     if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
-      c.push( new Choice({label: `pick up ${the(this)}`,
+      c.add( new Choice({label: `pick up ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'pick up', op1: this}
-      }) )
+      }), 'pick up' )
     }
 
     if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {
-      c.push( new Choice({label: `drop ${the(this)}`,
+      c.add( new Choice({label: `drop ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'drop', op1: this}
-      }) )
+      }), 'drop' )
     }
 
     
     if( this.is_creature() ) {
-      c.push( new Choice({label: `say hello to ${this}`,
+      c.add( new Choice({label: `say hello to ${this}`,
           fn: (cmd)=>`${this} also says hello to you`
       }) )
     }
 
-    c.push( new Choice({label: `examine ${this}`,
-          cmd: {who: game.get_player(), verb: 'examine', op1: this}
-    }) )          
-
-    c.push( new Choice({label: `ignore ${this}`}) )          
-
-    c = c.concat(this.choices)
-    c = c.concat(this.get_custom_choices())
+    if( this.is_hostile_to(game.get_player()) ) {
+      c.add( new Choice({label: `attack ${the(this)}`,
+          cmd: {who: game.get_player(), verb: 'attack', op1: this}
+      }), 'attack' )
+    }
     
-    return c
+    c.add( new Choice({label: `examine ${this}`,
+          cmd: {who: game.get_player(), verb: 'examine', op1: this}
+    }), 'examine' )
+
+    // c.add( new Choice({label: `ignore ${this}`}) )         
+
+    let custom_choices = this.get_custom_choices()
+    
+    let cl = new ChoiceList()
+    cl.merge(custom_choices)  // custom choices for the given entity
+    cl.merge(this.choices)    // static choices for the given entity
+    cl.merge(c)               // generic choices last
+  
+    return cl.get_list()
   }
 
   get_custom_choices() {
-    return []
+    return new ChoiceList()
   }
   
 } // Entity
