@@ -10,6 +10,7 @@ todo
 
 - choices should use builtin test features of verbs
 
+- do not offer any choices when the game is over...
 
 # rework as multiple-choice
 

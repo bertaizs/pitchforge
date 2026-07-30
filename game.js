@@ -128,7 +128,9 @@ class Game {
   // - calls entity.exec
   // - ends turn if needed
   exec(cmd = ui.cmd) {
-    if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
+    // if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
+    if( !(cmd instanceof Cmd) ) 
+      cmd = new Cmd(cmd)
     cmd.validate()  // throws an exception if cmd is not 'valid'
     options.log_commands && console.log(`executing: `, cmd)
     

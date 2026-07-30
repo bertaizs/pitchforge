@@ -1133,46 +1133,83 @@ let idol = new Entity({
       this.description = `Most of the malign radiation is gone, merely a shadow remains, as the evil idol has been destroyed.`
       this.clues = []
       this.set_tag('remains')
-    }
-})
-
-  game.add_trigger(
-    {verb: /examine/, op1: idol},
-    function(cmd) {
+    },
+    get_custom_choices() {
+      let cl = new ChoiceList()
       if( !idol.is('remains') ) {
-        ui.text(`You feel mesmerized by the idol, lost in time and space; reality fades for a brief moment and you no longer know who or what you are, and cannot decide whether to cover in fear, run away, or bow down and worship this magnificent thing. You feel it is crushing your very soul; you struggle to move our eyes away.`)
-        cmd.who.take_damage({type: 'spirit'})        
+        cl.add(new Choice({
+          label: 'examine the strange idol',
+          fn: ()=>{
+            if( !idol.is('remains') ) {
+              ui.text(`You feel mesmerized by the idol, lost in time and space; reality fades for a brief moment and you no longer know who or what you are, and cannot decide whether to cover in fear, run away, or bow down and worship this magnificent thing. You feel it is crushing your very soul; you struggle to move our eyes away.`)
+              player.take_damage({type: 'spirit'})
+              game.exec({verb: 'examine', op1: idol})
+            } else {
+              game.exec({verb: 'examine', op1: idol})
+            }
+          }
+        }), 'examine')
+  
+        cl.add(new Choice({
+          label: `smash the idol into the ground`,
+          fn: ()=>{
+            if( player.test('tough', 3) ) {
+              ui.text(`You smash the evil idol into the ground with full force and breaks into pieces.`)
+              idol.go_down()
+            } else {
+              ui.text(`You smash the evil idol into ground with all your force, but it just does not break. You are not strong enough.`)
+            }
+          },
+        }))
+  
+        cl.add(new Choice({
+          label: `hack the idol with your axe`,
+          fn: ()=>{
+            ui.text(`Your axe shatter the evil idol.`)
+            idol.go_down()
+          },
+          reqs: {items: /axe/}
+        }))
+  
+        cl.add(new Choice({
+          label: `hack the idol with your crowbar`,
+          fn: ()=>{
+            ui.text(`You smash the evil idol with your crowbar, it breaks into pieces.`)
+            idol.go_down()
+          },
+          reqs: {items: /axe/}
+        })) 
       }
-      return false
-    }
-  )
-
-  game.add_trigger(
-    {verb: /attack/, op1: idol},
-    function(cmd) {
-      ui.text(`You crush the evil idol.`)
-      idol.go_down()
-      return true
-    }
-  )
-
-  game.add_trigger(
-    {verb: /use/, op1: /axe/, op2: idol},
-    function(cmd) {
-      ui.text(`You crush the evil idol.`)
-      idol.go_down()
-      return true
-    }
-  )
-  
-  
-
+      return cl        
+    },
+})  // idol
 
 
 let vampire_eyes = new Entity({
     name: "red eyes",
     description: `You feel lost in the mesmerizing <font style="color: red;">red eyes</font> of the vampire.`,
 })
+  vampire_eyes.choices.add(new Choice({
+    label: 'examine the red eyes',
+    fn: ()=>{
+      game.exec({verb: 'examine', op1: vampire_eyes})
+
+      if( vampire.is_up() ) {
+        ui.text(`The vampire's eyes are peculiar... mesmerizing... You feel you must hold the creature's stare... forever...`)
+        if( player.test('resistance', Math.trunc(vampire.performance('charm')/2) ) ) {
+          player.take_damage({type: 'spirit', value: 3})
+          if( player.is_up() ) {
+            ui.text(`Summoning all your spiritual strength, you look away from the `, vampire, `'s eyes.`)
+          }
+        } else {
+          ui.text(`You feel helpless as the `,vampire,` steps right next to you and reaches out to your neck with his fangs. The bite hurts just a little...`)          
+          player.go_down()
+        }
+      }
+      else
+        throw `this should not happen, the vampire is already dead`
+    }
+  }), 'examine')
 
 let vampire = new Entity({
     name: "vampire",
@@ -1229,26 +1266,26 @@ let vampire = new Entity({
     }
   )
 
-  game.add_trigger(
-    {verb: /examine/, op1: vampire_eyes, },
-    function(cmd) {
-      if( vampire.is_up() ) {
-        ui.text(`The vampire's eyes are peculiar... mesmerizing... You feel you must hold the creature's stare... forever...`)
-        if( cmd.who.test('resistance', Math.trunc(vampire.performance('charm')/2) ) ) {
-          cmd.who.take_damage({type: 'spirit', value: 3})
-          if( cmd.who.is_up() ) {
-            ui.text(`Summoning all your spiritual strength, you look away from the `, vampire, `'s eyes.`)
-          }
-          return true
-        } else {
-          ui.text(`You feel helpless as the `,vampire,` steps right next to you and reaches out to your neck with his fangs. The bite hurts just a little...`)          
-          cmd.who.go_down()
-          return true
-        }
-      }
-      throw `this should not happen, the vampire is already dead`
-    }
-  )
+  // game.add_trigger(
+  //   {verb: /examine/, op1: vampire_eyes, },
+  //   function(cmd) {
+  //     if( vampire.is_up() ) {
+  //       ui.text(`The vampire's eyes are peculiar... mesmerizing... You feel you must hold the creature's stare... forever...`)
+  //       if( cmd.who.test('resistance', Math.trunc(vampire.performance('charm')/2) ) ) {
+  //         cmd.who.take_damage({type: 'spirit', value: 3})
+  //         if( cmd.who.is_up() ) {
+  //           ui.text(`Summoning all your spiritual strength, you look away from the `, vampire, `'s eyes.`)
+  //         }
+  //         return true
+  //       } else {
+  //         ui.text(`You feel helpless as the `,vampire,` steps right next to you and reaches out to your neck with his fangs. The bite hurts just a little...`)          
+  //         cmd.who.go_down()
+  //         return true
+  //       }
+  //     }
+  //     throw `this should not happen, the vampire is already dead`
+  //   }
+  // )
 
 let butler = new Entity({
   name: "the butler",
