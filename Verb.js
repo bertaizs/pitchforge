@@ -356,6 +356,31 @@ new Verb({
 })
 
 new Verb({
+  name: 'force',
+  // icon: '🍔',
+  text: `Open something locked open.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( cmd.op1.is('locked') ) {
+      if( cmd.who.test('tough', 
+          cmd.op1.performance('tough')   ) ) {
+        cmd.op1.remove_tag('locked')
+        cmd.op1.remove_tag('closed')
+        cmd.op1.set_tag('open')
+        ui.text(cmd.who, ` has ripped `, cmd.op1, ` open!`)
+      } else {
+        ui.text(cmd.who, ` failed to force `, cmd.op1, ` open.`)
+      }
+    } else {      
+      ui.text( cmd.op1, ` is not locked.`)
+    }
+  },
+  // sortkey: 6,
+})
+
+new Verb({
   name: 'close',
   // icon: '🍔',
   text: `Close something open.`,

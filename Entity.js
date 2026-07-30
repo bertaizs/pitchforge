@@ -648,7 +648,6 @@ class Entity {
             fail = true
       }
       if( !fail ) {
-        // console.log("tiszta", req)
         for( let k of req.knowledge ) {
           if(!(k instanceof Info)) {
             console.log(k)
@@ -873,16 +872,22 @@ class Entity {
       }), 'drop' )
     }
 
-    if( this.is('closed') ) {
-      c.add( new Choice({label: `open ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'open', op1: this}
-      }), 'open' )      
-    }
-    
     if( this.is('open') ) {
       c.add( new Choice({label: `close ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'close', op1: this}
       }), 'close' )
+    }
+
+    if( this.is('closed') ) {
+      c.add( new Choice({label: `open ${the(this)}`,
+          cmd: {who: game.get_player(), verb: 'open', op1: this}
+      }), 'open' )
+
+      c.add( new Choice({label: `force ${the(this)} open`,
+          cmd: {who: game.get_player(), verb: 'force', op1: this},
+          requirements: {tough: 2},
+      }), 'force' )
+      
     }
 
     if( this.is('consumable') ) {
@@ -915,8 +920,11 @@ class Entity {
     cl.merge(custom_choices)  // custom choices for the given entity
     cl.merge(this.choices)    // static choices for the given entity
     cl.merge(c)               // generic choices last
-  
-    return cl.get_list()
+
+    // only offer those choices where the given char meets the requirements
+    let list = cl.get_list() 
+    list = list.filter( (x)=>cmd.who.meets_requirements(x.requirements) )
+    return list
   }
 
   get_custom_choices() {

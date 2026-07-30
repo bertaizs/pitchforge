@@ -5,16 +5,20 @@ todo
 - do not display player info during chargen
 - location title should not be clickable (???)
 
+- all verbs must use the same loggig format:
+  ui.text
+
+
 # rework as multiple-choice
 
-// - disable / customize certain actions
-
-- restore combat loop
-  * eliminate triggers
+* eliminate triggers
 
 - common actions
   * equip weapons
   * combat
+  * lockpicking
+  * forcing locks
+  * unlocking doors
 
 - mark source of choices, make it possible to disable this via options
 

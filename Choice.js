@@ -17,7 +17,13 @@ class Choice {
     if( 'cmd' in this && !(this.cmd instanceof Cmd) )
       this.cmd = new Cmd(this.cmd)
 
+    this.requirements ??= {}
+
     this.fn ??= (cmd)=>"nothing happens"
+  }
+
+  viable_for(who) {
+    return game.entity(who).meets_requirements(this.requirements)
   }
 
   // executes the given choice
