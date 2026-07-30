@@ -881,11 +881,7 @@ class Entity {
 
     if( this.is('consumable') ) {
       c.add( new Choice({label: `consume ${the(this)}`,
-          fn: (cmd)=>{
-                ui.add_event(`You consume ${the(this)}.`)
-                this.consumed_by(cmd.who)
-                this.destroy()
-              }
+          cmd: {who: game.get_player(), verb: 'consume', op1: this},
       }), 'consume' )
     }
     

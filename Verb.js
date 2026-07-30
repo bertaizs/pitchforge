@@ -321,7 +321,13 @@ new Verb({
   test: false,
   op1: true,
   on_success: function(cmd) {
-    ui.add_event(`This does not seem to work.`)
+    if( !cmd.op1.is('consumable') ) {
+      ui.text(`${the(cmd.op1)} cannot be consumed.}`)
+    } else {
+      ui.text(`${cmd.who} consumes ${cmd.op1}.`)
+      cmd.op1.consumed_by(cmd.who)
+      cmd.op1.destroy()
+    }
   },
   sortkey: 6,
 })
