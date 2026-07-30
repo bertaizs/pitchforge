@@ -918,6 +918,10 @@ class Entity {
           cmd: {who: game.get_player(), verb: 'attack', op1: this}
       }), 'attack' )
     }
+
+    if( game.get_player().id == this.id ) {
+      c.add_verb('recover', cmd, this, {label: `take a breather to recover a bit`})
+    }
     
     c.add_verb('examine', cmd, this)
     

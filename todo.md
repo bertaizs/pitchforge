@@ -5,6 +5,7 @@ todo
 - do not display player info during chargen
 - location title should not be clickable (???)
 
+- add the() to Verbs
 - all verbs must use the same loggig format:
   ui.text
 - fix capitalization in ui.text
@@ -13,7 +14,6 @@ todo
 
 - do not offer any choices when the game is over...
 
-- chandellier icon file needs to be updated online ll->l
 
 # rework as multiple-choice
 
@@ -25,7 +25,7 @@ todo
 
 - mark source of choices, make it possible to disable this via options
 
-- add the() to Verbs
+- talking to the Butler
 
 
 
