@@ -8,16 +8,15 @@ todo
 - all verbs must use the same loggig format:
   ui.text
 
+- choices should use builtin test features of verbs
+
 
 # rework as multiple-choice
 
-* eliminate triggers
+* eliminate triggers...
 
 - common actions
-  * equip weapons
   * combat
-  * lockpicking
-  * forcing locks
   * unlocking doors
 
 - mark source of choices, make it possible to disable this via options

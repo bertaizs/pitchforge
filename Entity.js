@@ -891,6 +891,13 @@ class Entity {
       }), 'drop' )
     }
 
+    if( this.is('weapon') && game.get_player().has(this) && !this.position ) {
+      c.add_verb('equip', cmd, this)
+    }
+    if( this.is('weapon') && game.get_player().has(this) && this.position ) {
+      c.add_verb('unequip', cmd, this)
+    }
+
     if( this.is('open') ) {
       c.add_verb('close', cmd, this)      
     }
@@ -901,13 +908,17 @@ class Entity {
       c.add_verb('pick lock', cmd, this, {label: `pick the lock on ${the(this)}`} )
     }
 
-    if( this.is('consumable') ) {
-      c.add( new Choice({label: `consume ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'consume', op1: this},
-      }), 'consume' )
+    if( this.is('consumable') && game.get_player().has(this) ) {
+      c.add_verb('consume', cmd, this)
     }
     
-    if( this.is_creature() ) {
+    // if( this.is('consumable') ) {
+    //   c.add( new Choice({label: `consume ${the(this)}`,
+    //       cmd: {who: game.get_player(), verb: 'consume', op1: this},
+    //   }), 'consume' )
+    // }
+    
+    if( this.is_creature() && this.id!=game.get_player().id ) {
       c.add( new Choice({label: `say hello to ${this}`,
           fn: (cmd)=>`${this} also says hello to you`
       }) )
