@@ -568,24 +568,25 @@ let pantry = new Entity({
     description: `There are lots of barrels in this cellar, some big, some small, but none seem interesting.
     However, there is a huge ${ui.e(secret_barrel, "strange barrel")} at the far end of the cellar, which looks very suspicious.`
   })
-  
-  game.add_trigger(
-    {verb: /use/, op1: /crowbar|axe/, op2: barrels},
-    function(cmd) {
-      ui.text(`It makes no sense in whacking those barrels. It would take time to break them and you would be swimming in wine.`)
-      return true
-    }
-  )
 
-  game.add_trigger(
-    {verb: /use/, op1: /crowbar|axe/, op2: secret_barrel},
-    function(cmd) {
-      ui.text(`You break the empty barrel and reveal a secret passage inside!`)
+  barrels.choices.add(new Choice({
+    label: `hack the barrels`,
+    fn: ()=>`It makes no sense in whacking those barrels. It would take time to break them and you would be swimming in wine.`,
+    reqs: {item: /crowbar|axe/ }
+  }))
+
+  secret_barrel.choices.add(new Choice({
+    label: `hack that strange barrel`,
+    fn: ()=>{
+      let tool = 'crowbar'
+      if( game.get_player().has_a(/axe/) )
+        tool = 'axe'
+      ui.text(`You break the empty barrel with your ${tool} and reveal a secret passage inside!`)
       barrels.description = `There are many barrels here. One of them is bolted to the wall at the far end of the cellar, it is broken open, and there is a hidden passage inside.`
-      cmd.who.gain_info( new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) )
-      return true
-    }
-  )
+      game.get_player().gain_info( new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) )      
+    },
+    reqs: {item: /crowbar|axe/ }
+  }))
   
   
 let cellar = new Entity({
@@ -1048,25 +1049,30 @@ let ladder = new Entity({
     }
 })
 
-  game.add_trigger(
-    {verb: /use/, op1: ladder, op2: /mansion|^$/},
-    function(cmd) {
-      if( cmd.who.get_location() == mansion_left || cmd.who.get_location() == mansion_right ) {
-        ui.add_event(`You lean the ladder against the wall.`)
-        ladder.move_to( cmd.who.get_location(), `A [ladder] has been leaned against the wall.` )
-        ladder.connect( cmd.who.get_location(), mansion_roof )
-        return true
-      }
-      if( cmd.who.get_location() == well_area ) {
-        ui.add_event(`You slip the ladder into the well, it now reaches the bottom.`)
-        ladder.move_to(well_area, `There is a [ladder] leading down into the well.`)
-        ladder.connect( well, well_area )
-        return true
-      }
-      ui.add_event(`There is no point in using the ladder here.`)
-      return true
+mansion.choices.add(new Choice({
+  label: `lean the ladder against the mansion's wall`,
+  fn: ()=>{
+    if( player.get_location() == mansion_left || player.get_location() == mansion_right ) {
+      ui.text(`You lean the ladder against the wall.`)
+      ladder.move_to( player.get_location(), `A [ladder] has been leaned against the wall.` )
+      ladder.connect( player.get_location(), mansion_roof )
+    } else {
+      ui.text(`You do not find a suitable spot.`)
     }
-  )
+  },
+  reqs: {items: ladder }
+}))
+
+well.choices.add(new Choice({
+  label: `place the ladder into the well`,
+  fn: ()=>{
+    ui.text(`You carefully place the ladder into the well, leaning it to the well's wall..`)
+    ladder.move_to(well_area, `There is a [ladder] leading down into the well.`)
+    ladder.connect( well, well_area )
+  },
+  reqs: {items: ladder }
+}))
+
   
 let ham = new Entity({
   tags: ['item', 'consumable'],
