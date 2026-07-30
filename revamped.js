@@ -1307,7 +1307,7 @@ let vampire = new Entity({
     act() {
       if( this.get_location()==coffin && coffin.is('open') ) {
         this.move_to(coffin_room)
-        ui.text(`A `,vampire,` rises from the coffin!<br/>
+        ui.text(`A ${ui.e(vampire)} rises from the coffin!<br/>
           `+ui.img('vampire3.png'))
         return true
       }
@@ -1473,56 +1473,52 @@ garlic_braid.choices.add( new Choice({
 
 
 
-
-game.add_trigger(
-  {verb: /use/, op1: mansion_front_door_knocker, op2: /^$/},
-  function(cmd) {
-  ui.text(`You knock on the mansion's door.`)
-  if( the_staff.is_up() ) {
-    ui.text(`You hear some movement from the outside, and after a while the door opens by an inch and an ${ui.e(butler, "elderly gentleman")} peeps at you.<br/>`,
-            ui.img('butler_behind_door.png') ,
-            `<i>Please leave. The master does not wish to be disturbed.</i>`
-            )
-    if( the_staff.knocked ) {
-      the_staff.attitude--
-      ui.text(`He looks very disappointed.`)
-    }
-    the_staff.knocked = true            
-  } else
-    ui.text(`There is no response.`)
-  
-  return true
+mansion_front_door_knocker.choices.add(new Choice({
+  label: `knock on the door with the knocker`,
+  fn: ()=>{
+    if( the_staff.is_up() ) {
+      ui.text(`You hear some movement from the outside, and after a while the door opens by an inch and an ${ui.e(butler, "elderly gentleman")} peeps at you.<br/>`,
+              ui.img('butler_behind_door.png') ,
+              `<i>Please leave. The master does not wish to be disturbed.</i>`
+              )
+      if( the_staff.knocked ) {
+        the_staff.attitude--
+        ui.text(`He looks very disappointed.`)
+      }
+      the_staff.knocked = true            
+    } else
+      ui.text(`There is no response.`)    
   }
-)
+}))
 
-game.add_trigger(
-  {verb: /talk/, op1: butler, op2: /^$/},
-  function(cmd) {
-  if( the_staff.is_up() && the_staff.knocked ) {
-    if( cmd.who.test('social', Test.EASY-the_staff.attitude) ) {
-      ui.text(ui.img('butler_behind_door.png') ,
-              `<br/><i>Please come in, I shall announce your arrival to the master.</i>` )
-      ui.text(`He moves away from the doorway, the mansion's door opens up and now you can enter.`)
-      mansion_front_door.remove_tag('locked')
-      mansion_front_door.remove_tag('closed')
-      mansion_front_door.set_tag('open')
-    } else {
-      ui.text(ui.img('butler_behind_door.png') ,
-              `<br/><i>Please leave, tramps have absolutely no business here.` )
-      ui.text(`He closes the door.`)
-      the_staff.attitude--      
-    }
+butler.choices.add(new Choice({
+  label: `introduce yourself and ask him to let you in`,
+  fn: ()=>{
+    if( the_staff.is_up() && the_staff.knocked ) {
+      if( player.test('social', Test.EASY-the_staff.attitude) ) {
+        ui.text(ui.img('butler_behind_door.png') ,
+                `<br/><i>Please come in, I shall announce your arrival to the master.</i>` )
+        ui.text(`He moves away from the doorway, the mansion's door opens up and now you can enter.`)
+        mansion_front_door.remove_tag('locked')
+        mansion_front_door.remove_tag('closed')
+        mansion_front_door.set_tag('open')
+      } else {
+        ui.text(ui.img('butler_behind_door.png') ,
+                `<br/><i>Please leave, tramps have absolutely no business here.` )
+        ui.text(`He closes the door.`)
+        the_staff.attitude--      
+      }
+    }    
   }
-  return true
-  }
-)
+}))
 
-game.add_trigger(
-  {verb: /attack/, op1: butler },
-  function(cmd) {
+butler.choices.add(new Choice({
+  label: `attack the butler`,
+  fn: ()=>{
     ui.text(`The butler has no intention to fight, he just closes the door.`)
     the_staff.attitude = -Infinity
-  })
+  }
+}))
 
 
 game.ending.description = function() {
