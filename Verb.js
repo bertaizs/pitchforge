@@ -382,6 +382,30 @@ new Verb({
 })
 
 new Verb({
+  name: 'pick lock',
+  // icon: '🍔',
+  text: `Pick the lock on something locked.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  req: {items: /lockpick/},
+  on_success: function(cmd) {
+    if( cmd.op1.is('locked') ) {
+      if( cmd.who.test('lockpicking', 
+          cmd.op1.performance('cool')   ) ) {
+        cmd.op1.remove_tag('locked')
+        ui.text(cmd.who, ` has picked the lock on `, cmd.op1)
+      } else {
+        ui.text(cmd.who, ` failed to pick the lock on `, cmd.op1)
+      }
+    } else {      
+      ui.text( cmd.op1, ` is not locked.`)
+    }
+  },
+  // sortkey: 6,
+})
+
+new Verb({
   name: 'close',
   // icon: '🍔',
   text: `Close something open.`,

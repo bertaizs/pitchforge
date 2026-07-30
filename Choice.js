@@ -17,13 +17,13 @@ class Choice {
     if( 'cmd' in this && !(this.cmd instanceof Cmd) )
       this.cmd = new Cmd(this.cmd)
 
-    this.requirements ??= {}
+    this.reqs ??= {}
 
     this.fn ??= (cmd)=>"nothing happens"
   }
 
   viable_for(who) {
-    return game.entity(who).meets_requirements(this.requirements)
+    return game.entity(who).meets_requirements(this.reqs)
   }
 
   // executes the given choice
@@ -68,6 +68,17 @@ class ChoiceList {
 
     this.hash[tag] = choice   // add the choice with a tag
     return this
+  }
+
+  add_verb( verb, cmd, op, params = {} ) {
+    if( !(verb in VERBS) )
+      throw `unknown verb: ${verb}, cannot add such a choice`
+
+    this.add( new Choice({
+        label: params['label'] ?? `${verb} ${the(op)}`,
+        cmd: {who: cmd.who, verb: verb, op1: op},
+        reqs: VERBS[verb].req,
+      }), verb  )
   }
 
   // removes any Choices with the given tag from this ChoiceList

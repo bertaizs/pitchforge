@@ -411,52 +411,6 @@ game.character_backgrounds = {
 // 
 
 
-// lockpicking
-game.add_trigger(
-  {verb: /use/, op1: /lockpick/, op2: /.*/},
-  function(cmd) {
-    if( cmd.op2.is('locked') ) {
-      
-      let lock = cmd.op2
-      if( cmd.who.test('lockpicking', 
-          cmd.op2.performance('cool')   ) ) {
-        cmd.op2.remove_tag('locked')
-        ui.text(cmd.who, ` has picked the lock on `, cmd.op2)
-        return true
-      } else {
-        ui.text(cmd.who, ` failed to pick the lock on `, cmd.op2)
-        return true
-      }
-
-    }
-    ui.text( cmd.op2, ` is not locked.`)
-    return true
-  }, 999 )
-
-// forcing a door with a crowbar
-// game.add_trigger(
-//   {verb: /use/, op1: /crowbar/, op2: /.*/},
-//   function(cmd) {
-//     if( cmd.op2.is('locked') ) {
-      
-//       let lock = cmd.op2
-//       if( cmd.who.test('tough', 
-//           cmd.op2.performance('tough')   ) ) {
-//         cmd.op2.remove_tag('locked')
-//         cmd.op2.remove_tag('closed')
-//         cmd.op2.set_tag('open')
-//         ui.text(cmd.who, ` has ripped `, cmd.op2, ` open!`)
-//         return true
-//       } else {
-//         ui.text(cmd.who, ` failed to force `, cmd.op2, ` open.`)
-//         return true
-//       }
-
-//     }
-//     ui.text( cmd.op2, ` is not locked.`)
-//     return true
-//   }, 999 )
-
 // unlocking or locking a door with a key
 game.add_trigger(
   {verb: /use/, op1: /.*/, op2: /.*/},

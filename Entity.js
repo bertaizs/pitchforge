@@ -892,21 +892,13 @@ class Entity {
     }
 
     if( this.is('open') ) {
-      c.add( new Choice({label: `close ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'close', op1: this}
-      }), 'close' )
+      c.add_verb('close', cmd, this)      
     }
 
     if( this.is('closed') ) {
-      c.add( new Choice({label: `open ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'open', op1: this}
-      }), 'open' )
-
-      c.add( new Choice({label: `force ${the(this)} open`,
-          cmd: {who: game.get_player(), verb: 'force', op1: this},
-          requirements: VERBS['force'].req,
-      }), 'force' )
-      
+      c.add_verb('open', cmd, this)
+      c.add_verb('force', cmd, this )
+      c.add_verb('pick lock', cmd, this, {label: `pick the lock on ${the(this)}`} )
     }
 
     if( this.is('consumable') ) {
@@ -941,7 +933,7 @@ class Entity {
 
     // only offer those choices where the given char meets the requirements
     let list = cl.get_list() 
-    list = list.filter( (x)=>cmd.who.meets_requirements(x.requirements) )
+    list = list.filter( (x)=>cmd.who.meets_requirements(x.reqs) )
     return list
   }
 
