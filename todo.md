@@ -9,7 +9,10 @@ todo
   * eliminate triggers
 
 - common actions
+  * equip weapons
   * combat
+
+- mark source of choices, make it possible to disable this via options
 
 - add the() to Verbs
 

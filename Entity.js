@@ -216,9 +216,19 @@ class Entity {
   equip( entity ) {
     
   }
-  
+
+  // receives an associative array, copies those key=>value pairs into this
   set(changes) {
+    // this copies attributes into this, including any objects nested
+    // this does NOT copy functions
     Object.assign(this, JSON.parse(JSON.stringify(changes)));
+
+    // here ne need to call out which functions to copy explicitly
+    let functions_to_copy = ['consumed_by']
+    for( let i in functions_to_copy ) {
+      if( functions_to_copy[i] in changes )
+        this[functions_to_copy[i]] = changes[functions_to_copy[i]]
+    }
     return this;
   }
   
@@ -863,6 +873,21 @@ class Entity {
       }), 'drop' )
     }
 
+    if( this.is('open') ) {
+      c.add( new Choice({label: `close ${the(this)}`,
+          cmd: {who: game.get_player(), verb: 'drop', op1: this}
+      }), 'close' )
+    }
+
+    if( this.is('consumable') ) {
+      c.add( new Choice({label: `consume ${the(this)}`,
+          fn: (cmd)=>{
+                ui.add_event(`You consume ${the(this)}.`)
+                this.consumed_by(cmd.who)
+                this.destroy()
+              }
+      }), 'consume' )
+    }
     
     if( this.is_creature() ) {
       c.add( new Choice({label: `say hello to ${this}`,

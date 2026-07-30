@@ -1,3 +1,11 @@
+
+// these are offered to the player to choose from
+// a Choice can have:
+// * a cmd (in its attribute cmd), or
+// * a custom function
+// the latter are also executed via game.exec(cmd), via Verb 'custom'
+// 
+// Choices are often organized into a ChoiceList (also in this file)
 class Choice {
   
   constructor(value = {}) {
@@ -5,30 +13,36 @@ class Choice {
 
     this.label ??= `choose me`
     this.sortkey ??= 0
+    // this.cmd
+    if( 'cmd' in this && !(this.cmd instanceof Cmd) )
+      this.cmd = new Cmd(this.cmd)
 
     this.fn ??= (cmd)=>"nothing happens"
   }
 
-  make(cmd) {
+  // executes the given choice
+  make() {
     console.log(`making choice: ${this.label}`)
-
+    let cmd
     if( 'cmd' in this ) {
-      game.get_player().exec(this.cmd)
+      cmd = this.cmd
+      // console.log(`command`, this.cmd)
+      // game.exec(this.cmd)
     } else {
-      cmd.verb = 'custom'
-      cmd.fn = this.fn
-      cmd = new Cmd(cmd)
-      
-      console.log(`command`, cmd)
-      
-      let r = cmd.who.exec(cmd)      
+      cmd = new Cmd({verb: 'custom', fn: this.fn})
+      // cmd.verb = 'custom'
+      // cmd.fn = this.fn      
     }
-
+    console.log(`command`, cmd)
+    let r = game.exec(cmd)      
   }
 
 }
 
 
+// the list can have two type of Choices
+// * one with a tag; this tag must be unique
+// * untagged, they are just a list
 class ChoiceList {
 
   constructor(values = {}) {
@@ -50,19 +64,21 @@ class ChoiceList {
     return this
   }
 
+  // removes any Choices with the given tag from this ChoiceList
   remove(tag) {
     delete this.hash[tag]
   }
 
-  // return the choices as a list (i.e. without tags, only sorting by a sortkey)
+  // return all Choices as a list (i.e. without tags, only sorting by a sortkey)
   get_list() {
     return Object.values(this.hash).concat(this.arr).sort( (a, b) => a.sortkey - b.sortkey )
   }
 
+  // combine all Choices in ChoiceList withList into this ChoiceList
   merge( withList ) {
-    this.arr = this.arr.concat(withList.arr)
+    this.arr = this.arr.concat(withList.arr)  // arrays are just appended
     for( let i in withList.hash )
-      this.add(withList.hash[i], i)
+      this.add(withList.hash[i], i)           // for tagged choices, if the tag already exists, the duplicate is dropped
 
     return this
   }

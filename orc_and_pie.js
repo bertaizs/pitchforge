@@ -46,6 +46,7 @@ let orc = new Entity({
     description: `A bloodthirsty orc. It is thirsty for blood, but it is not hungry. Still, it has a pie. A yummy-yummy pie. This is an orc so it does not want to share.`,
     // epithet: "",
     icon: 'orc1.jpg',
+    faction: 'enemy', // ???
     tough:  1,
     cool:   1,
     sharp:  1,
@@ -63,8 +64,8 @@ let orc = new Entity({
       label: "kill the orc!!!",
       fn: ()=>{
         if(orc.is_up()) {
-          orc.kill()
-          ui.add_event("poor orc :(")
+          orc.go_down()
+          ui.add_event("Poor orc does not stand a chance against you. :(")
           return `With one mighty blow you kill the orc, who falls dead on the ground.`        
         } else 
           return `Come on, the orc is already dead!`
@@ -91,21 +92,6 @@ let player = new Entity({
     traits: {},
     location: room
 })
-
-
-
-// !!! remove
-game.add_trigger(
-  {who: player, verb: /pick up|examine/, op1: pie},
-  function(cmd) {
-    if( orc.is_up() ) {
-      ui.add_event(`The orc does not let you close to the pie!`)
-      return true
-    }
-    return false
-  } 
-)
-
 
 
 //

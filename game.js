@@ -69,8 +69,11 @@ class Game {
     location = this.entity(location)
     this.chargen.onward = location
   }
-    
+
+  // !!! todo: remove
   add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
+    console.log('add_trigger')
+    
     if( 'verb' in pattern == false ) throw `no verb in pattern: ${pattern}`
     pattern.who ??= /.*/
     pattern.op1 ??= /.*/
@@ -122,8 +125,6 @@ class Game {
 
   
   // called when someone executes a command
-  // - checks triggers
-  // - if no trigger is found, uses the default action for the verb
   // - calls entity.exec
   // - ends turn if needed
   exec(cmd = ui.cmd) {
@@ -131,22 +132,12 @@ class Game {
     cmd.validate()  // throws an exception if cmd is not 'valid'
     options.log_commands && console.log(`executing: `, cmd)
     
-    // if any of the triggers match, execute the triggered actions
-    let triggers = game.triggers.sort((x,y)=>(x.sortkey-y.sortkey))
-    let i = 0
-    let action_triggered = false
-    while( !action_triggered && i<triggers.length ) { // go through each trigger until we trigger an action
-      let trigger = triggers[i]
-      if( this.match(trigger.pattern, cmd) ) {
-        options.log_matching && console.log(`match found: `, trigger.pattern, cmd)
-        action_triggered = trigger.action(cmd) // trigger returns true if a 'final' action is found
-      }
-      i++
-    }
-    if( !action_triggered ) {   // if no action has been triggered, execute the default action
-      options.log_matching && console.log(`executing default command`)
-      this.get_current_entity().exec(cmd)      
-    }
+    // if( !action_triggered ) {   // if no action has been triggered, execute the default action
+      // options.log_matching && console.log(`executing default command`)
+
+    this.get_current_entity().exec(cmd)      
+    // }
+    console.log('*******************')
     
     // TODO: rework action economy and MOVES?????
     // check if the given cmd is turn ending for the player
@@ -418,6 +409,7 @@ game.character_backgrounds = {
 // GENERIC TRIGGERS
 // these should work similarly in all games
 // 
+// !!! todo: remove all of these, replace with choices
 
 // doors: opening and closing
 game.add_trigger(

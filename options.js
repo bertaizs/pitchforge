@@ -41,7 +41,7 @@ options.show_tags = true
 
 options.debug = false    // debug mode
 
-options.npcs_passive = true // if true, npcs do not act
+options.npcs_passive = false // if true, npcs do not act
 options.no_ticks = false // if true, ticks/time is turned off
 
 options.end_game_on_player_down = true
@@ -49,3 +49,5 @@ options.end_game_on_player_down = true
 options.show_full_knowledge = true  // quests/journal shows the full Info block as JSON
 
 options.show_events_at_other_locations = false
+
+options.show_choice_source = true

@@ -298,19 +298,18 @@ let bushes = new Entity({
     ]
   })
 
-  game.add_trigger(
-    {verb: /use/, op1: car, op2: car_keys },
-    function(cmd) {
-      ui.text(`You start the engine. The car is old, but it is working!`)
-      ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)
-      car.set_tag('running')
-      return true
-    })
-  
-  game.add_trigger(
-    {verb: /use/, op1: car, op2: /^$/ },
-    function(cmd) {
-      if( !car.is('running')) {
+  car.choices.add( new Choice({
+      label: "start the engine with the keys",
+      fn: ()=>{
+        ui.text(`You start the engine. The car is old, but it is working!`)
+        ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)
+        car.set_tag('running')
+      }
+      // !!! reqs: player has the keys
+    })  )
+  car.choices.add( new Choice({
+      label: "hotwire the car",
+      fn: ()=>{
         if( cmd.who.test('crafting', Test.ADVANCED) ) {
           ui.text(`You have hotwired the car. Cool! The engine is running.`)
           ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)        
@@ -318,12 +317,20 @@ let bushes = new Entity({
         } else {
           ui.text(`You have no idea how to hotwire the car. You will need to use keys.`)
         }
-      } else {
-        ui.text(`You hop into the car and drive on. Time to say goodbye to this accursed place!`)
-        player.move_to(game.ending)
       }
-      return true
-    })
+      // !!! reqs: player can hotwire the car
+    })  )
+  car.choices.add( new Choice({
+      label: "hop into the car and drive away",
+      fn: ()=>{
+        if( car.is('running')) {
+          ui.text(`You hop into the car and drive on. Time to say goodbye to this accursed place!`)
+          player.move_to(game.ending)
+        } else {
+          ui.text(`You need to start the engine first, somehow...`)          
+        }
+      }
+    })  )
 
 
 let garage = new Entity({
@@ -476,20 +483,18 @@ let bell_pull = new Entity({
   // icon: 'chandelier.png',
   description: 'This rope is connected to some bells for signalling servants. You wonder if there are any servants alive would could be alerted.'
 })
+  bell_pull.choices.add( new Choice({
+      label: "pull the rope",
+      fn: ()=>{
+        ui.text(`A bell rings somewhere to signal the servants.`)
+        if( the_staff.is_up() ) {
+          ui.text(`The lumbering figure of the staff appears.`)
+          the_staff.move_to( game.get_player().get_location() )
+        } else 
+        ui.text(`Nothing happens.`)
+      }
+    })  )
 
-game.add_trigger(
-  {verb: /use/, op1: bell_pull, op2: /^$/},
-  function(cmd) {
-    ui.text(`A bell rings somewhere to signal the servants.`)
-    if( the_staff.is_up() ) {
-      ui.text(`The lumbering figure of the staff appears.`)
-      the_staff.move_to( cmd.who.get_location() )
-      return false
-    } else 
-    ui.text(`Nothing happens.`)
-    return true
-  }
-)
 
 
 let main_hall = new Entity({
@@ -884,9 +889,12 @@ new Entity({
 new Entity({
     name: "garlic",
     tags: ['item', 'consumable'],
-    // epithet: ["crooked", "old"],
     icon: 'garlic.png',
     description: `A garlic bulb.`,
+    consumed_by: (who)=>{
+      ui.add_event(`You eat the garlic bulb as a whole. Yuck! Now you smell garlic.`)
+      who.add_status({name: `smells garlic`, timer: false})
+    }
 }, {template: 'garlic'} )
 
 //
@@ -1069,18 +1077,13 @@ let ham = new Entity({
   clues: [
     new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': Test.BASIC} }),
     new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': Test.MEDIUM} }),
-  ],  
+  ],
+  consumed_by: (who)=>{
+    ui.text(`You eat the ham. Finally, some food!`)
+    player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You found food, you are no longer hungry."})
+    who.level_up()
+  }
 })
-
-  game.add_trigger(
-    {verb: /consume|use/, op1: ham, op2: /knife|^$/},
-    function(cmd) {
-      ui.text(`You eat the ham. Finally, some food!`)
-      player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You found food, you are no longer hungry."})
-      cmd.op1.destroy()
-      cmd.who.level_up()
-    },
-  )
 
 let whisky = new Entity({
   tags: ['item', 'consumable'],
@@ -1091,18 +1094,13 @@ let whisky = new Entity({
   clues: [
     new Clue({ text: `It smells like alcohol...`, reqs: {'perception': Test.MUNDANE} }),
     new Clue({ text: `This is definitely whisky! Some <i>very good</i> whisky!`, reqs: {'perception': Test.MEDIUM} }),
-  ],  
+  ],
+  consumed_by: (who)=>{
+    ui.text(`The whisky burns your throat but gives you new strength!`)
+    // player.gain_info({tag: 'quest_hunger', category: "Quest", text: "You found food, you are no longer hungry."})
+    who.level_up()
+  }
 })
-
-  game.add_trigger(
-    {verb: /consume|use/, op1: whisky, op2: /^$/},
-    function(cmd) {
-      ui.text(`The whisky burns your throat but gives you new strength!`)
-      cmd.op1.destroy()
-      cmd.who.level_up()
-    },
-  )
-  
 
 let idol = new Entity({
     tags: ['item', 'character'],
@@ -1356,25 +1354,14 @@ game.add_trigger(
   }
 )
 
-game.add_trigger(
-  {verb: /pick up|use/, op1: garlic_braid},
-  function(cmd) {
-    ui.add_event(`You pick up some garlic.`)
-    Entity.spawn( 'garlic', cmd.who )
-    return true
-  }
-)
-
-game.add_trigger(
-  {verb: /consume|use/, op1: /^garlic$/},
-  function(cmd) {
-  ui.add_event(`You eat the garlic bulb as a whole. Yuck! Now you smell garlic.`)
-    cmd.op1.destroy()
-    cmd.who.add_status({name: `smells garlic`, timer: false})
-    // Entity.spawn( 'garlic', cmd.who )
-    return true
-  }
-)
+garlic_braid.choices.add( new Choice({
+    label: "grab a garlic bulb from the braid",
+    fn: (cmd)=>{
+      console.log(`does this work?`, cmd)
+      ui.add_event(`You pick up some garlic.`)
+      Entity.spawn( 'garlic', cmd.who )
+    }
+  })  )
 
 game.add_trigger(
   {verb: /use/, op1: chandelier_holder, op2: /^$/},

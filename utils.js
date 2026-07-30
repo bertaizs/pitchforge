@@ -44,7 +44,7 @@ function starts_with_capital(str) {
 }
 
 function the(noun) {
-  if(starts_with_capital(noun))
+  if(starts_with_capital(noun) || noun.search(/^(a |an )/) )
     return noun
   return "the "+noun
 }
