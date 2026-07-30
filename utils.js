@@ -39,6 +39,11 @@ function sentence( str, str2 = "" ) {
     return str.charAt(0).toUpperCase() + str.slice(1) + " " + str2;
 }
 
+function capitalize( str ) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+
 function starts_with_capital(str) {
   return /^[A-Z]/.test(str);
 }

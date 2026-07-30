@@ -825,10 +825,11 @@ class UI {
       
       let txt = ``
       let plain_text = ``
+
       for( let arg of args ) {
         if(txt || event.whitespace) txt+= " "
         if( arg instanceof Entity ) {
-          txt+= ui.e(arg)
+          txt+= the( ui.e(arg) )
           plain_text += arg.get_name()+`#${arg.id}`
         }
         else
@@ -837,7 +838,7 @@ class UI {
           plain_text += arg          
         }
       }
-      event.text = txt
+      event.text = sentence(txt)
       event.plaintext = plain_text
       
       ui.add_event(event)

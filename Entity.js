@@ -873,9 +873,15 @@ class Entity {
       }), 'drop' )
     }
 
+    if( this.is('closed') ) {
+      c.add( new Choice({label: `open ${the(this)}`,
+          cmd: {who: game.get_player(), verb: 'open', op1: this}
+      }), 'open' )      
+    }
+    
     if( this.is('open') ) {
       c.add( new Choice({label: `close ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'drop', op1: this}
+          cmd: {who: game.get_player(), verb: 'close', op1: this}
       }), 'close' )
     }
 

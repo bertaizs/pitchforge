@@ -412,32 +412,32 @@ game.character_backgrounds = {
 // !!! todo: remove all of these, replace with choices
 
 // doors: opening and closing
-game.add_trigger(
-  {verb: /use/, op1: /.*/, op2: /^$/},
-  function(cmd) {
-    if( cmd.op1.is('open') || cmd.op1.is('closed') ) {
-      let door = cmd.op1
+// game.add_trigger(
+//   {verb: /use/, op1: /.*/, op2: /^$/},
+//   function(cmd) {
+//     if( cmd.op1.is('open') || cmd.op1.is('closed') ) {
+//       let door = cmd.op1
       
-      if( door.is('locked') ) {
-        ui.text(door, ` is locked.`)
-        return true
-      }
+//       if( door.is('locked') ) {
+//         ui.text(door, ` is locked.`)
+//         return true
+//       }
       
-      if( door.is('open') ) {
-        door.remove_tag('open')
-        door.set_tag('closed')
-        ui.text(cmd.who, ` closes `, door)
-        return true
-      } else 
-      if( door.is('closed') && !door.is('locked') ) {
-        door.remove_tag('closed')
-        door.set_tag('open')
-        ui.text(cmd.who, ` opens `, door)
-        return true
-      }
-    }
-    return false
-  }, 999 )
+//       if( door.is('open') ) {
+//         door.remove_tag('open')
+//         door.set_tag('closed')
+//         ui.text(cmd.who, ` closes `, door)
+//         return true
+//       } else 
+//       if( door.is('closed') && !door.is('locked') ) {
+//         door.remove_tag('closed')
+//         door.set_tag('open')
+//         ui.text(cmd.who, ` opens `, door)
+//         return true
+//       }
+//     }
+//     return false
+//   }, 999 )
 
 // lockpicking
 game.add_trigger(

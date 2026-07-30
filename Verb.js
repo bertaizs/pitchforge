@@ -333,6 +333,48 @@ new Verb({
 })
 
 new Verb({
+  name: 'open',
+  // icon: '🍔',
+  text: `Open something closed.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( !cmd.op1.is('closed') ) {
+      ui.text( cmd.op1, ` is not closed.` )
+    } else {
+      if( cmd.op1.is('locked') ) {
+        ui.text(cmd.op1, ` is locked.`)
+      } else {
+        cmd.op1.remove_tag('closed')
+        cmd.op1.set_tag('open')
+        ui.text( cmd.who, ` opens `, cmd.op1 ) 
+      }    
+    }
+  },
+  sortkey: 6,
+})
+
+new Verb({
+  name: 'close',
+  // icon: '🍔',
+  text: `Close something open.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( !cmd.op1.is('open') ) {
+      ui.text( cmd.op1, ` is not open.` )
+    } else {
+      cmd.op1.remove_tag('open')
+      cmd.op1.set_tag('closed')
+      ui.text( cmd.who, ` closes `, cmd.op1 ) 
+    }
+  },
+  sortkey: 6,
+})
+
+new Verb({
   name: 'give',
   icon: '🎁',
   text: `Give and item to someone.`,

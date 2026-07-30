@@ -1070,7 +1070,7 @@ let ladder = new Entity({
   
 let ham = new Entity({
   tags: ['item', 'consumable'],
-  name: 'a ham',
+  name: 'ham',
   icon: 'ham.png',
   description: 'A delicious-looking ham.',
   location: pantry,
