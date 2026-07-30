@@ -572,7 +572,7 @@ let pantry = new Entity({
   barrels.choices.add(new Choice({
     label: `hack the barrels`,
     fn: ()=>`It makes no sense in whacking those barrels. It would take time to break them and you would be swimming in wine.`,
-    reqs: {item: /crowbar|axe/ }
+    reqs: {items: /crowbar|axe/ }
   }))
 
   secret_barrel.choices.add(new Choice({
@@ -585,7 +585,7 @@ let pantry = new Entity({
       barrels.description = `There are many barrels here. One of them is bolted to the wall at the far end of the cellar, it is broken open, and there is a hidden passage inside.`
       game.get_player().gain_info( new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) )      
     },
-    reqs: {item: /crowbar|axe/ }
+    reqs: {items: /crowbar|axe/ }
   }))
   
   
@@ -647,8 +647,40 @@ study.add( car_keys )
     name: "rope holding the chandelier",
     tags: ['prop'],
     // icon: 'chandelier.png',
-    description: 'The chandelier is held by this rope. The rope turns on a pulley on the ceiling, and ends on hook on the gallery, so that one can lower the chandelier or adjust its height.'
-  })
+    description: 'The chandelier is held by this rope. The rope turns on a pulley on the ceiling, and ends on hook on the gallery, so that one can lower the chandelier or adjust its height.',
+    get_custom_choices() {
+      let cl = new ChoiceList()
+      if( ! chandelier.is('remains') ) {
+        
+        chandelier_holder.choices.add(new Choice({
+          label: `pull the rope holding the chandelier`,
+          fn: ()=>`You adjust the height of the chandelier. You wonder why you did this.`
+        }))
+        
+        chandelier_holder.choices.add(new Choice({
+          label: `cut the rope holding the chandelier`,
+          fn: ()=>{
+            let tool = 'knife'
+            if( player.has_a(/axe/) )
+              tool = 'axe'
+            
+            ui.text(`You cut the rope with your ${tool} and the chandelier falls down.`)
+            chandelier.move_to(main_hall)
+            chandelier.set_tag('remains')
+            chandelier.description = `The once beautiful chandelier has been shattered.`
+            if( the_staff.get_location()==main_hall ) {
+              ui.text(`The chandelier crushes the creature below.`)
+              the_staff.kill()
+            }
+          },
+          reqs: {items: /knife|axe/}
+        }))        
+      }
+      return cl
+    }
+  }) // chandelier_holder
+
+
   
 let gallery = new Entity({
   name: "On the Gallery, above the Main Hall",
@@ -868,7 +900,56 @@ new Entity({
     // epithet: ["crooked", "old"],
     icon: 'stick.png',
     description: `Just a simple stick; broken from a tree or found in the forest.`,
+    // choices: new ChoiceList([
+    //   new Choice({
+    //     label: `sharpen the stick with your knife`,
+    //     fn: ()=>{
+    //       ui.text(`You have carved a stake.`)
+    //       this.destroy()
+    //       Entity.spawn( 'stake', player )
+    //     },
+    //     reqs: {items: /knife/},
+    //   }) 
+    // ] ),
+    // choices: new ChoiceList().add(
+    //   new Choice({
+    //     label: `sharpen the stick with your knife`,
+    //     fn: ()=>{
+    //       ui.text(`You have carved a stake.`)
+    //       this.destroy()
+    //       Entity.spawn( 'stake', player )
+    //     },
+    //     reqs: {items: /knife/},
+    //   } 
+    // )),
+    // choices: new ChoiceList([
+    //   new Choice({
+    //     label: `sharpen the stick with your knife`,
+    //     cmd: {
+    //       verb: 'process',
+    //       // op1: this,
+    //     },
+    //     reqs: {items: /knife/},
+    //   })
+    // ]),
+    process: (cmd)=>{
+       ui.text(`You have carved a stake.`)
+       Entity.spawn( 'stake', player )
+       // caller VERBS.process shall destroy this
+    }
 }, {template: 'stick'} )
+// game.templates.stick.choices.add(
+//   new Choice({
+//     label: `sharpen the stick with your knife`,
+//     fn: (cmd)=>{
+//       ui.text(`You have carved a stake.`)
+//       console.log(`%%%%%%%`, cmd)
+//       cmd.op1.destroy()
+//       Entity.spawn( 'stake', player )
+//     },
+//     reqs: {items: /knife/},
+//   }) 
+// )
 
 new Entity({
     name: "broken furniture",
@@ -1025,7 +1106,7 @@ let ladder = new Entity({
     tags: ['item'],
     name: "ladder",
     icon: 'ladder.png',
-    description: `Someone has committed horrible things to this doll.`,
+    description: `This is a simple ladder. One can climb up on it. Or down. It is long enough, so it can probably reach the top of the mansion.`,
     location: mansion_right,
     position: `There is a [ladder] lying on the ground by the mansion's wall.`,
     path_up:   new Path({
@@ -1246,46 +1327,30 @@ let vampire = new Entity({
     has_penalty() {
       return Boolean(game.get_player().has_status('smells garlic'))
     },
+    get_custom_choices() {
+      let cl = new ChoiceList()
+      if( vampire.is_up() ) {
+        cl.add(new Choice({
+          label: `stab the vampire in the heart with your stake`,
+          fn: ()=>{
+            ui.text(player,` drives the stake through the heart of the vampire, who collapses into a pile of ash.`)
+            // vampire.go_down() // cannot be used as it is special; the vampire is immortal
+            vampire.remove_tag('character')
+            vampire.set_tag('remains')
+            vampire.name = "vampire's remains"
+            vampire.icon = 'ashes.png'
+            vampire.description = `The dreadful creature of the night is now nothing but a pile of ash.`            
+          },
+          reqs: {items: /stake/},
+        }))
+      } else {
+        // ui.text(`The vampire is gone for good, there is no point in staking it again.`)
+      }
+      return cl
+    },
 })
 
-  game.add_trigger(
-    {verb: /use/, op1: /stake/, op2: vampire},
-    function(cmd) {
-      if( vampire.is_up() ) {
-        ui.text(cmd.who,` drives the stake through the heart of the vampire, who collapses into a pile of ash.`)
-        // vampire.go_down() // cannot be used as it is special
-        vampire.remove_tag('character')
-        vampire.set_tag('remains')
-        vampire.name = "vampire's remains"
-        vampire.icon = 'ashes.png'
-        vampire.description = `The dreadful creature of the night is now nothing but a pile of ash.`
-        return true
-      }  
-      ui.text(`The vampire is gone for good, there is no point in staking it again.`)
-      return true
-    }
-  )
 
-  // game.add_trigger(
-  //   {verb: /examine/, op1: vampire_eyes, },
-  //   function(cmd) {
-  //     if( vampire.is_up() ) {
-  //       ui.text(`The vampire's eyes are peculiar... mesmerizing... You feel you must hold the creature's stare... forever...`)
-  //       if( cmd.who.test('resistance', Math.trunc(vampire.performance('charm')/2) ) ) {
-  //         cmd.who.take_damage({type: 'spirit', value: 3})
-  //         if( cmd.who.is_up() ) {
-  //           ui.text(`Summoning all your spiritual strength, you look away from the `, vampire, `'s eyes.`)
-  //         }
-  //         return true
-  //       } else {
-  //         ui.text(`You feel helpless as the `,vampire,` steps right next to you and reaches out to your neck with his fangs. The bite hurts just a little...`)          
-  //         cmd.who.go_down()
-  //         return true
-  //       }
-  //     }
-  //     throw `this should not happen, the vampire is already dead`
-  //   }
-  // )
 
 let butler = new Entity({
   name: "the butler",
@@ -1368,34 +1433,17 @@ let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] 
 // GLOBAL TRIGGERS
 //
 
-
-game.add_trigger(
-  {verb: /use/, op1: trees},
-  function(cmd) {
-    if( the_staff.is_up() ) {
-      ui.add_event(`You break a branch from the trees.`)
-      Entity.spawn( 'stick', cmd.who )
-      return true
-    }
-
-    ui.add_event(`You go into the study.`)
-    return false
+trees.choices.add(new Choice({
+  label: `break a branch off the tree`,
+  fn: ()=>{
+    ui.text(`You break a branch from the trees.`)
+    Entity.spawn( 'stick', player )    
   }
-)
+}))
 
 // todo: 
 // - break furniture to get broken piece
 // - use knife on stick or broken furniture to get stake
-
-game.add_trigger(
-  {verb: /use/, op1: /knife/, op2: /stick/},
-  function(cmd) {
-    ui.add_event(`${cmd.who} has carved a stake.`)
-    cmd.op2.destroy()
-    Entity.spawn( 'stake', cmd.who )
-    return true
-  }
-)
 
 garlic_braid.choices.add( new Choice({
     label: "grab a garlic bulb from the braid",
@@ -1406,26 +1454,8 @@ garlic_braid.choices.add( new Choice({
     }
   })  )
 
-game.add_trigger(
-  {verb: /use/, op1: chandelier_holder, op2: /^$/},
-  function(cmd) {
-    ui.text(`You adjust the height of the chandelier. You wonder why you did this.`)      
-    return true
-  }
-)
 
-game.add_trigger(
-  {verb: /use/, op1: chandelier_holder, op2: /knife|axe/},
-  function(cmd) {
-    ui.text(`You cut the rope and the chandelier falls down.`)
-    chandelier.set_tag('remains')
-    if( the_staff.get_location()==main_hall ) {
-      ui.text(`The chandelier crushes the creature below.`)
-      the_staff.kill()
-    }
-    return true
-  }
-)
+
 
 
 game.add_trigger(

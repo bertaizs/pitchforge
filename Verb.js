@@ -333,6 +333,25 @@ new Verb({
 })
 
 new Verb({
+  name: 'process',
+  // icon: '🧪',
+  text: `Use a given item, destroying it in the process.`,
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( 'process' in cmd.op1 ) {
+      cmd.op1.process(cmd)      
+      cmd.op1.destroy()
+    } else {
+      throw `process called for ${cmd.op1} but it has no process() function`
+    }
+  },
+  sortkey: 6,
+})
+
+
+new Verb({
   name: 'open',
   // icon: '🍔',
   text: `Open something closed.`,

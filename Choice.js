@@ -51,9 +51,15 @@ class Choice {
 // * untagged, they are just a list
 class ChoiceList {
 
-  constructor(values = {}) {
-    this.arr ??= values.arr || []
-    this.hash ??= values.hash || {}
+  constructor(values = false) {
+    this.arr = []
+    this.hash = {}
+
+    if( Array.isArray(values) ) {
+      this.arr = values
+    }
+    // this.arr ??= values.arr || []
+    // this.hash ??= values.hash || {}
     // for (let i in value) this[i] = value[i];
   }
 
@@ -64,7 +70,7 @@ class ChoiceList {
     }
     
     if( tag in this.hash )    // if tag is already in the list, do not add and return false
-      return false
+      return this
 
     this.hash[tag] = choice   // add the choice with a tag
     return this

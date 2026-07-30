@@ -120,9 +120,6 @@ class Entity {
 
       entity.set(changes)
       
-      // for( let i in changes )
-      //     noun[i] = changes[i]
-
       return entity
   }
   
@@ -214,8 +211,11 @@ class Entity {
   }
   
   equip( entity ) {
-    
   }
+
+  // called when this is 'process'ed
+  // to be redefined
+  process(cmd) { }
 
   // receives an associative array, copies those key=>value pairs into this
   set(changes) {
@@ -224,7 +224,7 @@ class Entity {
     Object.assign(this, JSON.parse(JSON.stringify(changes)));
 
     // here ne need to call out which functions to copy explicitly
-    let functions_to_copy = ['consumed_by']
+    let functions_to_copy = ['consumed_by', 'choices', 'process']
     for( let i in functions_to_copy ) {
       if( functions_to_copy[i] in changes )
         this[functions_to_copy[i]] = changes[functions_to_copy[i]]

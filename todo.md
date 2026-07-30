@@ -12,6 +12,8 @@ todo
 
 - do not offer any choices when the game is over...
 
+- chandellier icon file needs to be updated online ll->l
+
 # rework as multiple-choice
 
 * eliminate triggers...
