@@ -108,24 +108,6 @@ class UI {
     document.getElementById('entity_choices').innerHTML = ''
     this.choices = []
   }
-  
-  // __obsolete_click_entity(id) {
-  //   let entity = game.entity(id)
-  //   options.log_clicks_on_entities && console.log( `clicked on Entity: ${entity} (#${entity.id})`)
-
-  //   // if( this.cmd.get_verb().op1 )
-  //   //   this.cmd.op1 = entity
-  //   if( this.cmd.get_verb().op1 && !this.cmd.op1 )
-  //     this.cmd.op1 = entity
-  //   else
-  //   if( this.cmd.get_verb().op1 && !this.cmd.get_verb().op2 )
-  //     this.cmd.op1 = entity
-  //   else
-  //   if( this.cmd.get_verb().op2 && this.cmd.op1 && entity!=this.cmd.op1 )
-  //     this.cmd.op2 = entity
-    
-  //   this.display_cmd()
-  // }
     
   entity_link(e) {
     let id = game.entity(e).id
@@ -222,8 +204,9 @@ class UI {
       
       if( ! path.can_pass_through(game.get_player()) )
         throw `${game.get_player()} cannot pass through this.`
-      
-      ui.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to), path: path}) )
+
+      this.clear_entity_choices()
+      this.exec(new Cmd({verb: 'move', who: game.get_player(), op1: game.entity(path.to), path: path}) )
     }
 
     print_path(path) {
