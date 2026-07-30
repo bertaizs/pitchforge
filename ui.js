@@ -102,6 +102,8 @@ class UI {
 
     this.choices = choices
     document.getElementById('entity_choices').innerHTML = s
+
+    window.scrollTo(document.getElementById('entity_choices').getBoundingClientRect() )
   }
 
   clear_entity_choices() {

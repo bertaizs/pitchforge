@@ -1,13 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&display=swap');
+
 :root {
 /* Mobile Sizes (Larger for readability) */
 	--big-text: 2rem;
 	--big-text-td: 3rem;
 	--big-text-padding: 1.5rem;
 	--standard-text: 1.5rem;
+	
+	--font-heading: 'Cinzel', 'Trajan Pro', 'Baskerville', serif;
+	--font-body: 'EB Garamond', 'Georgia', 'Garamond', serif;
 }
 
 * {
-    font-family: "Comic Sans MS", fantasy;
+    /*font-family: "Comic Sans MS", fantasy;*/
+    font-family: var( --font-body );
     background-color: black;
     color: gray;
     font-size: var(--standard-text);
@@ -16,6 +22,7 @@
 
 #title {
     font-weight: bold;
+    font-family: var( --font-heading );
 }
 
 a.verb {
