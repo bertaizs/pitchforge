@@ -7,6 +7,7 @@ todo
 
 - all verbs must use the same loggig format:
   ui.text
+- fix capitalization in ui.text
 
 - choices should use builtin test features of verbs
 

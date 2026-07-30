@@ -1343,6 +1343,22 @@ let vampire = new Entity({
           },
           reqs: {items: /stake/},
         }))
+
+        cl.add(new Choice({
+          label: `hold up the cross to repel the vampire`,
+          fn: ()=>{
+            if( player.spend({value: 1, type: 'spirit'}) ) {
+              ui.text(`The `,vampire,` backs off as you raise the `,cross,`. An immense force slams the creature to the wall.`)
+              vampire.add_status({name: 'stunned', timer: 4})
+              ui.text(`The `,vampire,` is stunned... for a while...`)
+            } else {
+              ui.text(`You do not feel the strength to stand up against the `,vampire,`.`)      
+            }
+          },
+          reqs: {items: cross},
+          
+        }))
+
       } else {
         // ui.text(`The vampire is gone for good, there is no point in staking it again.`)
       }
@@ -1457,20 +1473,6 @@ garlic_braid.choices.add( new Choice({
 
 
 
-
-game.add_trigger(
-  {verb: /use/, op1: cross, op2: vampire},
-  function(cmd) {
-    if( cmd.who.spend({value: 1, type: 'spirit'}) ) {
-      ui.text(`The `,vampire,` backs off as you raise the `,cross,`. An immense force slams the vampire to the wall.`)
-      vampire.add_status({name: 'stunned', timer: 4})
-      // ui.text(`The `,vampire,` is brie fly stunned.`)
-      return true      
-    } else {
-      ui.text(`You do not feel confident to stand up against the `,vampire,`.`)      
-    }
-  }
-)
 
 game.add_trigger(
   {verb: /use/, op1: mansion_front_door_knocker, op2: /^$/},
