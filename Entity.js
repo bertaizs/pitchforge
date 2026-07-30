@@ -622,6 +622,13 @@ class Entity {
   // 
   // examples:  reqs = {tough: 6, cool: 3, perception: 6, traits: {perception: true}}
   //            reqs = [{tough: 6}, {cool: 3}]
+  // 
+  // can have the following requirements:
+  // - stats like tough, cool
+  // - tests like perception
+  // - traits like traits: {traitname: true}
+  // - knowledge
+  // - items like items: [/compass/, ham] (these are validate via has_a and match)
   meets_requirements( reqs ) {
     if( !(reqs instanceof Array) )
       reqs = [reqs]   // ensures we have an array
@@ -630,9 +637,15 @@ class Entity {
       return true
     
     for( let req of reqs ) {
-      // console.log(reqs)
       req.traits ??= {}
       req.knowledge ??= []
+      
+      req.items ??= []
+      if( !Array.isArray(req.items)) 
+        req.items = [req.items]
+      // if( 'item' in req ) 
+      //   req.items.push(req.item)
+      
       if( !(req.knowledge instanceof Array) )
         req.knowledge = [req.knowledge]
       
@@ -650,11 +663,17 @@ class Entity {
       if( !fail ) {
         for( let k of req.knowledge ) {
           if(!(k instanceof Info)) {
-            console.log(k)
+            // console.log(k)
             k = new Info(k)
           }
             
           if( !this.has_info(k) )
+            fail = true
+        }
+      }
+      if( !fail ) {
+        for( let it in req.items ) {
+          if( !this.has_a(req.items[it]) )
             fail = true
         }
       }
@@ -855,9 +874,9 @@ class Entity {
 
   // get list of choices, considering the below command
   get_choices(cmd) {
-    console.log("get_choices", cmd)
+    // console.log("get_choices", cmd)
 
-    // let generic_choices = new ChoiceList()
+    // this is a generic choicelist returned for all items
     let c = new ChoiceList()
 
     if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
@@ -885,7 +904,7 @@ class Entity {
 
       c.add( new Choice({label: `force ${the(this)} open`,
           cmd: {who: game.get_player(), verb: 'force', op1: this},
-          requirements: {tough: 2},
+          requirements: VERBS['force'].req,
       }), 'force' )
       
     }
@@ -912,8 +931,7 @@ class Entity {
           cmd: {who: game.get_player(), verb: 'examine', op1: this}
     }), 'examine' )
 
-    // c.add( new Choice({label: `ignore ${this}`}) )         
-
+    // merging choicelists...
     let custom_choices = this.get_custom_choices()
     
     let cl = new ChoiceList()

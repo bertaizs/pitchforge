@@ -409,35 +409,7 @@ game.character_backgrounds = {
 // GENERIC TRIGGERS
 // these should work similarly in all games
 // 
-// !!! todo: remove all of these, replace with choices
 
-// doors: opening and closing
-// game.add_trigger(
-//   {verb: /use/, op1: /.*/, op2: /^$/},
-//   function(cmd) {
-//     if( cmd.op1.is('open') || cmd.op1.is('closed') ) {
-//       let door = cmd.op1
-      
-//       if( door.is('locked') ) {
-//         ui.text(door, ` is locked.`)
-//         return true
-//       }
-      
-//       if( door.is('open') ) {
-//         door.remove_tag('open')
-//         door.set_tag('closed')
-//         ui.text(cmd.who, ` closes `, door)
-//         return true
-//       } else 
-//       if( door.is('closed') && !door.is('locked') ) {
-//         door.remove_tag('closed')
-//         door.set_tag('open')
-//         ui.text(cmd.who, ` opens `, door)
-//         return true
-//       }
-//     }
-//     return false
-//   }, 999 )
 
 // lockpicking
 game.add_trigger(
@@ -462,28 +434,28 @@ game.add_trigger(
   }, 999 )
 
 // forcing a door with a crowbar
-game.add_trigger(
-  {verb: /use/, op1: /crowbar/, op2: /.*/},
-  function(cmd) {
-    if( cmd.op2.is('locked') ) {
+// game.add_trigger(
+//   {verb: /use/, op1: /crowbar/, op2: /.*/},
+//   function(cmd) {
+//     if( cmd.op2.is('locked') ) {
       
-      let lock = cmd.op2
-      if( cmd.who.test('tough', 
-          cmd.op2.performance('tough')   ) ) {
-        cmd.op2.remove_tag('locked')
-        cmd.op2.remove_tag('closed')
-        cmd.op2.set_tag('open')
-        ui.text(cmd.who, ` has ripped `, cmd.op2, ` open!`)
-        return true
-      } else {
-        ui.text(cmd.who, ` failed to force `, cmd.op2, ` open.`)
-        return true
-      }
+//       let lock = cmd.op2
+//       if( cmd.who.test('tough', 
+//           cmd.op2.performance('tough')   ) ) {
+//         cmd.op2.remove_tag('locked')
+//         cmd.op2.remove_tag('closed')
+//         cmd.op2.set_tag('open')
+//         ui.text(cmd.who, ` has ripped `, cmd.op2, ` open!`)
+//         return true
+//       } else {
+//         ui.text(cmd.who, ` failed to force `, cmd.op2, ` open.`)
+//         return true
+//       }
 
-    }
-    ui.text( cmd.op2, ` is not locked.`)
-    return true
-  }, 999 )
+//     }
+//     ui.text( cmd.op2, ` is not locked.`)
+//     return true
+//   }, 999 )
 
 // unlocking or locking a door with a key
 game.add_trigger(

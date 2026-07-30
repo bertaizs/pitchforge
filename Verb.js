@@ -362,6 +362,7 @@ new Verb({
   type: 'door',
   test: false,
   op1: true,
+  req: {items: /crowbar/},
   on_success: function(cmd) {
     if( cmd.op1.is('locked') ) {
       if( cmd.who.test('tough', 
