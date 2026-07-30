@@ -46,11 +46,9 @@ class UI {
 
   refresh() {
     this.show_main()
-    // this.show_sheet(game.get_player())
-    // this.show_commands()
+    this.show_player_info()
     this.show_inventory()
     this.show_menu()
-    // this.display_cmd()
     ui.show_events()
 
     window.scroll(0,0)
@@ -589,55 +587,49 @@ class UI {
       s+= `</select>`
       return s
     }
+        
+    // verb(v) {
+    //   let verb = VERBS[v]
+    //   let s = `<a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${UI.icon(verb.name)+verb.get_label()}</a>`
+    //   return s
+    // }
     
-    click_verb(verb) {
-      options.log_clicks_on_verbs && console.log(`clicked verb: ${verb}`)
-      this.cmd = new Cmd({verb: verb}, {validate: false})
-      ui.display_cmd()
-    }
-    
-    verb(v) {
-      let verb = VERBS[v]
-      let s = `<a class="verb" title="${verb.get_text()}" onclick="ui.click_verb('${verb.get_name()}')">${UI.icon(verb.name)+verb.get_label()}</a>`
-      return s
-    }
-    
-    filtered_verbs(verbs, type, params = {}) {
-      params.optional ??= false
-      params.label ??= type
-      verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
+//     filtered_verbs(verbs, type, params = {}) {
+//       params.optional ??= false
+//       params.label ??= type
+//       verbs = verbs.filter( (x)=>(VERBS[x].type==type) ).sort((x,y)=>(VERBS[x].sortkey-VERBS[y].sortkey))
 
-      let s = ``
-      if( !params.optional || verbs.length>0 ) {
-        s+= `<tr><td class="table_left">${params.label}</td><td class="table_right">`
-        for( let i in verbs ) {
-//          s+= ``+this.verb(verbs[i])+`&nbsp;`
-          s+= ``+this.verb(verbs[i])
-        }
-        s+= `</td>`
-        s+= `</tr>`        
-      }
-      return s
-    }
+//       let s = ``
+//       if( !params.optional || verbs.length>0 ) {
+//         s+= `<tr><td class="table_left">${params.label}</td><td class="table_right">`
+//         for( let i in verbs ) {
+// //          s+= ``+this.verb(verbs[i])+`&nbsp;`
+//           s+= ``+this.verb(verbs[i])
+//         }
+//         s+= `</td>`
+//         s+= `</tr>`        
+//       }
+//       return s
+//     }
     
-    print_verbs(entity) {
-      entity = game.entity(entity)
-      let verbs = entity.get_verbs()
-      let s = ``
-      s+= this.filtered_verbs(verbs, 'combat')
-      s+= this.filtered_verbs(verbs, 'action')
-      s+= this.filtered_verbs(verbs, 'inventory', {label: "item mgmnt"})
-      // s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
-      // s+= this.filtered_verbs(verbs, 'misc')
-      if( options.debug ) {
-        let d = ''
-	d+= `<table><tr>`
-        d+= this.filtered_verbs(verbs, 'debug')
-        d+= `</tr></table>`
-        document.getElementById('debug').innerHTML += d
-      }
-      return s
-    }
+//     print_verbs(entity) {
+//       entity = game.entity(entity)
+//       let verbs = entity.get_verbs()
+//       let s = ``
+//       s+= this.filtered_verbs(verbs, 'combat')
+//       s+= this.filtered_verbs(verbs, 'action')
+//       s+= this.filtered_verbs(verbs, 'inventory', {label: "item mgmnt"})
+//       // s+= this.filtered_verbs(verbs, 'thievery', {optional: true})
+//       // s+= this.filtered_verbs(verbs, 'misc')
+//       if( options.debug ) {
+//         let d = ''
+// 	d+= `<table><tr>`
+//         d+= this.filtered_verbs(verbs, 'debug')
+//         d+= `</tr></table>`
+//         document.getElementById('debug').innerHTML += d
+//       }
+//       return s
+//     }
     
     print_list(list = [], params = {}) {
       params.label ??= "no label"
@@ -710,6 +702,11 @@ class UI {
       }
     }
 
+    show_player_info() {
+      let s = ``
+      s+= ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
+      document.getElementById('player_info').innerHTML = s
+    }
     
     show_inventory() {
       let s = ``
@@ -721,25 +718,8 @@ class UI {
       //   document.getElementById('debug').innerHTML = d
       // }
       
-      if( ! game.get_player().get_location().is('abstract') ) {
-        // s+= `
-        // <div>
-        // <span id="who" class="cmd">who</span>: 
-        
-        // <span id="verb" class="cmd">verb</span>
-        // <span id="prep" class="cmd" >preposition</span>
-        // <span id="op1" class="cmd" >operand 1</span>
-        // <span id="sep" class="cmd" >operand separator</span>
-        // <span id="op2" class="cmd" >operand 1</span>
-
-        // &nbsp; <button class="btn" onclick="ui.exec()">⏎</button>
-        // <!-- &nbsp; <button class="btn" onclick="ui.show_sheet(game.get_player())">sheet</button> -->
-        // </div>
-        // `
-        
+      if( ! game.get_player().get_location().is('abstract') ) {        
         s+= `<table>`
-        // s+= this.print_verbs( game.get_player() )
-        // s+= this.print_equipment( game.get_player() )
         s+= this.print_list( game.get_player().get_equipped_items(),
                             {label: "equipment", not_if_empty: false, display: ui.print_entity_ministatus} )
         s+= this.print_list( game.get_player().get_nonequipped_items(),
@@ -847,7 +827,8 @@ class UI {
         options.log_events && console.log(event)
       this.events.push(event)
     }
-    
+
+    // adds text as an event
     text( ...args ) {
       // allow first arg to be an event for customization; this is optional, can be skipped
       if( args.length==0 ) throw `ui.text called with no arguments`

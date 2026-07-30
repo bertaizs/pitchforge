@@ -1,6 +1,10 @@
 todo
 ====
 
+# multi-choice bugs
+- do not display player info during chargen
+- location title should not be clickable (???)
+
 # rework as multiple-choice
 
 // - disable / customize certain actions
