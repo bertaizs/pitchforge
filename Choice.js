@@ -78,6 +78,7 @@ class ChoiceList {
         label: params['label'] ?? `${verb} ${the(op)}`,
         cmd: {who: cmd.who, verb: verb, op1: op},
         reqs: VERBS[verb].req,
+        sortkey: params['sortkey'] ?? VERBS[verb].sortkey
       }), verb  )
   }
 

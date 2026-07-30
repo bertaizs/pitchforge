@@ -880,15 +880,10 @@ class Entity {
     let c = new ChoiceList()
 
     if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
-      c.add( new Choice({label: `pick up ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'pick up', op1: this}
-      }), 'pick up' )
+      c.add_verb('pick up', cmd, this)
     }
-
     if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {
-      c.add( new Choice({label: `drop ${the(this)}`,
-          cmd: {who: game.get_player(), verb: 'drop', op1: this}
-      }), 'drop' )
+      c.add_verb('drop', cmd, this)
     }
 
     if( this.is('weapon') && game.get_player().has(this) && !this.position ) {
@@ -901,7 +896,7 @@ class Entity {
     if( this.is('open') ) {
       c.add_verb('close', cmd, this)      
     }
-
+    
     if( this.is('closed') ) {
       c.add_verb('open', cmd, this)
       c.add_verb('force', cmd, this )
@@ -911,12 +906,6 @@ class Entity {
     if( this.is('consumable') && game.get_player().has(this) ) {
       c.add_verb('consume', cmd, this)
     }
-    
-    // if( this.is('consumable') ) {
-    //   c.add( new Choice({label: `consume ${the(this)}`,
-    //       cmd: {who: game.get_player(), verb: 'consume', op1: this},
-    //   }), 'consume' )
-    // }
     
     if( this.is_creature() && this.id!=game.get_player().id ) {
       c.add( new Choice({label: `say hello to ${this}`,
@@ -930,10 +919,8 @@ class Entity {
       }), 'attack' )
     }
     
-    c.add( new Choice({label: `examine ${this}`,
-          cmd: {who: game.get_player(), verb: 'examine', op1: this}
-    }), 'examine' )
-
+    c.add_verb('examine', cmd, this)
+    
     // merging choicelists...
     let custom_choices = this.get_custom_choices()
     
@@ -945,6 +932,7 @@ class Entity {
     // only offer those choices where the given char meets the requirements
     let list = cl.get_list() 
     list = list.filter( (x)=>cmd.who.meets_requirements(x.reqs) )
+      .sort( (a,b)=>(a.sortkey-b.sortkey) )
     return list
   }
 

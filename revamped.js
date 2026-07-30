@@ -921,8 +921,8 @@ let compass = new Entity({
     tags: ['item'],
     name: "broken compass",
     icon: 'compass.png',
-    // description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
-    description: function(){return random(4)},
+    description: `Your compass is broken, it is just spinning around and around. This is not natural.`,
+    // description: function(){return random(4)},
     location: player,
     clues: [
       new Clue({ text: `This cannot be natural.`, reqs: {sharp: 2} }),
