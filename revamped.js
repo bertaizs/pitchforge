@@ -92,25 +92,35 @@ let small_key = new Entity({
   ],
 })
 
+let copper_key = new Entity({
+  name: "copper key",
+  tags: ['item', 'key',],
+  description: `<p>The key is somewhat dirty but it can probably still work.</p>`,
+  clues: [
+    new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: Test.MEDIUM} }),
+  ],
+})
+
+let keyring = new Entity({
+  name: "butler's keyring",
+  tags: ['key', 'item'],
+  description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`,
+  // location: the_staff,
+})
+
+
 let cellar_door = new Entity({
     name: "door to the cellar",
     tags: ['door', 'closed', 'locked'],
     // icon: 'mansion_front.png',
     tough: 2,
     cool: 2,
-    key: small_key,
+    keys: [small_key, keyring],
     description: `<p>This door leads down to the cellar below the mansion.</p>`,
   })
 
 
-  let copper_key = new Entity({
-    name: "copper key",
-    tags: ['item', 'key',],
-    description: `<p>The key is somewhat dirty but it can probably still work.</p>`,
-    clues: [
-      new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: Test.MEDIUM} }),
-    ],
-  })
+
   
   let clue_knocking = new Clue({ text: `Knocking could be a way to get in, but may also draw unwanted attention.`, reqs: {sharp: Test.MEDIUM}, flag: '💡' })
   let mansion_front_door_knocker = new Entity({
@@ -127,7 +137,7 @@ let cellar_door = new Entity({
     // icon: 'mansion_front.png',
     tough: Test.ADVANCED,
     cool: Test.MEDIUM,
-    key: copper_key,
+    keys: [copper_key, keyring],
     description: `<p>A heavy wooden double door stands in the mansion's main entrance. There is a ${ui.e(mansion_front_door_knocker, "knocker")} on the door. You may want to consider knocking..</p>`,
     clues: [
       new Clue({ text: `Considering the overall state of the mansion, this door looks surprisingly sturdy.`, reqs: {perception: Test.EASY} }),
@@ -1383,12 +1393,7 @@ let the_staff = new Entity({
     knocked: false,
 })
 
-  let keyring = new Entity({
-    name: "butler's keyring",
-    tags: ['key', 'item'],
-    description: `A keyring with lots of keys on it. This should open all or most doors of the mansion.`,
-    location: the_staff,
-  })
+  keyring.move_to(the_staff)
   
   game.add_trigger(
     {verb: /use/, op1: keyring, op2: /door/},

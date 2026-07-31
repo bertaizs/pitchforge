@@ -50,8 +50,10 @@ class Entity {
       this.cool ??= Test.BASIC
     }
 
-    if( 'key' in this ) {
-      this.key = game.entity(this.key).id
+    if( 'keys' in this ) {  // forces this.keys to be an array of IDs
+      this.keys = arrayify(this.keys)
+      for( let key in this.keys)
+        this.keys[key]= game.entity(this.keys[key]).id
     }
     
     this.traits ??= {};
@@ -222,6 +224,18 @@ class Entity {
   // to be redefined
   process(cmd) { }
 
+  lock_works_with( key ) {
+    key = game.entity(key)
+    if( !('keys' in this) )
+      throw `${this} is not a door`
+    let keys = this.keys
+    
+    for( let i in keys )
+      if( game.entity(keys[i]).id == key.id )
+        return true
+    return false
+  }
+  
   // receives an associative array, copies those key=>value pairs into this
   set(changes) {
     // this copies attributes into this, including any objects nested
@@ -917,13 +931,30 @@ class Entity {
     }
 
     if( this.is('open') ) {
-      c.add_verb('close', cmd, this)      
+      c.add_verb('close', cmd, this)  
     }
     
     if( this.is('closed') ) {
       c.add_verb('open', cmd, this)
       c.add_verb('force', cmd, this )
       c.add_verb('pick lock', cmd, this, {label: `pick the lock on ${the(this)}`} )
+
+      let keys = game.get_player().list_entities_here().filter(x=>x.is('key'))
+
+      if( 'keys' in this ) {
+        let action = this.is('locked') ? 'unlock' : 'lock'
+        
+        for(let k in keys) {
+          console.log(cmd)
+          let unlock_cmd = {verb: action, op1: this, op2: keys[k]}
+          c.add(new Choice({
+            label: `${action} ${this} with ${the(keys[k])}`,
+            cmd: unlock_cmd,
+            sortkey: VERBS[action].sortkey,
+          }))
+        }        
+      }
+
     }
 
     if( this.is('consumable') && game.get_player().has(this) ) {

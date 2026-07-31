@@ -329,6 +329,7 @@ new Verb({
   sortkey: 6,
 })
 
+// !!! not used at the moment
 new Verb({
   name: 'process',
   // icon: '🧪',
@@ -394,7 +395,7 @@ new Verb({
       ui.text( cmd.op1, ` is not locked.`)
     }
   },
-  // sortkey: 6,
+  sortkey: 9,
 })
 
 new Verb({
@@ -418,7 +419,7 @@ new Verb({
       ui.text( cmd.op1, ` is not locked.`)
     }
   },
-  // sortkey: 6,
+  sortkey: 10,
 })
 
 new Verb({
@@ -438,6 +439,78 @@ new Verb({
     }
   },
   sortkey: 6,
+})
+
+new Verb({
+  name: 'unlock',
+  // icon: '🍔',
+  text: `Unlock something locked with a key.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  op2: true,
+  on_success: function(cmd) {
+    let door = cmd.op1
+    let key = cmd.op2
+    
+    if( door.is('open') ) {
+      ui.text( door, ` is open.`)
+      return false
+    }
+    if( !door.is('locked') ) {
+      ui.text( door, ` is not locked.`)
+      return false
+    }
+    if( !key.is('key') ) {
+      ui.text( key, ` will not work here.`)
+      return false
+    }
+
+    if( door.lock_works_with(key) ) {
+      door.remove_tag('locked')
+      ui.text(cmd.who, ` unlocks `, door, ` with `, key)
+      return true
+    } else {
+      ui.text( key, ` is not the right key for `, door )
+    }
+  },
+  sortkey: 7,
+})
+
+new Verb({
+  name: 'lock',
+  // icon: '🍔',
+  text: `Lock something locked with a key.`,
+  type: 'door',
+  test: false,
+  op1: true,
+  op2: true,
+  on_success: function(cmd) {
+    let door = cmd.op1
+    let key = cmd.op2
+    
+    if( door.is('open') ) {
+      ui.text( door, ` is open.`)
+      return false
+    }
+    if( door.is('locked') ) {
+      ui.text( door, ` is already locked.`)
+      return false
+    }
+    if( !key.is('key') ) {
+      ui.text( key, ` will not work here.`)
+      return false
+    }
+
+    if( door.lock_works_with(key) ) {
+      door.set_tag('locked')
+      ui.text(cmd.who, ` locks `, door, ` with `, key)
+      return true
+    } else {
+      ui.text( key, ` is not the right key for `, door )
+    }
+  },
+  sortkey: 7,
 })
 
 // new Verb({
