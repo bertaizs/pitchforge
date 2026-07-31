@@ -267,7 +267,7 @@ game.ending = new Entity({
 game.chargen = new Entity({
   name: "character generation",
   tags: ['abstract', 'location', 'chargen'],
-  icon: 'chargen2.png',
+  // icon: 'chargen2.png',
   // description: ,
   
   get_interior_description: function() {
