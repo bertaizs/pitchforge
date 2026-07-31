@@ -124,6 +124,7 @@ class UI {
     params.label ??= false // this will appear as a link
     params.context ??= false  // the <a > element will be put into this sentence, replacing [entity]
     params.prefix ??= ''
+    params.showlink ??= true
     
     if( !params.label && params.context ) {
       let t = params.context.match(/\[(.*)\]/)
@@ -144,9 +145,7 @@ class UI {
       return params.context.replace( /\[.*\]/, link )
     }
     return link
-    // return `<a class="entity" onclick="${ui.entity_link(e)}">${params.label || e.get_name()}</a>`
-  }
-  
+  }  
   // shorthand for ui.print_entity
   e(id, label = false) { 
     if( !label ) 
@@ -181,16 +180,6 @@ class UI {
           s+= UI.icon('moves')        
       }
     }
-    
-    // if( params.stats && entity.is_character() ) {
-    //   // s+= " "+UI.icon('body')+entity.get('body')+"/"+entity.get('max_body')        
-    //   s+= " "+UI.icon('body')+entity.get('body')
-    //   s+= " "
-    //   s+= " "+UI.icon('spirit')+entity.get('spirit')
-    // }
-    // if( params.stats && entity.is_character() ) {
-
-    // }
     
     s+= `</span>`
     return s
@@ -264,7 +253,9 @@ class UI {
       }
       // s+= `</td><td style="vertical-align: top;">`
       s+= `<div class='content'>`
-      s+= `<div>${this.print_entity(location)}</div>`
+      // s+= `<div>${this.print_entity(location)}</div>`
+      s+= `<div class="location_heading">${location.get_name()}</div>`
+
       s+= `<div class="description">${location.get_interior_description()}</div>`
       
       for( let clue of location.location_clues ) {
@@ -688,11 +679,15 @@ class UI {
     }
 
     show_player_info() {
-      let s = ``
-      s+= ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
-      document.getElementById('player_info').innerHTML = s
+      if( !game.get_player_location().is('chargen') ) {
+        let s = ``
+        s+= ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
+        document.getElementById('player_info').innerHTML = s        
+      }
     }
-    
+
+    // displays player equipment and inventory
+    // unless the player's location is abstract
     show_inventory() {
       let s = ``
       // if( options.debug ) {
@@ -706,7 +701,7 @@ class UI {
       if( ! game.get_player().get_location().is('abstract') ) {        
         s+= `<table>`
         s+= this.print_list( game.get_player().get_equipped_items(),
-                            {label: "equipment", not_if_empty: false, display: ui.print_entity_ministatus} )
+                            {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus} )
         s+= this.print_list( game.get_player().get_nonequipped_items(),
                             {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
         s+= `</table>` 

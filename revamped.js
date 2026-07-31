@@ -606,7 +606,7 @@ let cellar = new Entity({
 
   // prop
   let coffin = new Entity({
-    name: "Coffin",
+    name: "coffin",
     tags: ['closed', 'door', 'container'],
     icon: 'mansion_coffin.png',
     description: `<p>A coffin...?</p>`,

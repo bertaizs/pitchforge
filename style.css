@@ -7,7 +7,8 @@
 	--big-text-padding: 1.5rem;
 	--standard-text: 1.5rem;
 	
-	--font-heading: 'Cinzel', 'Trajan Pro', 'Baskerville', serif;
+	/*--font-heading: 'Cinzel', 'Trajan Pro', 'Baskerville', serif;*/
+	--font-heading: 'EB Garamond', 'Georgia', 'Garamond', serif;
 	--font-body: 'EB Garamond', 'Georgia', 'Garamond', serif;
 }
 
@@ -21,6 +22,12 @@
 }
 
 #title {
+    font-weight: bold;
+    font-family: var( --font-heading );
+    font-size:var(--big-text);    
+}
+
+.location_heading {
     font-weight: bold;
     font-family: var( --font-heading );
 }

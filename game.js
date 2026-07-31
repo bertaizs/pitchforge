@@ -266,7 +266,7 @@ game.ending = new Entity({
 // abstract location entity, for the character generation screen
 game.chargen = new Entity({
   name: "character generation",
-  tags: ['abstract', 'location'],
+  tags: ['abstract', 'location', 'chargen'],
   icon: 'chargen2.png',
   // description: ,
   

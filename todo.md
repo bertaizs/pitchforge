@@ -2,8 +2,6 @@ todo
 ====
 
 # multi-choice bugs
-- do not display player info during chargen
-- location title should not be clickable (???)
 
 - add the() to Verbs
 - all verbs must use the same loggig format:
@@ -25,8 +23,11 @@ todo
 
 - mark source of choices, make it possible to disable this via options
 
-- talking to the Butler
+# features
 
+- talking to the Butler
+  * get info
+  * let into cellar
 
 
 # mvp
