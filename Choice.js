@@ -28,7 +28,7 @@ class Choice {
 
   // executes the given choice
   make() {
-    console.log(`making choice: ${this.label}`)
+    // console.log(`making choice: ${this.label}`)
     let cmd
     if( 'cmd' in this ) {
       cmd = this.cmd
@@ -39,7 +39,7 @@ class Choice {
       // cmd.verb = 'custom'
       // cmd.fn = this.fn      
     }
-    console.log(`command`, cmd)
+    // console.log(`command`, cmd)
     let r = game.exec(cmd)      
   }
 
