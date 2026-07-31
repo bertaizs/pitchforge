@@ -44,6 +44,18 @@ class UI {
     this.choices = [] // choices currently offered, can pick from this by #
   }
 
+  scroll(html_id) {
+    let x = document.getElementById(html_id).getBoundingClientRect().x
+    let y = document.getElementById(html_id).getBoundingClientRect().y
+    let dy = document.getElementById(html_id).getBoundingClientRect().height
+
+    // we first scroll to the bottom, then scroll to the top
+    // (if we just scroll to the top, then the top will be visible but the we might not see 
+    // even the second line)
+    window.scrollTo(x, y+dy )
+    window.scrollTo(x, y )
+  }
+
   refresh() {
     this.show_main()
     this.show_player_info()
@@ -51,7 +63,16 @@ class UI {
     this.show_menu()
     ui.show_events()
 
-    window.scroll(0,0)
+    switch( this.cmd.verb ) {
+      case 'move':
+        this.scroll('main')
+        break;
+      // case 'charsheet':
+      //   window.scrollTo(0, document.getElementById('work').getBoundingClientRect().y )
+      //   break;
+      default:
+        this.scroll('work')
+    }
   }
 
   click_entity(id) {
@@ -103,7 +124,7 @@ class UI {
     this.choices = choices
     document.getElementById('entity_choices').innerHTML = s
 
-    window.scrollTo(document.getElementById('entity_choices').getBoundingClientRect() )
+    this.scroll('entity_choices')
   }
 
   clear_entity_choices() {
@@ -152,7 +173,7 @@ class UI {
     if( params.context ) {
       return params.context.replace( /\[.*\]/, link )
     }
-    if( params.the && (!starts_with_capital(display_str) && !starts_with_an(display_str)) )
+    if( params.the && (!starts_with_capital(display_str) && !starts_with_an(display_str)) && !starts_with_the(display_str) )
       link = 'the '+link
     return link
   }  
@@ -897,8 +918,12 @@ class UI {
     // refreshes ui (ui.refresh)
     exec(cmd = this.cmd) {
       // document.getElementById('output').style.display = 'none'
-      document.getElementById('output').style.animation = null
-      document.getElementById('output').offsetHeight
+      this.cmd = cmd
+      let anim = ['work', 'main']
+      for( let i in anim ) {
+        document.getElementById(anim[i]).style.animation = null
+        document.getElementById(anim[i]).offsetHeight        
+      }
       game.exec(cmd)
       // game.end_player_turn()   // moved into game.exec
       ui.refresh()
@@ -906,7 +931,9 @@ class UI {
       // document.getElementById('work').innerHTML += `<div style="border-bottom: 1px solid darkslategray;"></div>`
       // ui.scrollTo()
       // document.getElementById('output').style.display = 'block'
-      document.getElementById('output').style.animation = "fadeIn 1s ease-in";
+      for( let i in anim ) {
+        document.getElementById(anim[i]).style.animation = "fadeIn 1s ease-in";
+      }
     }
         
 

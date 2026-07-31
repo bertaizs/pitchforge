@@ -32,15 +32,13 @@ class Choice {
     let cmd
     if( 'cmd' in this ) {
       cmd = this.cmd
-      // console.log(`command`, this.cmd)
-      // game.exec(this.cmd)
     } else {
       cmd = new Cmd({verb: 'custom', fn: this.fn})
-      // cmd.verb = 'custom'
-      // cmd.fn = this.fn      
     }
     // console.log(`command`, cmd)
+    ui.cmd = cmd
     let r = game.exec(cmd)      
+    // ui.exec(cmd)
   }
 
 }

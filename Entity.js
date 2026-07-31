@@ -896,8 +896,17 @@ class Entity {
                               ) ) {
       c.add_verb('pick up', cmd, this)
     }
-    if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {
+
+    // takeable and held by the player
+    if( this.is_takeable() && this.is_at(game.get_player()) ) {
       c.add_verb('drop', cmd, this)
+    }
+
+    // takeable and held by someone else not the player
+    if( this.is_takeable() && this.get_location().is_at(game.get_player_location()) &&
+        this.get_location().is('character') && this.get_location().is_up() &&
+        this.get_location().id!=game.get_player().id ) {
+          c.add_verb('pickpocket', cmd, this, {label: `pickpocket ${the(this)} from ${the(this.get_location())}`})
     }
 
     if( this.is('weapon') && game.get_player().has(this) && !this.position ) {

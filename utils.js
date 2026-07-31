@@ -49,6 +49,11 @@ function starts_with_an(str) {
   return /^(a |an )/.test(str)
 }
 
+function starts_with_the(str) {
+  return /^(the |The )/.test(str)
+}
+
+
 function the(noun) {
   if(starts_with_capital(noun) || starts_with_an(noun) )
     return noun

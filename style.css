@@ -244,6 +244,18 @@ img.combat_icon {
     border-left: 6px solid  darkslategray;
 }
 
+#player_info {
+    border-top: 1px solid  darkslategray;
+    padding-top: 1em;
+}
+
+#entity_choices {
+    /*border-left: 6px solid  darkslategray;*/
+    padding-left: 2em;
+    border-top: 1px solid  darkslategray;
+    padding-top: 1em;
+}
+
 #main {
     margin-bottom: 15px;
 }
