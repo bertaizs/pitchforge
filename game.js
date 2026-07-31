@@ -209,7 +209,10 @@ class Game {
     // options.log_character_turns && console.log(`Handing control to user.`)
   } // main_loop
   
-  run() { this.main_loop() }
+  run() { 
+    ui.clear_entity_choices()
+    this.main_loop() 
+  }
   
   // called when the current player character ends their turn
   // restarts main loop, proceeding with actions as per game.initiative_order

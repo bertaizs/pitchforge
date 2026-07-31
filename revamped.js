@@ -308,7 +308,7 @@ let bushes = new Entity({
     ]
   })
 
-  car.choices.add( new Choice({
+  car.add_choice({
       label: "start the engine with the keys",
       fn: ()=>{
         ui.text(`You start the engine. The car is old, but it is working!`)
@@ -316,7 +316,7 @@ let bushes = new Entity({
         car.set_tag('running')
       }
       // !!! reqs: player has the keys
-    })  )
+    })
   car.choices.add( new Choice({
       label: "hotwire the car",
       fn: ()=>{
@@ -1395,19 +1395,6 @@ let the_staff = new Entity({
 
   keyring.move_to(the_staff)
   
-  game.add_trigger(
-    {verb: /use/, op1: keyring, op2: /door/},
-    function(cmd) {
-      if( cmd.op2.is('locked') ) {
-        ui.text(`Going through the keyring you eventually find the right key to open the lock on the `, cmd.op2, '.' )
-        cmd.op2.remove_tag('locked')
-        return true
-      }
-      ui.text(cmd.op2,` is not locked.`)
-      return true
-    }
-  )
-
   game.add_trigger(
     {verb: /move/, op1: study},
     function(cmd) {

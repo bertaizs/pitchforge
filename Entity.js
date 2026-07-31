@@ -453,6 +453,11 @@ class Entity {
       this.go_down()
     return this.add_status({name: 'wound', magnitude: n, timer: false})
   }
+
+  add_choice(choice_data, tag = false) {
+    this.choices.add_quick(choice_data, tag)
+    return this
+  }
   
   // insta-kill this Entity/character
   // standard actions that happen when a character dies

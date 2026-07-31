@@ -76,6 +76,11 @@ class ChoiceList {
     return this
   }
 
+  add_quick( choice_data, tag = false ) {
+    this.add( new Choice(choice_data), tag )
+    return this
+  }
+
   add_verb( verb, cmd, op, params = {} ) {
     if( !(verb in VERBS) )
       throw `unknown verb: ${verb}, cannot add such a choice`

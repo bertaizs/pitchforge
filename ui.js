@@ -123,12 +123,14 @@ class UI {
 
     this.choices = choices
     document.getElementById('entity_choices').innerHTML = s
+    document.getElementById('entity_choices').style.display = 'block'
 
     this.scroll('entity_choices')
   }
 
   clear_entity_choices() {
     document.getElementById('entity_choices').innerHTML = ''
+    document.getElementById('entity_choices').style.display = 'none'
     this.choices = []
   }
     
