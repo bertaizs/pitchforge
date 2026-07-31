@@ -3,7 +3,6 @@ todo
 
 # multi-choice bugs
 
-- picking up items from open containers
 - stealing items
 
 

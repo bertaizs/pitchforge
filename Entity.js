@@ -133,6 +133,11 @@ class Entity {
   get_location() {
     return game.entity(this.location_id)
   }
+
+  is_at(loc) {
+    loc = game.entity(loc)
+    return this.get_location().id == loc.id
+  }
   
   // returns entities contained by this entity
   list_entities_here() {
@@ -879,7 +884,16 @@ class Entity {
     // this is a generic choicelist returned for all items
     let c = new ChoiceList()
 
-    if( this.is_takeable() && (game.get_player_location().id == this.get_location().id) ) {
+    if( this.is_takeable() && (  
+          ( this.is_at(game.get_player_location() )   // where the player is
+            || 
+          (this.get_location().is_at(game.get_player_location()) && // in an open container where the player is
+          this.get_location().is('container') && this.get_location().is('open') )
+            ||
+          (this.get_location().is_at(game.get_player_location()) && // in an open container where the player is
+          this.get_location().is('remains') )
+          ) 
+                              ) ) {
       c.add_verb('pick up', cmd, this)
     }
     if( this.is_takeable() && (game.get_player().id == this.get_location().id) ) {

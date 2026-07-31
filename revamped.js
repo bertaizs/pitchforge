@@ -257,7 +257,7 @@ let well_area = new Entity({
 
   let dead_woodsman = new Entity({
       name: "dead woodsman",
-      tags: ['prop', 'remains', 'container', 'open'],
+      tags: ['prop', 'remains'],
       description: `The dead and partially eaten body of a woodsman. A middle-aged male with a beard. Whatever killed him must have had large teeth and claws, and it has torn the lower part of his body into pieces.`,
       // location: bushes,
   })
