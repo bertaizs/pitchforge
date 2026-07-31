@@ -15,6 +15,7 @@ todo
   * may add a period (.) after a whitespace
   * may add a period (.) inside a link
 
+- choices from templates do not work properly :( workaroud: global choices.. not good...
 
 
 

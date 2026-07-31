@@ -16,6 +16,8 @@ class Game {
         
     this.initiative_order = []
     this.current_entity_n = 0   // index of the current entity in the initiative order
+
+    this.global_choices = new ChoiceList()
   }
 
   entity(e) {
@@ -70,6 +72,12 @@ class Game {
     this.chargen.onward = location
   }
 
+  add_global_choice(choice_hash) {
+    let choice = new Choice(choice_hash)
+    this.global_choices.add(choice)
+    return this
+  }
+  
   // !!! todo: remove
   add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
     console.log('add_trigger')
@@ -109,19 +117,6 @@ class Game {
     }
     return false
   }
-
-  // old version, with limitation: if there are both op1 and op2, they can match in this order only, not if reversed
-  // __match( pattern, cmd ) {
-  //   options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
-  //   for( let p of ['who', 'verb', 'op1', 'op2'] ) {
-  //     if( ! cmd.match( p, pattern[p] ) ) {
-  //       options.log_matching_details && console.log(`no match`)
-  //       return false
-  //     }
-  //   }
-  //   options.log_matching_details && console.log(`match!`)
-  //   return true
-  // }
 
   
   // called when someone executes a command

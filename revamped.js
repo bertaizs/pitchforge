@@ -900,43 +900,11 @@ new Entity({
     // epithet: ["crooked", "old"],
     icon: 'stick.png',
     description: `Just a simple stick; broken from a tree or found in the forest.`,
-    // choices: new ChoiceList([
-    //   new Choice({
-    //     label: `sharpen the stick with your knife`,
-    //     fn: ()=>{
-    //       ui.text(`You have carved a stake.`)
-    //       this.destroy()
-    //       Entity.spawn( 'stake', player )
-    //     },
-    //     reqs: {items: /knife/},
-    //   }) 
-    // ] ),
-    // choices: new ChoiceList().add(
-    //   new Choice({
-    //     label: `sharpen the stick with your knife`,
-    //     fn: ()=>{
-    //       ui.text(`You have carved a stake.`)
-    //       this.destroy()
-    //       Entity.spawn( 'stake', player )
-    //     },
-    //     reqs: {items: /knife/},
-    //   } 
-    // )),
-    // choices: new ChoiceList([
-    //   new Choice({
-    //     label: `sharpen the stick with your knife`,
-    //     cmd: {
-    //       verb: 'process',
-    //       // op1: this,
-    //     },
-    //     reqs: {items: /knife/},
-    //   })
-    // ]),
-    process: (cmd)=>{
-       ui.text(`You have carved a stake.`)
-       Entity.spawn( 'stake', player )
-       // caller VERBS.process shall destroy this
-    }
+    // process: (cmd)=>{
+    //    ui.text(`You have carved a stake.`)
+    //    Entity.spawn( 'stake', player )
+    //    // caller VERBS.process shall destroy this
+    // }
 }, {template: 'stick'} )
 // game.templates.stick.choices.add(
 //   new Choice({
@@ -950,6 +918,20 @@ new Entity({
 //     reqs: {items: /knife/},
 //   }) 
 // )
+
+game.add_global_choice({
+  label: `sharpen the stick with your knife`,
+  entity_regexp: /stick/,
+  fn: (cmd)=>{
+    ui.text(`You have carved your stick into a stake.`)
+    console.log(`%%%%%%%`, cmd) // !!!!
+    cmd.op1.destroy()
+    Entity.spawn( 'stake', player )
+  },
+  clicked_entity_as: 'op1',
+  reqs: {items: /knife/},
+})
+
 
 new Entity({
     name: "broken furniture",

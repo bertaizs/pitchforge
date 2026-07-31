@@ -34,6 +34,8 @@ class Choice {
       cmd = this.cmd
     } else {
       cmd = new Cmd({verb: 'custom', fn: this.fn})
+      if( 'clicked_entity_as' in this )
+        cmd[this.clicked_entity_as] = this[this.clicked_entity_as]
     }
     // console.log(`command`, cmd)
     ui.cmd = cmd

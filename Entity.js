@@ -950,10 +950,17 @@ class Entity {
     
     // merging choicelists...
     let custom_choices = this.get_custom_choices()
+
+    let global_choices = new ChoiceList( game.global_choices.get_list().
+                        filter( x=>(this.get_name().match(x.entity_regexp) ) ).
+                        map( x=>{x[x.clicked_entity_as] = this; return x;}) 
+                        )
+    console.log( global_choices )
     
     let cl = new ChoiceList()
     cl.merge(custom_choices)  // custom choices for the given entity
     cl.merge(this.choices)    // static choices for the given entity
+    cl.merge(global_choices)  // also merge any global choices
     cl.merge(c)               // generic choices last
 
     // only offer those choices where the given char meets the requirements
