@@ -429,7 +429,7 @@ class Entity {
   add_wound( n ) {
     if( this.get_status('wound').magnitude == n )
       n+= 1   // if already had a wound with this magnitude, the wound gets worse    
-    ui.add_event(`${this} is wounded (${n}).`)
+    ui.text(this, ` is wounded (${n}).`)
     if( n>=LETHAL_WOUND )
       this.go_down()
     return this.add_status({name: 'wound', magnitude: n, timer: false})
@@ -446,7 +446,7 @@ class Entity {
   // called when this entity would down due to damage;
   // redefine if you want something else to happen
   go_down() {
-    ui.add_event(`${this} goes down.`)
+    ui.text(this, ` goes down.`)
     if( this.is_character() ) {
       this.kill() // call this.kill by default
     }

@@ -35,9 +35,6 @@ function pick_one( fromArray ) {
     return fromArray[random(fromArray.length)]
 }
 
-function sentence( str, str2 = "" ) {
-    return str.charAt(0).toUpperCase() + str.slice(1) + " " + str2;
-}
 
 function capitalize( str ) {
     return str.charAt(0).toUpperCase() + str.slice(1)
@@ -57,6 +54,60 @@ function the(noun) {
     return noun
   return "the "+noun
 }
+
+function deHtml(str) {
+  return str.replace(/<[^>]*>?/gm, '');
+}
+
+
+
+function capitalizeFirstWordHTML(html) {
+  if (!html || typeof html !== 'string') return '';
+
+  // Matches leading HTML tags or non-letter characters, then captures the first letter.
+  // Using unicode property escape \p{L} to support international letter characters.
+  return html.replace(
+    /^((?:<[^>]*>|[^<\p{L}])*?)(\p{L})/u,
+    (_, prefix, firstLetter) => prefix + firstLetter.toUpperCase()
+  );
+}
+
+/**
+ * Ensures an HTML string ends with a punctuation mark (., !, ?, or )).
+ * Inserts a period before any trailing closing HTML tags if needed.
+ */
+function ensureEndingPunctuation(html) {
+  if (!html || typeof html !== 'string') return '';
+
+  // Step 1: Extract any closing HTML tags or trailing whitespace at the very end.
+  const match = html.match(/(?:\s*<\/?[^>]+>|\s)*$/);
+  const trailingMarkup = match ? match[0] : '';
+  
+  // Step 2: Get the content preceding those trailing tags/spaces.
+  const mainContent = html.slice(0, html.length - trailingMarkup.length);
+
+  // If there's no actual content before trailing tags, return original input.
+  if (!mainContent.trim()) return html;
+
+  // Step 3: Check if the last visible character is a valid punctuation mark.
+  const validEndings = ['.', '!', '?', ')'];
+  const lastChar = mainContent.trim().slice(-1);
+
+  if (validEndings.includes(lastChar)) {
+    return html;
+  }
+
+  // Step 4: Insert '.' directly after the main content, before closing tags.
+  return mainContent + '.' + trailingMarkup;
+}
+
+function sentence( str ) {
+  str = capitalizeFirstWordHTML(str)
+  str = ensureEndingPunctuation(str)
+  return str
+    // return str.charAt(0).toUpperCase() + str.slice(1) + " " + str2;
+}
+
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;

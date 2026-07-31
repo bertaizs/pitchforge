@@ -125,6 +125,7 @@ class UI {
     params.context ??= false  // the <a > element will be put into this sentence, replacing [entity]
     params.prefix ??= ''
     params.showlink ??= true
+    params.the ??= false
     
     if( !params.label && params.context ) {
       let t = params.context.match(/\[(.*)\]/)
@@ -139,11 +140,20 @@ class UI {
       extra_class = ' party'
     if( e.is_hostile_to(player) )
       extra_class = ' hostile'
-    
-    let link = `<a class="entity${extra_class}" onclick="${ui.entity_link(e)}">${params.prefix}${params.label || e.get_name()}</a>`
+
+    let display_str = params.prefix + (params.label || e.get_name())
+    if( !params.showlink ) {
+      if( params.the )
+        return the(display_str)
+      else
+        return display_str
+    }
+    let link = `<a class="entity${extra_class}" onclick="${ui.entity_link(e)}">${display_str}</a>`
     if( params.context ) {
       return params.context.replace( /\[.*\]/, link )
     }
+    if( params.the && (!starts_with_capital(display_str) && !starts_with_an(display_str)) )
+      link = 'the '+link
     return link
   }  
   // shorthand for ui.print_entity
@@ -826,7 +836,7 @@ class UI {
       for( let arg of args ) {
         if(txt || event.whitespace) txt+= " "
         if( arg instanceof Entity ) {
-          txt+= the( ui.e(arg) )
+          txt+= ui.print_entity(arg, {the: true})
           plain_text += arg.get_name()+`#${arg.id}`
         }
         else
@@ -835,6 +845,16 @@ class UI {
           plain_text += arg          
         }
       }
+
+      // if( ! starts_with_capital(plain_text) ) {
+      //   plain_text = capitalize(plain_text)
+      //   txt = capitalize(txt)
+      // }
+      // if( /[^.?!)]$/.test(plain_text) ) {
+      //   plain_text += '.'
+      //   txt += '.'
+      // }
+      
       event.text = sentence(txt)
       event.plaintext = plain_text
       

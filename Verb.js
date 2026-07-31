@@ -69,7 +69,7 @@ new Verb({
   text: `Smile. Does not do anything, testing only.`,
   debug: true,
   on_success: function(cmd) {
-    ui.add_event(`${cmd.who} smiles. :)`)
+    ui.text(cmd.who, ` smiles. :)`)
   },
 })
 
@@ -97,9 +97,6 @@ new Verb({
   },
 })
 
-
-
-
 new Verb({
   name: 'select',    prep: '',
   type: 'debug',
@@ -108,7 +105,7 @@ new Verb({
   debug: true,
   on_success: function(cmd) {
     game.select_player(cmd.op1)
-    ui.add_event(`${cmd.op1} has been selected as the active character.`)
+    ui.text(cmd.op1, ` has been selected as the active character.`)
   },
 })
 
@@ -133,18 +130,18 @@ new Verb({
   sortkey: 1,
 })
 
-new Verb({
-  name: 'talk',        prep: 'to',
-  icon: '💬',
-  text: `Talk to another character.`,
-  type: 'action',
-  test: false,
-  op1: true,
-  on_success: function(cmd) {
-    ui.add_event(`There is no response.`)
-  },
-  sortkey: 3,
-})
+// new Verb({
+//   name: 'talk',        prep: 'to',
+//   icon: '💬',
+//   text: `Talk to another character.`,
+//   type: 'action',
+//   test: false,
+//   op1: true,
+//   on_success: function(cmd) {
+//     ui.add_event(`There is no response.`)
+//   },
+//   sortkey: 3,
+// })
 
 //
 // COMBAT
@@ -160,45 +157,45 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.op1.is_character() ) {
-      return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
+      return ui.text(`There is no point in attacking `, cmd.op1)
     }
     
     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
-    ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
+    ui.text(cmd.who, ` strikes `, cmd.op1, '.')
     let damage = cmd.op1.take_damage({value: 1, tier: cmd.who.get('damage_tier')})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
   },
   on_fail: function(cmd) {
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
+    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`)
   },
 })
 
-new Verb({
-  name: 'kick',
-  icon: '🥋',
-  text: `Deliver a powerful circle kick`,
-  type: 'combat',
-  test: 'attack',
-  test_vs: 'defense',
-  op1: true,
-  reqs: {traits: {'martial arts': true}},
+// new Verb({
+//   name: 'kick',
+//   icon: '🥋',
+//   text: `Deliver a powerful circle kick`,
+//   type: 'combat',
+//   test: 'attack',
+//   test_vs: 'defense',
+//   op1: true,
+//   reqs: {traits: {'martial arts': true}},
   
-  on_success: function(cmd) {
-    if( !cmd.op1.is_character() ) {
-      return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
-    }
+//   on_success: function(cmd) {
+//     if( !cmd.op1.is_character() ) {
+//       return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
+//     }
     
-    // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
-    ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
-    let damage = cmd.op1.take_damage({value: 2})
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-  },
-  on_fail: function(cmd) {
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
-  },
-})
+//     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
+//     ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
+//     let damage = cmd.op1.take_damage({value: 2})
+//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+//   },
+//   on_fail: function(cmd) {
+//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+//     ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
+//   },
+// })
 
 new Verb({
   name: 'recover',         // prep: 'at',
@@ -209,7 +206,7 @@ new Verb({
   sortkey: 99,
   on_success: function(cmd) {
     // todo: should not be immediate
-    ui.add_event( `${cmd.who} takes a breather...` )
+    ui.text( cmd.who, ` takes a breather...` )
     cmd.who.recover()
   },
 })
@@ -232,13 +229,13 @@ new Verb({
       if( (cmd.op1.get_location().id == cmd.who.get_location().id) || 
           cmd.op1.get_location().is_open_container() ) {
         cmd.op1.move_to(cmd.who)
-        ui.add_event(`${cmd.who} picks up ${cmd.op1}.`)
+        ui.text(cmd.who, ` picks up `, cmd.op1)
       }
       else
-        ui.add_event(`${cmd.who} cannot pick up ${cmd.op1} as it is not on the ground.`)
+        ui.text(cmd.who, ` cannot pick up `, cmd.op1, ` as it is not on the ground.`)
     } 
     else
-      ui.add_event(`${cmd.who} cannot pick up ${cmd.op1}.`)
+      ui.text(cmd.who, ` cannot pick up `, cmd.op1)
   },
   sortkey: 1,
 })
@@ -252,7 +249,7 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     cmd.op1.move_to(cmd.who.get_location())
-    ui.add_event(`${cmd.who} drops ${cmd.op1}.`)
+    ui.text(cmd.who, ` drops `, cmd.op1)
   },
   sortkey: 2,
 })
@@ -266,18 +263,18 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.who.has( cmd.op1) )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
+      return ui.text(cmd.who, ` does not have `, cmd.op1)
     
     let where = 'weapon'
     cmd.who.list_entities_here()
         .map( x=>{
               if(x.position==where) {
-                ui.add_event(`${cmd.who} unequips ${x}.`)
+                ui.text(cmd.who, ` unequips `, x)
                 x.position=false
               }
         } ) // unequip all
     cmd.op1.move_to(cmd.who, where) // pick up and equip
-    ui.add_event(`${cmd.who} now wields ${cmd.op1}.`)
+    ui.text(cmd.who, ` now wields `, cmd.op1)
   },
   sortkey: 3,
 })
@@ -289,29 +286,29 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.who.has( cmd.op1) )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
+      return ui.text(cmd.who, ` does not have `, cmd.op1)
     if( cmd.op1.get('position') == false )
-      return ui.add_event(`${cmd.who} does not have ${cmd.op1} equipped.`)
+      return ui.text(cmd.who, ` does not have `, cmd.op1, ` equipped.`)
     
     cmd.op1.position = false
-    ui.add_event(`${cmd.who} unequips ${cmd.op1}.`)
+    ui.text(cmd.who, ` unequips `, cmd.op1)
   },
   sortkey: 4,
 })
 
-new Verb({
-  name: 'use',
-  icon: '🔧',
-  text: `Try to find a way to use an item. Try pushing or pulling it, turning it on. If it can be opened, then try opening it. If not, then try closing it. If it can be eaten, you will eat it.`,
-  type: 'action',
-  test: false,
-  op1: true,    separator: 'and',
-  op2: true,
-  on_success: function(cmd) {    
-    ui.add_event(`This does not seem to work.`)
-  },
-  sortkey: 2,
-})
+// new Verb({
+//   name: 'use',
+//   icon: '🔧',
+//   text: `Try to find a way to use an item. Try pushing or pulling it, turning it on. If it can be opened, then try opening it. If not, then try closing it. If it can be eaten, you will eat it.`,
+//   type: 'action',
+//   test: false,
+//   op1: true,    separator: 'and',
+//   op2: true,
+//   on_success: function(cmd) {    
+//     ui.add_event(`This does not seem to work.`)
+//   },
+//   sortkey: 2,
+// })
 
 new Verb({
   name: 'consume',
@@ -322,9 +319,9 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.op1.is('consumable') ) {
-      ui.text(`${the(cmd.op1)} cannot be consumed.}`)
+      ui.text(cmd.op1, ` cannot be consumed.`)
     } else {
-      ui.text(`${cmd.who} consumes ${cmd.op1}.`)
+      ui.text(cmd.who, ` consumes `, cmd.op1)
       cmd.op1.consumed_by(cmd.who)
       cmd.op1.destroy()
     }
@@ -443,32 +440,32 @@ new Verb({
   sortkey: 6,
 })
 
-new Verb({
-  name: 'give',
-  icon: '🎁',
-  text: `Give and item to someone.`,
-  type: 'action',
-  test: false,
-  op1: true,    separator: 'to',
-  op2: true,
-  on_success: function(cmd) {
-    if(cmd.op1.get_location()!=cmd.who) {
-      ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
-      return true
-    }
-    if(!cmd.op1.is_takeable()) {
-      ui.add_event(`${cmd.who} cannot give away ${cmd.op1}.`)
-      return true
-    }
-    if(!cmd.op2.is_character()) {
-      ui.add_event(`${cmd.who} cannot give away ${cmd.op1} to ${cmd.op2}.`)
-      return true
-    }
-    ui.add_event(`${cmd.who} gives ${cmd.op1} to ${cmd.op2}.`)
-    cmd.op1.move_to(cmd.op2)
-  },
-  sortkey: 4,
-})
+// new Verb({
+//   name: 'give',
+//   icon: '🎁',
+//   text: `Give and item to someone.`,
+//   type: 'action',
+//   test: false,
+//   op1: true,    separator: 'to',
+//   op2: true,
+//   on_success: function(cmd) {
+//     if(cmd.op1.get_location()!=cmd.who) {
+//       ui.add_event(`${cmd.who} does not have ${cmd.op1}.`)
+//       return true
+//     }
+//     if(!cmd.op1.is_takeable()) {
+//       ui.add_event(`${cmd.who} cannot give away ${cmd.op1}.`)
+//       return true
+//     }
+//     if(!cmd.op2.is_character()) {
+//       ui.add_event(`${cmd.who} cannot give away ${cmd.op1} to ${cmd.op2}.`)
+//       return true
+//     }
+//     ui.add_event(`${cmd.who} gives ${cmd.op1} to ${cmd.op2}.`)
+//     cmd.op1.move_to(cmd.op2)
+//   },
+//   sortkey: 4,
+// })
 
 
 
@@ -476,53 +473,52 @@ new Verb({
 //
 // SPECIAL ACTIONS
 // 
-new Verb({
-  name: 'pickpocket',
-  icon: '👜',
-  type: 'action',
-  test: 'pickpocket',
-  op1: true,
-  reqs: {cool: 1},
+// new Verb({
+//   name: 'pickpocket',
+//   icon: '👜',
+//   type: 'action',
+//   test: 'pickpocket',
+//   op1: true,
+//   reqs: {cool: 1},
   
-  difficulty: function(cmd) {
-    let owner = cmd.op1.get_location()
-    return owner.performance('perception')
-  },
-  on_success: function(cmd) {
-    if(cmd.op1.is_takeable()) {
-      let owner = cmd.op1.get_location()
-      cmd.op1.move_to(cmd.who)
-      ui.add_event(`${cmd.who} has stolen ${cmd.op1} from ${owner}.`)      
-    } 
-    else
-      ui.add_event(`${cmd.who} cannot steal ${cmd.op1}, items can be stolen only.`)
-  },
-  on_fail: function(cmd) {
-    let owner = cmd.op1.get_location()
-    // cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.add_event(`${owner} noticed that ${cmd.who} was trying to steal ${cmd.op1}!`)
-    ui.add_event(`${owner} is angry!`)
-  },
-  sortkey: 5,
-})
+//   difficulty: function(cmd) {
+//     let owner = cmd.op1.get_location()
+//     return owner.performance('perception')
+//   },
+//   on_success: function(cmd) {
+//     if(cmd.op1.is_takeable()) {
+//       let owner = cmd.op1.get_location()
+//       cmd.op1.move_to(cmd.who)
+//       ui.add_event(`${cmd.who} has stolen ${cmd.op1} from ${owner}.`)      
+//     } 
+//     else
+//       ui.add_event(`${cmd.who} cannot steal ${cmd.op1}, items can be stolen only.`)
+//   },
+//   on_fail: function(cmd) {
+//     let owner = cmd.op1.get_location()
+//     // cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+//     ui.add_event(`${owner} noticed that ${cmd.who} was trying to steal ${cmd.op1}!`)
+//     ui.add_event(`${owner} is angry!`)
+//   },
+//   sortkey: 5,
+// })
 
-new Verb({
-  name: 'sneak',
-  icon: '🥷',
-  text: `Enter sneak mode.`,
-  type: 'action',
-  test: false,
-  reqs: {cool: 1},
-  on_success: function(cmd) {
-    ui.add_event(`${cmd.who} starts sneaking.`)
-    cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
-  },
-  sortkey: 6,
-})
+// new Verb({
+//   name: 'sneak',
+//   icon: '🥷',
+//   text: `Enter sneak mode.`,
+//   type: 'action',
+//   test: false,
+//   reqs: {cool: 1},
+//   on_success: function(cmd) {
+//     ui.add_event(`${cmd.who} starts sneaking.`)
+//     cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
+//   },
+//   sortkey: 6,
+// })
 
 
-
-// !!! place properly
+// this is not a real verb; it calls a custom function instead
 new Verb({
   name: 'custom',
   // icon: '🥷',

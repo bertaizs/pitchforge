@@ -6,14 +6,17 @@ todo
 - picking up items from open containers
 - stealing items
 
-- add the() to Verbs
-- all verbs must use the same loggig format:
-  ui.text
-- fix capitalization in ui.text
 
 - choices should use builtin test features of verbs
 
 - do not offer any choices when the game is over...
+
+
+- minor bugs remain around punctuation utils / sentence:
+  * may add a period (.) after a whitespace
+  * may add a period (.) inside a link
+
+
 
 
 # rework as multiple-choice
