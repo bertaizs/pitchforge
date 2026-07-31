@@ -3,6 +3,9 @@ todo
 
 # multi-choice bugs
 
+- picking up items from open containers
+- stealing items
+
 - add the() to Verbs
 - all verbs must use the same loggig format:
   ui.text
@@ -29,6 +32,7 @@ todo
   * get info
   * let into cellar
 
+- let into study
 
 # mvp
 

@@ -48,8 +48,12 @@ function starts_with_capital(str) {
   return /^[A-Z]/.test(str);
 }
 
+function starts_with_an(str) {
+  return /^(a |an )/.test(str)
+}
+
 function the(noun) {
-  if(starts_with_capital(noun) || /^(a |an )/.test(noun) )
+  if(starts_with_capital(noun) || starts_with_an(noun) )
     return noun
   return "the "+noun
 }
