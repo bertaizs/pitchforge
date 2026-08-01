@@ -45,6 +45,14 @@ class UI {
   }
 
   scroll(html_id) {
+    let element = document.getElementById(html_id)
+    element.scrollIntoView({
+      behavior: 'smooth', // 'smooth' or 'auto' (instant)
+      block: 'start',     // Vertical alignment: 'start', 'center', 'end', or 'nearest'
+      inline: 'nearest'   // Horizontal alignment: 'start', 'center', 'end', or 'nearest'
+    });	
+
+	  /*
     let x = document.getElementById(html_id).getBoundingClientRect().x
     let y = document.getElementById(html_id).getBoundingClientRect().y
     let dy = document.getElementById(html_id).getBoundingClientRect().height
@@ -54,6 +62,7 @@ class UI {
     // even the second line)
     window.scrollTo(x, y+dy )
     window.scrollTo(x, y )
+    */
   }
 
   refresh() {
@@ -73,6 +82,8 @@ class UI {
       default:
         this.scroll('work')
     }
+    if( game.get_player_location().is('chargen') )
+	  this.scroll('title')
   }
 
   click_entity(id) {
