@@ -20,6 +20,8 @@ options.log_test_results = false
 
 options.log_damage = true
 
+options.log_move = true
+
 options.log_turn_start = true       // log when a game turn starts (i.e. not entity's turn)
 // options.log_ticks = true
 options.log_entity_ticks = false     // log tick for every entity (incl. items, locations)

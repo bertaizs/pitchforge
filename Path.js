@@ -88,9 +88,11 @@ class Path {
     
     if( this.on_move_through(cmd) ) {
       entity.move_to(this.to)
+      options.log_move && console.log(`moving ${cmd.who} from ${this.from} to ${this.to}`)
       return true
     } else {
       cmd.verb = 'nop'
+      options.log_move && console.log(`move blocked by on_move_through()`)
       return false      
     }
   }

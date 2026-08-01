@@ -77,19 +77,7 @@ class Game {
     this.global_choices.add(choice)
     return this
   }
-  
-  // !!! todo: remove
-  add_trigger( pattern={}, action = ()=>(console.log(`empty action`)), sortkey = 100 ) {
-    console.log('add_trigger')
     
-    if( 'verb' in pattern == false ) throw `no verb in pattern: ${pattern}`
-    pattern.who ??= /.*/
-    pattern.op1 ??= /.*/
-    pattern.op2 ??= /.*/
-    this.triggers.push( {pattern: pattern, action: action, sortkey: sortkey} )
-  }
-  
-  
   // returns true if the cmd (Cmd) matches the pattern
   // pattern is created by game.add_trigger
   match( pattern, cmd ) {
@@ -281,7 +269,9 @@ game.chargen = new Entity({
     them.name = document.getElementById('chr_name').value
     them.gain( game.character_backgrounds[document.getElementById('chr_background').value] )
     them.recover()
-    them.move_to(this.onward)
+    // them.move_to(this.onward)
+    ui.cmd = new Cmd({verb: 'move', op1: this.onward, path: false})  // setting to a move command to scroll accordingly after refresh
+    game.exec(ui.cmd)  // would be ideal, but would need a path for it too
     ui.refresh()
   },
   onward: game.universe,

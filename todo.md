@@ -1,7 +1,12 @@
 todo
 ====
 
-# multi-choice bugs
+# critical bugs
+
+
+# lesser multi-choice bugs
+
+- chargen should be moved into game-specific part
 
 - choices should use builtin test features of verbs
 
@@ -12,7 +17,6 @@ todo
   * may add a period (.) inside a link
 
 - choices from templates do not work properly :( workaroud: global choices.. not good...
-
 
 
 # rework as multiple-choice

@@ -48,16 +48,23 @@ class Verb {
 // called via dedicated path links, not via calling this command
 new Verb({
   name: 'move',
-  type: 'debug',
+  type: 'move',
   test: false,
   op1: true,
   text: `Go somewhere.`,
   debug: true,
   on_success: function(cmd) {
+    console.log('/%/=%==/=')
+    
     if( !('path' in cmd) )
       throw `no path received in cmd: ${cmd}`
 
-    cmd.path.move_through(cmd)
+    if( cmd.path )
+      cmd.path.move_through(cmd)
+    else {
+      options.log_move && console.log('moving directly, without a path')
+      cmd.who.move_to(cmd.op1)
+    }
   },
 })
 
