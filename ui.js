@@ -417,11 +417,15 @@ class UI {
       let perception = ('perception' in params ? params.perception : Infinity )
       options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
       
-      let s = `<table><tr><td style="vertical-align: top;">`
+//      let s = `<table><tr><td style="vertical-align: top;">`
+      let s = ``
+      s+= `<div>`
       if( entity.get('icon') ) {
         s+= this.img(entity.get('icon'))
       }
-      s+= `</td><td style="vertical-align: top;">`
+//      s+= `</td><td style="vertical-align: top;">`
+
+      s+= `</div><div>`
       
       s+= this.print_entity(entity)
       if( options.show_tags ) {
@@ -531,7 +535,8 @@ class UI {
         s+= `<a onclick="ui.sheet_level_up(${entity.id})">⬆️level up!</a> |`
         s+= `</div>`
       }
-      s+= `</td></tr></table`
+  //    s+= `</td></tr></table`
+      s += `</div>`
       return s
     } // print_sheet
     
