@@ -2,10 +2,9 @@
 
 :root {
 /* Mobile Sizes (Larger for readability) */
-	--big-text: 2rem;
+	--big-text: 1.3rem;
 	--big-text-td: 3rem;
-	--big-text-padding: 1.5rem;
-	--standard-text: 1.5rem;
+	--standard-text: 1.2rem;
 	
 	/*--font-heading: 'Cinzel', 'Trajan Pro', 'Baskerville', serif;*/
 	--font-heading: 'EB Garamond', 'Georgia', 'Garamond', serif;
@@ -143,8 +142,6 @@ a.entity {
     /*border-right: 1px solid gray;*/
     width: 6em;
     padding-bottom: 8px;
-    /* height: var(--big-text-td); */
-    /*border: 1px solid green;*/
 }
 
 .table_right {
@@ -183,7 +180,7 @@ td, th { /* table cells */
 
 img.entity_image {
     width: 300px;
-    width: 25rem;
+/*    width: 25rem; */
     display: inline-block;
     margin-right: 5px;
     margin-bottom: 10px;
@@ -226,7 +223,7 @@ img.combat_icon {
     top:0px; right: 0px;
     margin-right: 2em;
     margin-top: 6px;
-    position: absolute;
+/*    position: absolute;  */
     color: darkslategray;
 }
     .menuitem {
@@ -280,8 +277,6 @@ img.combat_icon {
 @media (min-width: 1000px) {
     :root {
 	--big-text: 1.3rem;
-	--big-text-td: 2rem;
-	--big-text-padding: 0.5rem;
 	--standard-text: 1rem;
     }
     .container {
