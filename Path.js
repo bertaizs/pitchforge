@@ -73,17 +73,26 @@ class Path {
   }
   
   // called when moving through this path; redefine if you need a custom event
-  on_move_through(cmd) {}
+  // returns true if successful; if false, then the move does not happen
+  on_move_through(cmd) { return true }
   
-  move_through(entity, endpoint_id = false) {
-    entity = game.entity(entity)
+  move_through(cmd) {
+    let entity = cmd.who
+
+    if(!this.can_pass_through(entity)) {
+      // throw `${entity} cannot pass through ${this}`
+      ui.text(entity, ` cannot pass through.`)
+      cmd.verb = 'nop'
+      return false
+    }
     
-    if(!this.can_pass_through(entity))
-      throw `${entity} cannot pass through ${this}`
-    
-    this.on_move_through()
-    
-    entity.move_to(this.to)
+    if( this.on_move_through(cmd) ) {
+      entity.move_to(this.to)
+      return true
+    } else {
+      cmd.verb = 'nop'
+      return false      
+    }
   }
   
 }

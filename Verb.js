@@ -54,8 +54,10 @@ new Verb({
   text: `Go somewhere.`,
   debug: true,
   on_success: function(cmd) {
-    cmd.path.on_move_through(cmd)
-    cmd.who.move_to(cmd.op1)
+    if( !('path' in cmd) )
+      throw `no path received in cmd: ${cmd}`
+
+    cmd.path.move_through(cmd)
   },
 })
 

@@ -408,6 +408,7 @@ let shed = new Entity({
     on_move_through: function(cmd) {
       ui.text(`You feel hope slipping away... Is this a curse?`)
       cmd.who.take_damage({value: 1, type: 'spirit'})
+      return false
     }
   })  
 
@@ -494,7 +495,7 @@ let bell_pull = new Entity({
   description: 'This rope is connected to some bells for signalling servants. You wonder if there are any servants alive would could be alerted.'
 })
   bell_pull.choices.add( new Choice({
-      label: "pull the rope",
+      label: "pull the chord",
       fn: ()=>{
         ui.text(`A bell rings somewhere to signal the servants.`)
         if( the_staff.is_up() ) {
@@ -505,7 +506,16 @@ let bell_pull = new Entity({
       }
     })  )
 
-
+  let study = new Entity({
+    name: "Study in Ruins",
+    icon: 'mansion_study.png',
+    // description: `<p></p>`,
+    interior_description: 
+    `<p>You step into a small chamber in the mansion, a study of the master, perhaps. The air thick with dust and the faint smell of rot. The once-solid structure now buckling under time and neglect.</p>
+    <p>Your eyes drift across the wreckage. In the center of the room, a heavy wooden desk still stands, though scarred and dusty. Papers, books, and small scattered objects lie across its surface, as if someone had been working here… and never returned. A worn leather chair sits behind it, one of its legs is missing.</p>
+    <p>Cobwebs cling to every corner. The silence presses in, broken only by the faint creak of wood overhead—as if the mansion is still settling... or watching.</p>
+    `,
+  })
 
 let main_hall = new Entity({
   name: "Main Hall",
@@ -519,7 +529,7 @@ let main_hall = new Entity({
   <p>Your gaze is pulled toward the sweeping staircase ahead, its wooden steps worn and partially overtaken by green growth. It leads up to a gallery that wraps around the room. Below, a tall grandfather clock stands against the wall, silent like the rest of the house, while scattered chairs and broken debris suggest abandonment rather than decay alone.</p>
   
   <p>There is a dining room next to the main hall, its door has been torn open, something huge must have come out through it... or maybe it went in.
-  There is another smaller room, with a destroyed door, it is probably a study of some sort.
+  There is another smaller room, with a destroyed door, it is probably a ${ui.e(study, "study")} of some sort.
   </p>
   <p>A ${ui.e(mansion_front_door, "double door")} leads to the outside.
   There is a ${ui.e(cellar_door, "small door")} leading to the cellar below the mansion.</p>
@@ -634,17 +644,8 @@ let coffin_room = new Entity({
   `,
 })
 
-let study = new Entity({
-  name: "Study in Ruins",
-  icon: 'mansion_study.png',
-  // description: `<p></p>`,
-  interior_description: 
-  `<p>You step into a small chamber in the mansion, a study of the master, perhaps. The air thick with dust and the faint smell of rot. The once-solid structure now buckling under time and neglect.</p>
-  <p>Your eyes drift across the wreckage. In the center of the room, a heavy wooden desk still stands, though scarred and dusty. Papers, books, and small scattered objects lie across its surface, as if someone had been working here… and never returned. A worn leather chair sits behind it, one of its legs is missing.</p>
-  <p>Cobwebs cling to every corner. The silence presses in, broken only by the faint creak of wood overhead—as if the mansion is still settling... or watching.</p>
-  `,
-})
-study.add( car_keys )
+
+study.add( car_keys, `You spot some [keys] are lying under the broken table.` )
 
   let chandelier = new Entity({
     name: "chandelier",
@@ -819,9 +820,15 @@ let ladies_bedroom = new Entity({
     from: main_hall, 
     to: study, 
     text: `enter the study`,
-  }, { text: `go back to the the mansion's entrance`, })
-
-  
+    on_move_through: (cmd)=>{
+      if( the_staff.is_at(main_hall) && the_staff.is_up() ) {
+        ui.text( the_staff, ` does not let you into the study.` )
+        return false
+      }
+      return true
+    }
+  }, { text: `go back to the the mansion's entrance`,
+    on_move_through: ()=>true})
   
   
 //
@@ -1153,6 +1160,7 @@ let ham = new Entity({
   icon: 'ham.png',
   description: 'A delicious-looking ham.',
   location: pantry,
+  position: `A [ham] is hanging from the ceiling.`,
   clues: [
     new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': Test.BASIC} }),
     new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': Test.MEDIUM} }),
@@ -1170,6 +1178,7 @@ let whisky = new Entity({
   icon: 'whisky.png',
   description: 'A bottle with some mysterious liquid inside. The label has been removed from the bottle.',
   location: study,
+  position: `A [bottle with some mysterious liquid] is standing on the floor, still intact for some reason.`,
   clues: [
     new Clue({ text: `It smells like alcohol...`, reqs: {'perception': Test.MUNDANE} }),
     new Clue({ text: `This is definitely whisky! Some <i>very good</i> whisky!`, reqs: {'perception': Test.MEDIUM} }),
@@ -1395,20 +1404,6 @@ let the_staff = new Entity({
 
   keyring.move_to(the_staff)
   
-  game.add_trigger(
-    {verb: /move/, op1: study},
-    function(cmd) {
-      if( the_staff.is_up() && the_staff.get_location()==main_hall ) {
-        ui.add_event(`The staff does not let you enter the study.`)
-        return true
-      }
-
-      ui.add_event(`You go into the study.`)
-      return false
-    }
-  )
-
-
 
 let woodsmans_axe = Entity.spawn( 'axe', bushes, {name: "woodsman's axe"} )
 let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )

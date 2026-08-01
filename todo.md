@@ -3,13 +3,9 @@ todo
 
 # multi-choice bugs
 
-- stealing items
-
-
 - choices should use builtin test features of verbs
 
 - do not offer any choices when the game is over...
-
 
 - minor bugs remain around punctuation utils / sentence:
   * may add a period (.) after a whitespace
@@ -20,8 +16,6 @@ todo
 
 
 # rework as multiple-choice
-
-* eliminate triggers...
 
 - common actions
   * combat
