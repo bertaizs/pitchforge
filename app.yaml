@@ -9,9 +9,9 @@ handlers:
   upload: index.html
   secure: always
 
-- url: /(.+\.(html|js|css|ico))$
+- url: /(.+\.(html|js|css|ico|png))$
   static_files: \1
-  upload: (.+\.(html|js|css|ico))$
+  upload: (.+\.(html|js|css|ico|png))$
   secure: always
 
 - url: /(.+)
