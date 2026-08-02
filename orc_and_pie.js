@@ -92,26 +92,3 @@ let player = new Entity({
     traits: {},
     location: room
 })
-
-
-//
-// the below are NOT part of the adventure, just made for testing...
-// 
-
-let backroom = new Entity({
-  name: "another place",
-  tags: ['location'],
-  icon: 'cottage_inside.png',
-  description: `You are in some fantasy world. It is not really important where you are, you can be in a dungeon, in a room, a top of a mountain or wherever you want. Just play the game.
-  
-  <br/>There is no exit; don't even try to go anywhere.
-  
-  <p>Hint: You are supposed to kill the orc to eat the pie.</p>`,
-})
-
-new Path({
-  from: room, 
-  to: backroom, 
-  text: `a door leads to a backroom`,
-},  {  text: `return to the main room`,  }
-)
