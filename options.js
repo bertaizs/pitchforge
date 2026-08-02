@@ -10,8 +10,8 @@ if(String(document.location).match(/^http/)) {
   options.picture_ext = 'jpg'
 }
 
-options.log_clicks_on_verbs = true
-options.log_clicks_on_entities = true
+options.log_clicks_on_verbs = false
+options.log_clicks_on_entities = false
 options.log_clicks_on_paths = false
 
 options.log_tests = false
@@ -20,7 +20,7 @@ options.log_test_results = false
 
 options.log_damage = true
 
-options.log_move = true
+options.log_move = false
 
 options.log_turn_start = true       // log when a game turn starts (i.e. not entity's turn)
 // options.log_ticks = true
@@ -37,19 +37,19 @@ options.log_commands = true
 options.log_player_turn_milestones = true
 options.log_events = true       // also log anything outputted as an event
 
-options.show_tags = true
+options.show_tags = false
 
 
 
 options.debug = false    // debug mode
 
-options.npcs_passive = true // if true, npcs do not act
+options.npcs_passive = false // if true, npcs do not act
 options.no_ticks = false // if true, ticks/time is turned off
 
 options.end_game_on_player_down = true
 
-options.show_full_knowledge = true  // quests/journal shows the full Info block as JSON
+options.show_full_knowledge = false  // quests/journal shows the full Info block as JSON
 
 options.show_events_at_other_locations = false
 
-options.show_choice_source = true
+options.show_choice_source = false
