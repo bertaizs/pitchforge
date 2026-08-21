@@ -8,6 +8,7 @@ Poor Man's RPG
   * Paper and six-sided dice -- no fancy tools should be needed.
   * Simple maths, small numbers.
   * Unlimited progress, but will reach diminishing returns.
+  * Combat is dangerous, even for the strong if outnumbered.
   * Allow diverse character builds, both specialists and generalists.
   * No powergaming (no complex stacking of bonuses).
 
@@ -222,7 +223,36 @@ Professions, and crafting skills, such as:
   - additional traits (e.g. painting, carving, music) required by this one may specialize it further, where the core trait can be considered a cross-skill
 
 
-# Life, Damage and Death
+# Mortality
+
+
+## Damage
+
+Damage you take can be physical -- expressed in body points, or non-physical -- expressed in spirit points. When either of these reach zero or below, you go down.
+
+## Threat
+
+When you are hurt, you take damage. However, whenever you successfully avoid getting hurt (for example by blocking or evading an attack), you accumulate **threat**.
+Each point of threat decreases your performance on tests when you defend yourself, i.e. it appears as a penalty or any defensive tests.
+This means that you can defend yourself for a limited time only, and will eventually get overwhelmed.
+
+You get rid of all threat when:
+
+* you are no longer in danger; or
+* if you have a combat trait, you can remove all threat from yourself at the cost of 1 spirit point.
+
+## Wounds
+
+When you are seriously hurt, you receive a **wound**. 
+
+* If you have a light wounds only, you get a `-1` penalty on all tests. You recover from light wounds with time.
+* If you have a serious wound, then in addition to the penalty for light wounds, your performance is halved all tests. Serious wounds will need treatment, or you do not recover.
+* If you have a critical wound, automatically fail all tests. If a critical wound does not get treatment, you die.
+
+## Death
+
+Death is irreversible.
+
 
 # Combat
 
@@ -232,7 +262,72 @@ Everyone performs an *initiative* test using *sharp*, they act based on their pe
 
 ## Actions
 
-## Threat
+You can take one action during your turn, in addition to some movement. You can use your action for attacking, taking cover, drinking a potion, or you can do something else.
+
+Each offensive action you take is a *test*, where you compare your attack performance vs the target's defense performance.
+
+
+### Defense
+
+  * **Melee defense**:
+    - *melee* trait & *tough*, using your weapon and any shield; or
+    - *martial arts* trait & *cool* or *tough*; or
+    - *evasion* trait & *cool*, if you are not wearing armor;
+
+  * **Ranged defense**:
+    - *any combat trait* & *tough*, using any cover; or
+    - *evasion* trait & cool;
+
+  * **Health** trait and *tough* for anything affecting your health (disease, poison, nausea);
+
+  * **Resistance** trait and *charm* for anything affecting your mind, your morale or trying to change what you are;
+
+### Offense
+
+  * **Attack** (with weapon or unarmed, melee or ranged): the *combat trait* you use and *tough*;
+
+  * **Aimed shots**:  *firearms* or *archery* trait (depending on if you are using guns or bows) & *cool*;
+
+---
+
+  * **Melee defense**:
+    - *melee* trait & *tough*, using your weapon and any shield; or
+    - *martial arts* trait & *cool* or *tough*; or
+    - *evasion* trait & cool;
+
+  * **Ranged defense**:
+    - *any combat trait* & *tough*, using any cover; or
+    - *evasion* trait & cool;
+
+  
+
+  * **Melee attack**: *melee* trait & *tough*;
+
+  * **Ranged attack*:
+    - for point blank: *firearms* or *archery* trait (depending on if you are using guns or bows) & *tough* or *cool*;
+    - for aimed shots: 
+  * 
+
+
+Melee defense:
+
+
+
+### Melee attack
+Your attack via *melee* trait, using your *tough* and your weapon.
+
+### Melee defense
+They defend via:
+
+  * *melee* trait and *tough* and a weapon; or
+  * *martial arts* trait and *tough* or *cool*; or
+  * *evasion* trait and *cool*, but this cannot be used in armor.
+
+### Ranged attack at a close target
+You attack via *firearms* or *archery* trait (depending on if you use a gun or a bow) and *tough* or *cool* if you fire at a close target.
+
+### Ranged defense
+
 
 ## Attack
 
