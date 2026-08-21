@@ -164,11 +164,10 @@ If you are taking an action, success means you can perform the action. Meanwhile
 
 ## Combat-related
 
-  * **melee**: all melee weapons and throwing weapons
+  * **melee**: All melee weapons and throwing weapons. 
+    Generic trait, specialized science traits require this, such as:
     - **swordfighting**: special attacks for one handed swords
-      + requires melee
     - **martial arts**: unarmed fighting techniques
-      + requires melee
   
   * **marksmanship**: all ranged weapons
     - firearms (free supplementary trait, based on game world)
@@ -188,28 +187,39 @@ If you are taking an action, success means you can perform the action. Meanwhile
 ## Survival-related
 
 * **perception**: Noticing details, threats or anything unusual; being aware of your environment.
+
 * **survival**
 * **resistance**: resisting an external effect
 
+* **nature**: Understanding nature and being in harmony with it. 
+  The below specialized traits require this and may use it as cross-trait:
+  - **horse riding**, **animal taming**, etc.
+  - specialized traits for biomes (desert, arctic, etc)
 
 ## Skill-related
 
   * **athletics**
+
+  * **piloting**: Driving vehicles (carts, cars), aircrafts or spaceships, controlling drones, etc.
   
   * **stealth**: hiding, sneaking, acting undetected
+
   * **stealing**: pickpocketing items
+
+  * **lockpicking**
   
   * **crafting**: Generic trait for crafting items, fixing or building things.
   The below specialized traits require this and may use it as cross-trait:
     - **blacksmithing**, **tailoring**, **mechanics**, **electronics**, **hacking**, etc.
 
-## Knowledge-related
-
   * **first-aid**: Treating wounds like a skilled nurse. Note:
     - You do not need this trait for very basic first aid, as that can be done via a **cool** test.
     - For performing operations, you will need science trait(s) like **medicine** to have the theoretical background.
+
+## Knowledge-related
   
-  * **science**: Generic trait, specialized science traits require this, such as:
+  * **science**: 
+    Generic trait, specialized science traits require this, such as:
     - **mathematics**, **medicine**, **biology**, **quantum physics**, **interstellar navigation**, etc.
 
   * **lore**: Generic trait about cultural background knowledge and being able to understand such works.
@@ -219,16 +229,17 @@ If you are taking an action, success means you can perform the action. Meanwhile
 
 ## Communications-related
 
-* **leadership**
-* **influencing**
-* **sexuality**
-* **art**: Generic trait for creating art. 
-  The below specialized traits require this and may use it as cross-trait:
-  - **acting**, **painting**, **music**, etc.
+  * **leadership**
+  * **influencing**
+  * **intimidation**
+  * **sexuality**
+  
+  * **art**: Generic trait for creating art. 
+    The below specialized traits require this and may use it as cross-trait:
+    - **acting**, **painting**, **music**, etc.
 
 
 # Mortality
-
 
 ## Damage
 
@@ -270,103 +281,71 @@ You can take one action during your turn, in addition to some movement. You can 
 
 Each offensive action you take is a *test*, where you compare your attack performance vs the target's defense performance.
 
+### Defenses
 
-### Defense
-
-  * **Melee defense**:
+  * melee defense for melee attacks:
     - *melee* trait & *tough* & any weapon and shield; or
     - *evasion* trait & *cool*, if you are not wearing armor;
 
-  * **Ranged defense**:
-    - *any combat trait* & *tough*, using any cover (where cover may cap your performance); or
-    - *evasion* trait & cool;
+  * ranged defense for ranged attacks:
+    - *melee* or *marksmanship* & *tough*, using any cover (where cover may cap your performance); or
+    - *evasion* trait & *cool*, if you are not wearing armor;
 
-  * **Health** trait and *tough* for anything affecting your health (disease, poison, nausea);
+  * *survival* trait and *tough* for anything affecting your health (disease, poison, nausea);
 
-  * **Resistance** trait and *charm* for anything affecting your mind, your morale or trying to change what you are;
+  * *resistance* trait and *charm* for anything affecting your mind, your morale or trying to change what you are;
 
-### Offense
+  * *perception* trait and *sharp* for spotting tricks or sneaky attempts (often tested vs stealth);
 
-  * **Attack** (with weapon or unarmed, melee or ranged): the *combat trait* you use and *tough*;
 
-  * **Aimed shots**:  *firearms* or *archery* trait (depending on if you are using guns or bows) & *cool*;
+### Offensive actions
 
----
+  * melee attack:
+    - *melee* trait & *tough* (or other characteristic required by weapon) & weapon and offhand;
+    - tested vs melee defense;
+    - damage is taken on success, threat is built on failure;
 
-  * **Melee defense**:
-    - *melee* trait & *tough*, using your weapon and any shield; or
-    - *martial arts* trait & *cool* or *tough*; or
-    - *evasion* trait & cool;
-
-  * **Ranged defense**:
-    - *any combat trait* & *tough*, using any cover; or
-    - *evasion* trait & cool;
-
+  * ranged attack:
+    - *marksmanship* trait & *tough* (or other characteristic required by weapon) & weapon;
+    - tested vs ranged defense;
+    - damage is taken on success, threat is built on failure;
   
+  * feint [melee]: 
+    - *melee* trait & *tough* (or other characteristic required by weapon) & weapon;
+    - tested vs *perception* and *sharp*;
+    - double threat on success (but no damage), no threat on failure;
 
-  * **Melee attack**: *melee* trait & *tough*;
+  * sweep attack [melee] (affecting multiple enemies):
+    - *tough* (no trait used)
+    - tested vs melee defense;
+    - damage is taken on success;
 
-  * **Ranged attack*:
-    - for point blank: *firearms* or *archery* trait (depending on if you are using guns or bows) & *tough* or *cool*;
-    - for aimed shots: 
-  * 
+  * warcry (affecting multiple enemies):
+    - *intimidation* trait and *charm*;
+    - tested vs *resistance* trait and *charm*;
+    - threat is built on success;
 
+  * way of the rock [martial arts]:
+    - *martial arts* trait and *tough*;
+    - tested vs melee defense;
+    - damage is taken on success, threat is built on failure;
 
-Melee defense:
+  * way of the gale [martial arts]:
+    - *martial arts* trait and *cool*;
+    - tested vs *melee* trait and *cool*;
+    - damage is taken on success, threat is built on failure;
 
+  * way of the spark [martial arts]:
+    - *martial arts* trait and *sharp*;
+    - tested vs *melee* trait and *sharp*;
+    - damage is taken on success, threat is built on failure;
 
+  * way of the spring [martial arts]:
+    - *martial arts* trait and *charm*;
+    - tested vs *resistance* trait and *charm*;
+    - double threat on success (but no damage), no threat on failure;
 
-### Melee attack
-Your attack via *melee* trait, using your *tough* and your weapon.
-
-### Melee defense
-They defend via:
-
-  * *melee* trait and *tough* and a weapon; or
-  * *martial arts* trait and *tough* or *cool*; or
-  * *evasion* trait and *cool*, but this cannot be used in armor.
-
-### Ranged attack at a close target
-You attack via *firearms* or *archery* trait (depending on if you use a gun or a bow) and *tough* or *cool* if you fire at a close target.
-
-### Ranged defense
-
-
-## Attack
-
-An attack is a *test* where you compare your attack performance vs the target's defense performance.
-
-If your attack succeeds, the damage you deal is removed from the target's body points.
-
-If your attack fails, the damage you would have dealt is added as *threat* to the target.
-
-
-### Melee
-
-Your attack performance is one of the following:
-
-* *melee* trait and *tough* by default for most attacks;
-* *swordfighting* trait and *tough* or *cool* if you are attacking with a one-handed sword a humanoid opponent;
-* *martial arts* trait and *tough* or *cool* for martial arts attacks;
-
-Their defense performance is one of the following:
-* *melee* trait and *tough*, using their weapon -- this is the default;
-* *evasion* trait and *cool* if the target is trying to evade;
-
-Their defense is further reduced by any *threat* on them.
-
-### Ranged Attacks
-
-Your attack performance is:
-
-* *firearms* or *archery* trait (depending on you using guns or bows) and your *tough* or *cool* if you are shooting a target up close;
-* *firearms* or *archery* trait and *cool* if you are aiming for a target far away;
-
-Their defense performance is:
-* *tough* or *cool* (without any trait requirement), using any shield or cover 
-* *evasion* trait and *cool* if the target is trying to evade;
-
-Their defense is further reduced by any *threat* on them.
-
-
-## Area Attacks
+  * sword attack [swordsmanship]:
+    - *swordsmanship* trait and *cool*;
+    - tested vs *melee* trait and *sharp*;
+    - damage is taken on success, threat is built on failure;
