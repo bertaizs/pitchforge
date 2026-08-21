@@ -112,9 +112,9 @@ If your equipment has a performance cap, then your performance with the given eq
 [^performance_cap]: Rudolf inherited an old rifle from his father; the rifle has a performance cap of 7. Rudolf is level 1 and his cool is 3. When he aims with the rifle, his performance is 4. When Rudolf reaches level 4, his performance with the rifle is 7. He gains further levels, but he is never going to go above 7 with his rifle, as it has a limited accuracy. If he wants to shoot better, he needs to find a more accurate rifle.
 
 
-### Equipment as hard requirement
+### Required equipment
 
-If the test requires special equipment:
+If the test requires equipment as a **hard requirement**:
 
 - If you do not have the equipment, you fail[^no_equipment] the test.
 - Some equipment may require a test to use, if your performance is too low to pass this test[^equipment_reqs_not_met], you cannot use the equipment properly, and you fail.
@@ -164,63 +164,67 @@ If you are taking an action, success means you can perform the action. Meanwhile
 
 ## Combat-related
 
-* melee: all melee weapons
-* swordfighting: one handed swords
-  - requires melee
-* martial arts: unarmed fighting and certain weapon skills
-* throwing ???
-* firearms
-* archery
+  * **melee**: all melee weapons and throwing weapons
+    - **swordfighting**: special attacks for one handed swords
+      + requires melee
+    - **martial arts**: unarmed fighting techniques
+      + requires melee
+  
+  * **marksmanship**: all ranged weapons
+    - firearms (free supplementary trait, based on game world)
+    - archery (free supplementary trait, based on game world)
+  
+  * **simple weapons** (free supplementary trait): Limited use of simple weapons (knives, clubs, simple pistols) that do not need serious training.
+  
+  * **initiative**: determines turn-order (who goes first in combat )
+  
+  * **evasion**: allows using *cool* when defending if you are not wearing armor
+  
+  * **assassination**: If the target is not aware of your attack and you land an attack that would do at least one point of damage, you kill the target immediately. This requires that you know where the target's vital organs are[^assassination_vital_organs].
 
-All the above are cross-skills for each other.
+[^assassination_vital_organs]: You may know how to kill an ogre with one blow, as it is a humanoid. Still you might not know how to land a killing blow on a giant amoeba.
 
-When fighting unarmed, one can use the martial arts trait, or treat any of the above as a cross-skill.
-
-Some weapons are **simple** to use, if you don't have any of the above traits, you can be considered as having a cross-skill.
-
-* assassination: if you are familiar with the physiology of the target and land a damaging attack undetected, you can kill your target instantly
-* initiative
-* evasion
-
-## Skill-related
-
-* stealth: hiding, sneaking, acting while 
-* stealing: pickpocketing items
-* climbing
-* falling and reducing damage
-
-Professions, and crafting skills, such as:
-* tailoring
-* blacksmithing
-* mechanics
-* electronics
-* hacking
-* ...
 
 ## Survival-related
 
-* resistance: resisting an external effect
-* perception
-* vigilance
+* **perception**: Noticing details, threats or anything unusual; being aware of your environment.
+* **survival**
+* **resistance**: resisting an external effect
 
+
+## Skill-related
+
+  * **athletics**
+  
+  * **stealth**: hiding, sneaking, acting undetected
+  * **stealing**: pickpocketing items
+  
+  * **crafting**: Generic trait for crafting items, fixing or building things.
+  The below specialized traits require this and may use it as cross-trait:
+    - **blacksmithing**, **tailoring**, **mechanics**, **electronics**, **hacking**, etc.
 
 ## Knowledge-related
 
-* science
-  - additional traits (e.g. mathematics, quantum physics, geology) required by this one may specialize it further, where the core trait can be considered a cross-skill
+  * **first-aid**: Treating wounds like a skilled nurse. Note:
+    - You do not need this trait for very basic first aid, as that can be done via a **cool** test.
+    - For performing operations, you will need science trait(s) like **medicine** to have the theoretical background.
+  
+  * **science**: Generic trait, specialized science traits require this, such as:
+    - **mathematics**, **medicine**, **biology**, **quantum physics**, **interstellar navigation**, etc.
 
-* lore
-  - additional traits (e.g. history, ) may specialize it further, where the core trait can be considered a cross-skill
+  * **lore**: Generic trait about cultural background knowledge and being able to understand such works.
+  The below specialized traits require this and may use it as cross-trait:
+    - ** **history**, **religion**, etc.
 
 
 ## Communications-related
 
-* leadership
-* influencing
-* seduction/sexuality
-
-* art
-  - additional traits (e.g. painting, carving, music) required by this one may specialize it further, where the core trait can be considered a cross-skill
+* **leadership**
+* **influencing**
+* **sexuality**
+* **art**: Generic trait for creating art. 
+  The below specialized traits require this and may use it as cross-trait:
+  - **acting**, **painting**, **music**, etc.
 
 
 # Mortality
@@ -270,12 +274,11 @@ Each offensive action you take is a *test*, where you compare your attack perfor
 ### Defense
 
   * **Melee defense**:
-    - *melee* trait & *tough*, using your weapon and any shield; or
-    - *martial arts* trait & *cool* or *tough*; or
+    - *melee* trait & *tough* & any weapon and shield; or
     - *evasion* trait & *cool*, if you are not wearing armor;
 
   * **Ranged defense**:
-    - *any combat trait* & *tough*, using any cover; or
+    - *any combat trait* & *tough*, using any cover (where cover may cap your performance); or
     - *evasion* trait & cool;
 
   * **Health** trait and *tough* for anything affecting your health (disease, poison, nausea);
