@@ -48,17 +48,17 @@ Each of the above are expressed as numerical values.
 
 [^cost_of_characteristics]: Example: Pay 1 CP for the increase from 0 to 1; pay 2 more CPs for the increase from 1 to 2; pay 3 more CPs for the increase from 2 to 3, etc.
 
-## Resources
+## Body and Spirit
 
-* The **body** resource describes your physical condition, and your initial body value is your tough value. You may lose body points, when you get hurt, when you get tired, or when you lose your strength for some reason. 
-If your body value becomes 0 or less, you pass out and collapse.
-You can regain your body points via a good night's sleep (or something equivalent).
-When you are wounded, you may not regain all your body points.
+  * **Body** points express your physical health.
+  Your maximum number of body points equal your *tough*. When you take damage you lose some body points. 
+  If your body value becomes 0 or less, you pass out and collapse.
+  You can regain your body points via a good night's sleep (or something equivalent).
 
-* The **spirit** resource describes your mental and emotional energy; your morale, your resolve and your inner strength. 
-If your spirit value becomes 0 or less, you act randomly, become catathonic or just pass out and collapse.
-You can regain your spirit points if you can calm down and clear your mind; this may take a few minutes or more, depending on the situation.
-When you are traumatized, you may not regain all your spirit points.
+  * **Spirit** points express your energy. 
+  Your maximum number of spirit points equal your **charm**. When you exert yourself you lose some spirit points; this can include special abilities or spells.
+  If your spirit value becomes 0 or less, you act randomly, become catathonic or just pass out and collapse.
+  You can regain your spirit points if you can calm down and clear your mind; this may take a few minutes or more, depending on the situation.
 
 
 ## Traits
@@ -92,16 +92,19 @@ The test may require a certain trait or a combination of traits.
 
 - If you have the right trait(s), you can
 add your character **level** to the base value, as you are skilled in the given task.
-- It may happen that you do not have the necessary trait(s), but you have some lesser but viable option. In this case you can add *half* of your level to the base performance.
+- It may happen that you do not have the necessary trait(s), but you have some lesser but viable option (cross-trait). In this case you can add *half* of your level to the base performance.
 - If you do not have applicable traits, you cannot add anything to the base performance.
 
-You may add further bonuses or modifiers:
+Further bonuses or penalties can be added based on:
 
-* If your **equipment** has any modifiers to the given test, add these to your performance.
-* If there are **special effects** (such as wounds, being drunk, being inspired or blessed) on that have modifiers applicable to the given test, add these too.
-* based on equipment, special effects on you and the situation.
+* **equipment** you use; and
+* **special effects** (wounds, being drunk, being inspired or blessed) on you; and
+* **situational** factors (shooting from higher ground, rain, etc);
 
-These can be tuned further based on the below rules.
+* ??? threat
+
+Bonuses/penalties must be calculated for each category separately.
+Modifiers with a category do not stack, the most significant modifier (highest bonus or highest penalty) must be used for each category. If the highest bonus has the same magnitude as the highest penalty, then they cancel each other.
 
 
 ### Equipment capping performance
@@ -180,6 +183,11 @@ When you are seriously hurt, you receive a **wound**.
 * If you have a serious wound, then in addition to the penalty for light wounds, your performance is halved all tests. Serious wounds will need treatment, or you do not recover.
 * If you have a critical wound, automatically fail all tests. If a critical wound does not get treatment, you die.
 
+## Tiers
+
+
+- 
+
 ## Death
 
 Death is irreversible.
@@ -187,6 +195,15 @@ Death is irreversible.
 
 
 # Core Traits
+
+Traits are not tied to characteristics, so you may test for the same trait as per different characteristics[^traits_not_tied_to_characteristics]. 
+
+[^traits_not_tied_to_characteristics]: For example, you may use your *nature* trait
+for taming an animal - test for *charm*,
+finding your way in the forest or identifying a plant - test for *sharp*,
+climbing a tree or lighting your fire - test for *cool*,
+for cutting a tree - test for *tough*.
+
 
 ## Combat-related
 
@@ -214,7 +231,8 @@ Death is irreversible.
 
 * **perception**: Noticing details, threats or anything unusual; being aware of your environment.
 
-* **survival**
+* **survival**: Not dying. Resisting damage or pain, or figuring out how to stay alive and doing practical actions. 
+
 * **resistance**: resisting an external effect
 
 * **nature**: Understanding nature and being in harmony with it. 
@@ -233,10 +251,12 @@ Death is irreversible.
   * **stealing**: pickpocketing items
 
   * **lockpicking**
+
+  * **tech use**: Using an advanced (electronic) technological device. Finding your way on the user interface, writing code or even hacking.
   
   * **crafting**: Generic trait for crafting items, fixing or building things.
   The below specialized traits require this and may use it as cross-trait:
-    - **blacksmithing**, **tailoring**, **mechanics**, **electronics**, **hacking**, etc.
+    - **blacksmithing**, **tailoring**, **mechanics**, **electronics**, etc.
 
   * **first-aid**: Treating wounds like a skilled nurse. Note:
     - You do not need this trait for very basic first aid, as that can be done via a **cool** test.
@@ -344,3 +364,6 @@ Each offensive action you take is a *test*, where you compare your attack perfor
     - *swordfighting* trait and *cool*;
     - tested vs *melee* trait and *sharp*;
     - damage is taken on success, threat is built on failure;
+
+
+  # Magic
