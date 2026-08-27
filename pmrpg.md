@@ -101,8 +101,6 @@ Further bonuses or penalties can be added based on:
 * **special effects** (wounds, being drunk, being inspired or blessed) on you; and
 * **situational** factors (shooting from higher ground, rain, etc);
 
-* ??? threat
-
 Bonuses/penalties must be calculated for each category separately.
 Modifiers with a category do not stack, the most significant modifier (highest bonus or highest penalty) must be used for each category. If the highest bonus has the same magnitude as the highest penalty, then they cancel each other.
 
@@ -163,17 +161,6 @@ If you are taking an action, success means you can perform the action. Meanwhile
 ## Damage
 
 Damage you take can be physical -- expressed in body points, or non-physical -- expressed in spirit points. When either of these reach zero or below, you go down.
-
-## Threat
-
-When you are hurt, you take damage. However, whenever you successfully avoid getting hurt (for example by blocking or evading an attack), you accumulate **threat**.
-Each point of threat decreases your performance on tests when you defend yourself, i.e. it appears as a penalty or any defensive tests.
-This means that you can defend yourself for a limited time only, and will eventually get overwhelmed.
-
-You get rid of all threat when:
-
-* you are no longer in danger; or
-* if you have a combat trait, you can remove all threat from yourself at the cost of 1 spirit point.
 
 ## Wounds
 
@@ -290,6 +277,19 @@ for cutting a tree - test for *tough*.
 
 Everyone performs an *initiative* test using *sharp*, they act based on their performance in decreasing order. The highest performance acts first, the lowest last. 
 
+
+## Threat
+
+When you are at risk of getting hurt (for example by blocking or evading an attack), you accumulate **threat**.
+Each point of threat decreases your performance on tests when you defend yourself, i.e. it appears as a penalty or any defensive tests.
+This means that you can defend yourself for a limited time only, and will eventually get overwhelmed.
+
+You get rid of all threat:
+
+  * automatically, when you are no longer in danger (like when combat ends); or
+  * if you have the *melee* or *marksmanship* trait, you can remove all threat from yourself at the cost of 1 spirit point.
+
+
 ## Actions
 
 You can take one action during your turn, in addition to some movement. You can use your action for attacking, taking cover, drinking a potion, or you can do something else.
@@ -312,6 +312,7 @@ Each offensive action you take is a *test*, where you compare your attack perfor
 
   * *perception* trait and *sharp* for spotting tricks or sneaky attempts (often tested vs stealth);
 
+All the above are reduced by any threat on the target.
 
 ### Offensive actions
 
@@ -365,5 +366,59 @@ Each offensive action you take is a *test*, where you compare your attack perfor
     - tested vs *melee* trait and *sharp*;
     - damage is taken on success, threat is built on failure;
 
+## Weapon Damage
 
-  # Magic
+When you hit someone, you deal the following amount of damage:
+
+  * **Heavy weapons**: you roll two six-sided dice and use their *sum* as the damage value;
+    - covers weapons which are heavy (both melee and ranged)
+    - you have the necessary trait(s) for the weapon
+
+  * **Normal weapons**: you roll two six-sided dice and use the *higher* value as damage;
+    - covers all other weapons (not heavy, both melee and ranged),
+    - you have the necessary trait(s) for the weapon
+    - also unarmed attacks with the martial arts trait
+
+  * **Simple weapons**: you roll two six-sided dice and use the *lower* value as damage;
+    - you do not have the weapon trait, but the weapon is *simple* to use;
+
+  * **Untrained**: you roll one six-sided die and *half* of the result is the damage value;
+    - melee weapon where you do not have the necessary trait(s), or
+    - unarmed attacks without any trait (like martial arts).
+
+## Tiers
+
+By now we assumed that you are fighting someone of your size. If you someone radically smaller or larger, then any difference in the tier (of your size or your attack power) also need to be factored in:
+
+  * attacks against your same tier do normal damage;
+  * attacks against one tier higher do half damage, while those against more than one tier higher deal no damage at all (if you want to hurt them, you need special means that cause higher tier damage, such as explosives);
+  * attacks against one tier lower do double damage, while those against more than one tier lower make the target go down immediately (lethal, critical wound or at least knockout);
+
+The following can be considered as different tiers for body damage (in increasing order):
+
+  * microscopic
+  * insect
+  * cat or small dog
+  * **human-size** (including dwarves, large orcs, etc, but also including large dogs)
+  * car or small boat or elephant
+  * tank, yacht, whale or a mech
+  * warship, fort or giant mech
+  * city or giant spaceship
+  * continent
+  * planet
+  * star
+
+Melee attacks against a higher tier creature receive a -2 penalty as it is harder to get close and reach the vital organs, while those against a lower tier creature receive a +2 bonus.
+Meanwhile,
+ranged attacks against a higher tier creature receive a +2 bonus, as it is easier to hit a bigger target, while those against a lower tier creature receive a -2 penalty as a smaller target is harder to hit.
+
+Spirit damage can also have similar tiers.
+
+  
+# Magic
+
+TBD.
+
+## Arcane
+
+## Divine
