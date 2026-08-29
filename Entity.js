@@ -329,7 +329,7 @@ class Entity {
     return this.get('faction') != other_entity.get('faction')
   }
   
-  get(x) {
+  get( x, alt = undefined ) {
     // these must have hardcoded values
     // TODO: need to consider modifiers on traits, statuses, etc
     
@@ -385,8 +385,11 @@ class Entity {
     if(x=='interior_icon') { // && there is no such field (implicit)
       return this.get('icon')
     }
-    
-    throw `don't know how to get ${x}`;
+
+    if( alt === undefined )
+      throw `don't know how to get ${x}`;
+    else
+      return alt
   }
   
   get_name(with_epithet = true) { 
