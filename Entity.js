@@ -64,8 +64,6 @@ class Entity {
     this.body ??= this.get('max_body')
     this.spirit ??= this.get('max_spirit')
     
-    this.moves ??= 1
-
     // this.position ??= false     // or string describing how/where the Noun is
     // this.img ??= false          // or image file name
     this.location_id ??= 0      // the default location of all will be the game universe

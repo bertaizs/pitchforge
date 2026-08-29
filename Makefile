@@ -25,4 +25,5 @@ test:
 	cp *.html *.js *.css *.ico *.png tmp/
 	gsutil -m -h "Cache-Control:no-store" rsync -r tmp/  gs://revamped-test.berta.hu/
 
-
+docs:
+    echo docs

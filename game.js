@@ -80,65 +80,54 @@ class Game {
     
   // returns true if the cmd (Cmd) matches the pattern
   // pattern is created by game.add_trigger
-  match( pattern, cmd ) {
-    options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
-    if( ! cmd.match( 'verb', pattern['verb'] ) ) {
-      // options.log_matching_details && console.log(`no match`)
-      return false
-    }
-    if( ! cmd.match( 'who', pattern['who'] ) ) {
-      // options.log_matching_details && console.log(`no match`)
-      return false
-    }
-    // for op1 and op2, check if EITHER order matches
-    if( cmd.match('op1',pattern['op1']) && cmd.match('op2',pattern['op2']) ) {
-      options.log_matching_details && console.log(`match!`)
-      return true
-    }
-    if( cmd.match('op1', pattern['op2']) && cmd.match('op2', pattern['op1']) ) {
-      options.log_matching_details && console.log(`match!`)
-      // replace op1 ond op2, so that the trigger needs to be defined only once
-      let x = cmd.op1
-      cmd.op1 = cmd.op2
-      cmd.op2 = x
-      return true
-    }
-    return false
-  }
+  // match( pattern, cmd ) {
+  //   options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
+  //   if( ! cmd.match( 'verb', pattern['verb'] ) ) {
+  //     // options.log_matching_details && console.log(`no match`)
+  //     return false
+  //   }
+  //   if( ! cmd.match( 'who', pattern['who'] ) ) {
+  //     // options.log_matching_details && console.log(`no match`)
+  //     return false
+  //   }
+  //   // for op1 and op2, check if EITHER order matches
+  //   if( cmd.match('op1',pattern['op1']) && cmd.match('op2',pattern['op2']) ) {
+  //     options.log_matching_details && console.log(`match!`)
+  //     return true
+  //   }
+  //   if( cmd.match('op1', pattern['op2']) && cmd.match('op2', pattern['op1']) ) {
+  //     options.log_matching_details && console.log(`match!`)
+  //     // replace op1 ond op2, so that the trigger needs to be defined only once
+  //     let x = cmd.op1
+  //     cmd.op1 = cmd.op2
+  //     cmd.op2 = x
+  //     return true
+  //   }
+  //   return false
+  // }
 
   
   // called when someone executes a command
   // - calls entity.exec
   // - ends turn if needed
   exec(cmd = ui.cmd) {
-    // if( !(cmd instanceof Cmd) ) throw `game.exec not called with Cmd instance`
     if( !(cmd instanceof Cmd) ) 
-      cmd = new Cmd(cmd)
+      cmd = new Cmd(cmd)  // ensure cmd is a Cmd instance
     cmd.validate()  // throws an exception if cmd is not 'valid'
     options.log_commands && console.log(`executing: `, cmd)
-    
-    // if( !action_triggered ) {   // if no action has been triggered, execute the default action
-      // options.log_matching && console.log(`executing default command`)
 
-    this.get_current_entity().exec(cmd)      
-    // }
-    console.log('*******************')
+    this.get_current_entity().exec(cmd)      // this is where we execute the given command
+
+    options.log_player_turn_milestones && console.log('*******************')
     
-    // TODO: rework action economy and MOVES?????
     // check if the given cmd is turn ending for the player
     if( this.get_current_entity().id == game.get_player().id ) {
       let player = game.get_player()
-      // if moved and still has moves, then use a move and do not end turn; if not in combat, end tht turn
-      if( cmd.verb=='move' && player.get('moves')>0 && player.is_in_combat() ) {
-        player.moves--
-        options.log_player_turn_milestones && console.log(`${player} used a move`)
-      }
-      else 
+
       if( !('quick' in cmd ) ) {  // 'quick' commands don't end the turn
-        player.moves = 1
         game.end_player_turn()  // proceeds with main_loop
       } else {
-        options.log_player_turn_milestones && console.log(`${player}'s turn continues`)        
+        options.log_player_turn_milestones && console.log(`quick command, ${player}'s turn continues`)        
       }
     }
   }
@@ -168,7 +157,7 @@ class Game {
               .sort( (x,y)=>(y.performance('initiative')-x.performance('initiative') || x.id-y.id) )
   }
   
-  // this loop runs 
+  // this loop runs
   main_loop() {
     if( this.initiative_order.length == 0 ) {
       this.initiative_order = this.build_initiative_order()

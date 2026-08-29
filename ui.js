@@ -13,7 +13,7 @@ class UI {
     if( text in POINTS ) return POINTS[text].icon
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
     if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].icon || ''
-    if( text=='moves' ) return '➡️'    
+    // if( text=='moves' ) return '➡️'    
     return ''
   }
   
@@ -203,7 +203,7 @@ class UI {
     // params.stats ??= true
     params.body ??= true
     params.spirit ??= false
-    params.moves ??= false
+    // params.moves ??= false
     
     let s = ``
     s+= `<span class="ministatus">`
@@ -218,11 +218,11 @@ class UI {
         s+= " "+UI.icon('body')+entity.get('body')
       if( params.spirit )
         s+= " "+UI.icon('spirit')+entity.get('spirit')
-      if( params.moves ) {
-        s+= " "
-        for( let i=0; i<entity.get('moves'); i++ )
-          s+= UI.icon('moves')        
-      }
+      // if( params.moves ) {
+      //   s+= " "
+      //   for( let i=0; i<entity.get('moves'); i++ )
+      //     s+= UI.icon('moves')        
+      // }
     }
     
     s+= `</span>`
@@ -697,7 +697,7 @@ class UI {
     display_cmd(cmd = this.cmd) {
       if( !game.get_player().get_location().is('abstract') ) {
         let verb = cmd.get_verb()
-        document.getElementById('who').innerHTML = ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
+        document.getElementById('who').innerHTML = ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true})
         document.getElementById('verb').innerHTML = verb.get_name()
         document.getElementById('prep').innerHTML = verb.get_prep()
         document.getElementById('op1').innerHTML = ( cmd.op1 ? cmd.get_op1_text() : "" )
@@ -730,7 +730,7 @@ class UI {
     show_player_info() {
       if( !game.get_player_location().is('chargen') ) {
         let s = ``
-        s+= ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true, moves: true})
+        s+= ui.print_entity_ministatus(game.get_player(), {body: true, spirit: true})
         document.getElementById('player_info').innerHTML = s        
       }
     }
