@@ -135,23 +135,50 @@ class Game {
   get_current_entity() {
     return this.initiative_order[this.current_entity_n]
   }
+
+  end_turn() {    
+    this.perform_move_actions();
+
+    options.log_turn_start && console.log(`*** TURN starts ***`);
+    this.initiative_order = this.build_initiative_order()
+    this.current_entity_n = 0   // rebuild and restart initiative order
+  }
   
   // proceed to next entity in the initiative order
   // if end of initiative order then restart it
   next_entity() {
     if( this.initiative_order.length == 0 ) throw `game.next entity called without game.main_loop`
-    
     this.current_entity_n++
+
+    // CHECK if turn ends
     if( this.current_entity_n >= this.initiative_order.length ) { // if end of initiative order
-      this.initiative_order = this.build_initiative_order()
-      this.current_entity_n = 0   // rebuild and restart initiative order
+      this.end_turn()
     }
+    
     return this.get_current_entity()
+  }
+
+  perform_move_actions() {
+    if( options.log_move_actions ) console.log(`performing move actions...`)
+    
+    // TODO: if entity is following someone else at the same location, set their heading value
+    
+    for(let i in this.initiative_order) {
+      if('heading' in this.initiative_order[i]) {
+        let destination_entity = game.entity(this.initiative_order[i].heading)
+        if( options.log_move_actions ) 
+          console.log(`${this.initiative_order[i]} moves to ${destination_entity}`)
+
+        ui.add_event() 
+        
+        this.initiative_order[i].move_to(destination_entity)
+      }
+      
+    }
   }
   
   // (re)builds the initiative order
-  build_initiative_order() {
-    options.log_turn_start && console.log(`*** TURN starts ***`)
+  build_initiative_order() {    
     return game.entities
               .filter(x=>(!x.is('abstract') && !x.is('universe')))
               .sort( (x,y)=>(y.performance('initiative')-x.performance('initiative') || x.id-y.id) )
@@ -159,7 +186,9 @@ class Game {
   
   // this loop runs
   main_loop() {
-    if( this.initiative_order.length == 0 ) {
+    if( this.initiative_order.length == 0 ) { // if this is called the first time; subsequent rebuilds of the initiative order are via next_entity() -> end_turn()
+      options.log_turn_start && console.log(`*** TURN starts ***`);
+
       this.initiative_order = this.build_initiative_order()
       this.current_entity_n = 0
     }

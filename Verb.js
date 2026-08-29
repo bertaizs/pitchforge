@@ -54,16 +54,14 @@ new Verb({
   text: `Go somewhere.`,
   debug: true,
   on_success: function(cmd) {
-    console.log('/%/=%==/=')
-    
     if( !('path' in cmd) )
       throw `no path received in cmd: ${cmd}`
 
     if( cmd.path )
       cmd.path.move_through(cmd)
     else {
-      options.log_move && console.log('moving directly, without a path')
-      cmd.who.move_to(cmd.op1)
+      if( options.log_move ) console.log('moving directly, without a path')
+      cmd.who.head_towards(cmd.op1)
     }
   },
 })

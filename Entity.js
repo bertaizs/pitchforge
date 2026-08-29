@@ -75,10 +75,6 @@ class Entity {
     this.faction ??= 'neutral'
     this.attitude ??= 0
         
-    if( this.location ) {
-      this.move_to(this.location, this.position)
-      delete this.location
-    }
     
     this.knowledge ??= {}
         
@@ -91,6 +87,11 @@ class Entity {
       game.templates[param.template] = this;  // add as a template with the given name
     }
 
+    if( this.location ) {
+      this.move_to(this.location, this.position)
+      delete this.location
+    }
+    
     if( this.is('player') )
       game.select_player(this)
     if( this.is_location() && this.is('start') )
@@ -104,14 +105,16 @@ class Entity {
       // this does not call its constructor, so we need to do those actions (set, register, moveto manually)
       let entity = Object.create( Object.getPrototypeOf( game.templates[template]) )
       entity.set( game.templates[template] )
+
+      // if epithet is an array, pick one!
+      if( entity.epithet instanceof Array ) { // this must appear before first move (otherwise, a log_move may get confused because of epithets)
+          entity.epithet = entity.epithet[ entity.id % entity.epithet.length  ]
+      }
+
       entity.register()
       if( where )
         entity.move_to(where) // otherwise game.universe
 
-      // if epithet is an array, pick one!
-      if( entity.epithet instanceof Array ) {
-          entity.epithet = entity.epithet[ entity.id % entity.epithet.length  ]
-      }
 
       // if icon is an array, pick one!
       if( entity.icon instanceof Array ) {
@@ -154,13 +157,23 @@ class Entity {
   
   // called after then entity is moved
   on_move() {}
-  
+
+  // moves this entity to a location entity (into position (pos))
   move_to(location, pos = false) {
     location = game.entity(location)
     this.location_id = location.id
     this.position = pos
+    if( options.log_move ) console.log(`${this} moves to ${location}${pos ? ':'+pos : ''}`);
+    // if( options.log_move ) console.log( this.id+" moves to "+location.id )
     this.on_move()
     return this
+  }
+
+  // set this entity to head to location
+  // a move_to will be called at the end of the turn move phase
+  head_towards(location, pos = false) {
+    this.heading = game.entity(location).id
+    this.heading_pos = pos || undefined
   }
   
   destroy() {
@@ -319,6 +332,7 @@ class Entity {
   get(x) {
     // these must have hardcoded values
     // TODO: need to consider modifiers on traits, statuses, etc
+    
     if( x in STATS ) return this.get_stat(x)
     
     if (x in this) {  // if what you are get-ting is a function, run it and return results
@@ -376,7 +390,13 @@ class Entity {
   }
   
   get_name(with_epithet = true) { 
-    let epithet = this.get('epithet')
+    let epithet
+    try {
+      epithet = this.get('epithet')
+    } catch(e) {
+      return this.get('name')
+    }
+    
     if( !with_epithet || !epithet )
       return this.get('name')
     
