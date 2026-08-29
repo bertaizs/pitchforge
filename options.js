@@ -11,7 +11,7 @@ if(String(document.location).match(/^http/)) {
 }
 
 options.log_clicks_on_verbs = false
-options.log_clicks_on_entities = false
+options.log_clicks_on_entities = true
 options.log_clicks_on_paths = false
 
 options.log_tests = false

@@ -838,6 +838,9 @@ class UI {
         event = {type: 'text', text: event}
       event.type ??= 'text'
       
+      event.relevant_for ??= [] // list of ids for whom the event will appear
+      event.global ??= false    // if true, then the event is relevant_for everyone
+      
       // if the event is tied to a location, we are only adding the event to the queue 
       // if the player is there (otherwise not relevant for the player)
       // TODO: consider if the location is the player; consider if the player is controlling something else
@@ -857,8 +860,8 @@ class UI {
       this.events.push(event)
     }
 
-    // adds text as an event
-    text( ...args ) {
+    // adds text as an event - decorated text, entities are clickable
+    text2( ...args ) {
       // allow first arg to be an event for customization; this is optional, can be skipped
       if( args.length==0 ) throw `ui.text called with no arguments`
       let event = {}
@@ -885,14 +888,47 @@ class UI {
         }
       }
 
-      // if( ! starts_with_capital(plain_text) ) {
-      //   plain_text = capitalize(plain_text)
-      //   txt = capitalize(txt)
-      // }
-      // if( /[^.?!)]$/.test(plain_text) ) {
-      //   plain_text += '.'
-      //   txt += '.'
-      // }
+      if( 'location' in event )
+        event.relevant_for.push(event.location.id)
+      
+      event.text = sentence(txt)
+      event.plaintext = plain_text
+      
+      ui.add_event(event)
+    }
+
+    // adds text as an event; plain text
+    text( ...args ) {
+      // allow first arg to be an event for customization; this is optional, can be skipped
+      if( args.length==0 ) throw `ui.text called with no arguments`
+      let event = {}
+      if( (typeof args[0]=='object') && !(args[0] instanceof Entity) ) {
+        event = args[0]
+      }
+      event.type ??= 'text'
+      event.whitespace ??= true
+      event.relevant_for ??= []
+      console.log(event)
+      
+      let txt = ``
+      let plain_text = ``
+
+      for( let arg of args ) {
+        if(txt || event.whitespace) txt+= " "
+        if( arg instanceof Entity ) {
+          // txt+= ui.print_entity(arg, {the: true})
+          txt += the(arg.get_name())
+          plain_text += arg.get_name()+`#${arg.id}`
+          
+          event.relevant_for.push(arg.id)
+          event.relevant_for.push(arg.get_location().id)
+        }
+        else
+        if( typeof arg == 'string' ) {
+          txt+= arg
+          plain_text += arg          
+        }
+      }
       
       event.text = sentence(txt)
       event.plaintext = plain_text
@@ -910,13 +946,28 @@ class UI {
       }
       throw `don't know what to do with an event of type `+event.type
     }
+
+    event_is_relevant(event) {
+      // global events are always relevant, regardless of who the player is
+      if( 'global' in event && event.global )
+        return true
+
+      // non-global events are relevant (the current player nees to see it), 
+      // if related to the current player or
+      // related to the current player's location
+      if( event.relevant_for.filter( x=>(x==game.get_player().id || x==game.get_player_location().id) ).length>0 )
+        return true
+
+      return false  // otherwise the event is not relevant
+    }
     
     // removes events from the queue and displays them
     show_events() {
       let s = ``
       while( this.events.length>0 ) {
-        let event = this.events.shift()
-        s+= this.print_event(event)
+        let event = this.events.shift()       // remove event from the queue
+        if( this.event_is_relevant(event) )
+          s+= this.print_event(event)         // only display the event if relevant (i.e. if the current player nees to see it)
       }
       document.getElementById('work').innerHTML = s
       

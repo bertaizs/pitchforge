@@ -3,10 +3,12 @@ todo
 
 # top bugs
 
-reworked moves, they now happen at turn end always; this brings up problems:
+<!--reworked moves, they now happen at turn end always; this brings up problems:
   - need to ui.event the moves as an attack may happen after the player issued the move command
-  - logs about attacks after the player issued a move command are clickable; player can attack someone who is just not there
+  - logs about attacks after the player issued a move command are clickable; player can attack someone who is just not there-->
 
+
+events should look nicer, there should be an event class
 
 
 # lesser multi-choice bugs

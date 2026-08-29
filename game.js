@@ -118,7 +118,7 @@ class Game {
 
     this.get_current_entity().exec(cmd)      // this is where we execute the given command
 
-    options.log_player_turn_milestones && console.log('*******************')
+    // options.log_player_turn_milestones && console.log('*******************')
     
     // check if the given cmd is turn ending for the player
     if( this.get_current_entity().id == game.get_player().id ) {
@@ -169,7 +169,7 @@ class Game {
         if( options.log_move_actions ) 
           console.log(`${this.initiative_order[i]} moves to ${destination_entity}`)
 
-        ui.add_event() 
+        ui.text(this.initiative_order[i], ' arrives at ', destination_entity) 
         
         this.initiative_order[i].move_to(destination_entity)
       }
