@@ -178,7 +178,7 @@ class Game {
   }
   
   // (re)builds the initiative order
-  build_initiative_order() {    
+  build_initiative_order() {
     return game.entities
               .filter(x=>(!x.is('abstract') && !x.is('universe')))
               .sort( (x,y)=>(y.performance('initiative')-x.performance('initiative') || x.id-y.id) )

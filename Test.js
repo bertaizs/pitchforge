@@ -20,17 +20,31 @@ class Test {
     for( let i in value ) this[i] = value[i];
     for( let i in param ) this[i] = param[i]
 
-    if (!("stat" in this)) throw "no test without a stat!";
+    if (!("stat" in this)) {
+      console.log(this)
+      throw "no test without a stat!";
+    }
 
     this.stat = arrayify(this.stat);
 
     // this.randomize = true  // to randomize the test
 
-    this.spec ??= [];
-    this.spec = arrayify(this.spec);
+    this.trait ??= []
+    this.trait = arrayify(this.trait)
+    
+    this.half_trait ??= []
+    this.half_trait = arrayify(this.half_trait)
 
-    // if ("name" in this)
-    //   TESTS[this.name] = this;
+    this.name ??= (this.trait.length>0 ? this.trait[0] : this.stat[0])
+  }
+
+  static register(test_data = {}, param = {}) {
+    let test = new Test( test_data, param )
+
+    if( test.name in TESTS ) throw `${test.name} already defined`
+
+    TESTS[test.name] = test
+    return test
   }
   
   get_name() {
@@ -42,31 +56,29 @@ class Test {
   
 } // class Test
 
+
 const TESTS = {
-  tough: new Test({ stat: "tough" }),
-  cool: new Test({ stat: "cool" }), //
-  sharp: new Test({ stat: "sharp" }),
-  charm: new Test({ stat: "charm" }),
-  weird: new Test({ stat: "weird" }),
+  'lockpicking': new Test({stat: "cool", trait: 'thievery', status: {'progress': -1} }),
+  'pickpocket': new Test({stat: "cool", trait: 'thievery'}),
 
-  // strike: new Test({stat: "tough", /* randomize: true */ }),
-  attack: new Test({stat: "tough"}),
-  // melee: new Test({stat: "tough"}),
-  defense: new Test({stat: "tough", status: {'threat': -1} }),
-  // aim: new Test({stat: ["tough", "cool"]}),
-  // target: new Test({stat: "cool", status: {"threat": -1} }),
+  'climbing': new Test({stat: 'cool', trait: 'climbing'}),
+  'crafting': new Test({stat: 'cool', trait: 'crafting'}),
 
-  'perception': new Test({stat: 'sharp', spec: 'perception'}),
-  'initiative': new Test({stat: 'sharp', spec: 'initiative'}),
-  
-  'lockpicking': new Test({stat: "cool", spec: 'thievery', status: {'progress': -1} }),
-  'pickpocket': new Test({stat: "cool", spec: 'thievery'}),
-
-  'climbing': new Test({stat: 'cool', spec: 'climbing'}),
-  'crafting': new Test({stat: 'cool', spec: 'crafting'}),
-
-  'social': new Test({stat: "charm", spec: 'social'}),
-  'sixth sense': new Test({stat: "charm", spec: 'sixth sense'}),
-  'resistance': new Test({stat: "charm", spec: 'resistance'}),
-
+  'social': new Test({stat: "charm", trait: 'social'}),
 };
+
+
+Test.register({stat: 'tough'})
+Test.register({stat: 'cool'})
+Test.register({stat: 'sharp'})
+Test.register({stat: 'charm'})
+
+Test.register({name: "attack",    stat: 'tough'})
+Test.register({name: "defense",   stat: 'tough', status: {'threat': -1}})
+
+Test.register({name: "resistance",   stat: 'charm', status: {'threat': -1}})
+
+Test.register({trait: 'perception', stat: 'sharp'})
+Test.register({trait: 'initiative', stat: 'sharp'})
+
+Test.register({trait: 'sixth sense', stat: 'charm'})

@@ -72,6 +72,8 @@ class UI {
     this.show_menu()
     ui.show_events()
 
+    ui.clear_explanation()
+
     switch( this.cmd.verb ) {
       case 'move':
         this.scroll('main')
@@ -572,7 +574,7 @@ class UI {
       document.getElementById('main').innerHTML = s
     }
 
-    explanation(exp) {
+    explanation(exp, result = "result") {
         let s = ``
         let n = 0
         s+= `<table>`
@@ -581,12 +583,29 @@ class UI {
             n+= exp[i].value
         }
         s+= `</table>`
-        s+= `<hr/>result: ${n}`
+        s+= `<hr/>${result}: ${n}`
         return s
     }
-    show_explanation(exp) {
-        document.getElementById('expl').innerHTML = this.explanation(exp)
+    show_explanation(exp, label) {
+        document.getElementById('explanation').innerHTML = this.explanation(exp, label)
     }
+    clear_explanation() {      
+      document.getElementById('explanation').innerHTML = ''
+    }
+
+    show_explanation_for(entity, test) {
+      entity = game.entity(entity)
+      if( test in TESTS )
+        test = TESTS[test]
+      else 
+        test = new Test(test)
+      
+      let ex = []
+      let performance = entity.performance(test, {}, ex)
+
+      this.show_explanation(ex, test.name)
+    }
+    
     explanation_click( entity, stat ) {
         entity = game.entity(entity)
         let e = []
@@ -840,6 +859,9 @@ class UI {
       
       event.relevant_for ??= [] // list of ids for whom the event will appear
       event.global ??= false    // if true, then the event is relevant_for everyone
+      // if no onen is listed to see the event, display it for the player
+      if( !event.global && event.relevant_for.length==0 )
+        event.relevant_for.push(player.id)
       
       // if the event is tied to a location, we are only adding the event to the queue 
       // if the player is there (otherwise not relevant for the player)
@@ -857,8 +879,15 @@ class UI {
         options.log_events && console.log(event.plaintext)
       else
         options.log_events && console.log(event)
+      
       this.events.push(event)
+      return event
     }
+
+    // add_player_event(event) {
+    //   event = this.add_event(event)
+    //   event.global = true
+    // }
 
     // adds text as an event - decorated text, entities are clickable
     text2( ...args ) {
@@ -908,7 +937,7 @@ class UI {
       event.type ??= 'text'
       event.whitespace ??= true
       event.relevant_for ??= []
-      console.log(event)
+      // console.log(event)
       
       let txt = ``
       let plain_text = ``

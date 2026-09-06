@@ -7,7 +7,7 @@ class Entity {
   }
   static stat_points_at_level_up(n) { return 3 }
   static stat_penalty(n) { return Math.round(n/2) } // this returns a penalty value, so we round UP from .5
-  static stat_specialization_bonus(n) { return n }
+  // static stat_specialization_bonus(n) { return n }
 
   static max_id = 0;
 
@@ -592,7 +592,14 @@ class Entity {
   has_trait(t) {
     return t in this.traits;
   }
-  has_spec(t) { return this.has_trait(t) }
+  // true if this entity has one of the traits on list traits
+  // if yes, return the name of a trait found; if not then false
+  has_one_of_traits( traits = [] ) {
+    for( let i in traits )
+      if( this.has_trait(traits[i]) )
+        return traits[i]
+    return false
+  }
 
   // this Entity gains new trait t
   gain_trait(t) {
@@ -752,7 +759,7 @@ class Entity {
     return n;
   }
   // same as get_stat, but receives an array as stats and returns the highest with its explanation
-  get_best_stat(stats, explain) {
+  get_best_stat(stats, explain = []) {
     let n = null
     for( let i in stats ) {
       let e = []
@@ -783,22 +790,30 @@ class Entity {
   performance(test, params = {}, explain = []) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
-    let penalty = false
+    // let penalty = false
     
     let n = this.get_best_stat(test.stat, explain);
-    // console.log(explain)
     
-    // considering specializations
-    let spec = false
-    for( let i in test.spec )
-      if( this.has_spec(test.spec[i]) )
-        spec = test.spec[i]
-    if( spec ) {
-      explain.push({value: Entity.stat_specialization_bonus(n), label: `specialized (${spec})`})
-      n += n
+    // considering traits
+    let trait = this.has_one_of_traits(test.trait)
+    if( trait ) {
+      let bonus = this.get('level')
+      n += bonus
+      explain.push({label: `${this} has aligned trait ${trait}`, value: bonus})
+    } else {
+      explain.push({label: `${this} does not have an aligned trait`, value: 0})
     }
+      
+    // let spec = false
+    // for( let i in test.spec )
+    //   if( this.has_spec(test.spec[i]) )
+    //     spec = test.spec[i]
+    // if( spec ) {
+    //   explain.push({value: Entity.stat_specialization_bonus(n), label: `specialized (${spec})`})
+    //   n += n
+    // }
     
-    // considering if certain statuses affect the test negatively
+    // considering if certain statuses affect the test
     for( let i in test.status ) {
       let status = this.get_status(i)
       // console.log("*", test.status, test.status[i])
@@ -812,13 +827,13 @@ class Entity {
     // todo: consider items ?
 
     // considering penalties
-    if( this.has_penalty(test.get_name()) )
-      penalty = true
-    if( penalty ) {
-      let penalty_value = Entity.stat_penalty(n)
-      explain.push({value: penalty_value, label: `penalty: (${penalty_value})`})
-      n -= penalty_value
-    }
+    // if( this.has_penalty(test.get_name()) )
+    //   penalty = true
+    // if( penalty ) {
+    //   let penalty_value = Entity.stat_penalty(n)
+    //   explain.push({value: penalty_value, label: `penalty: (${penalty_value})`})
+    //   n -= penalty_value
+    // }
     
     // considering randomization: rolls two dice, substracts one from the other (todo: advantage / disadvantage)
     if( 'randomize' in test ) {

@@ -132,6 +132,7 @@ new Verb({
   on_success: function(cmd) {
     // console.log(cmd)
     let perception = (cmd.who.id==cmd.op1.id ? Infinity : cmd.who.performance('perception') )
+
     ui.add_event( ui.print_sheet(cmd.op1, {perception: perception}) )
   },
   sortkey: 1,
