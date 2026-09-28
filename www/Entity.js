@@ -1,13 +1,6 @@
 var entities = [];
 
 class Entity {
-  static cost_of_stat_point(n) {
-    if( n>0 ) return n
-    else return 1
-  }
-  static stat_points_at_level_up(n) { return 3 }
-  static stat_penalty(n) { return Math.round(n/2) } // this returns a penalty value, so we round UP from .5
-  // static stat_specialization_bonus(n) { return n }
 
   static max_id = 0;
 
@@ -570,7 +563,7 @@ class Entity {
   level_up(n = 1) {
     for (let i = 0; i < n; i++) {
       this.level++;
-      this.cp += Entity.stat_points_at_level_up(this.level);
+      this.cp += CP_GAINED_AT_LEVEL(this.level)
       ui.text(`<span class="progress">`, this, ` has gained a level!</span>`)
     }
     return this;
@@ -581,9 +574,9 @@ class Entity {
 
     if (delta == 1) {
       this[stat] += 1;
-      this.cp -= Entity.cost_of_stat_point(this[stat]);
+      this.cp -= CP_COST_OF_STAT_POINT(this[stat]);
     } else if (delta == -1) {
-      this.cp += Entity.cost_of_stat_point(this[stat]);
+      this.cp += CP_COST_OF_STAT_POINT(this[stat]);
       this[stat] -= 1;
     } else throw `invalid stat change; not +1 or -1`;
   }
@@ -903,12 +896,13 @@ class Entity {
         vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )
       }
       options.log_test_results && console.log(`vs performance: ${vs_result}`)        
-      result -= vs_result
+      result -= vs_result   // this is where we compare this entity's performance with the other's performance
     } else {
       options.log_test_results && console.log(`no test -> auto success`) 
       result = 1
     }
 
+    // process result of the test based on <, > and = only
     if( result>=0 ) {
       options.log_test_results && console.log( `success!`)
       event = verb.on_success(cmd)

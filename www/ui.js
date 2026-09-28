@@ -374,7 +374,7 @@ class UI {
         if( change==-1 && entity[stat] > MIN_STAT ) {   // cannot decrease below minimum
           return true
         } else                                          // can only increase if enough cp
-        if( change==+1 && entity.cp >= Entity.cost_of_stat_point(entity[stat]+1) )
+        if( change==+1 && entity.cp >= CP_COST_OF_STAT_POINT(entity[stat]+1) )
           return true
         return false
       }
@@ -382,7 +382,7 @@ class UI {
         if( change==-1 && entity[stat]>ui.original_stats[stat] ) {
           return true          
         } else
-        if( change==+1 && entity.cp >= Entity.cost_of_stat_point(entity[stat]+1) )
+        if( change==+1 && entity.cp >= CP_COST_OF_STAT_POINT(entity[stat]+1) )
           return true
         return false
       }

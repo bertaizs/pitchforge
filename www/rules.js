@@ -40,7 +40,7 @@ const POINTS = {
 }
 
 
-const CP_PER_LEVEL = 4;
+// const CP_PER_LEVEL = 4;
 
 function STARTING_CP() { return 14 }
 function CP_GAINED_FIXED() { return 1 }
@@ -55,7 +55,10 @@ function TOTAL_CP_AT_LEVEL(n) {
   return sum
 }
 
-function CP_COST_OF_STAT_POINT(n) {return n}
+function CP_COST_OF_STAT_POINT(n) {
+  if(n>0) return n
+    else  return 1
+}
 function TOTAL_CP_COST_OF_STAT(n) {
   sum = 0
   while(n>0) {
