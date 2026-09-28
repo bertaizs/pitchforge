@@ -801,9 +801,19 @@ class Entity {
       n += bonus
       explain.push({label: `${this} has aligned trait ${trait}`, value: bonus})
     } else {
-      explain.push({label: `${this} does not have an aligned trait`, value: 0})
+      // considering half-traits
+      let half_trait = this.has_one_of_traits(test.half_trait)
+      if( half_trait ) {
+        let bonus = Math.trunc( this.get('level')/2 )
+        n += bonus
+        explain.push({label: `${this} does not have an aligned trait but has aligned half-trait ${trait}`, value: bonus})
+      } else {
+        explain.push({label: `${this} does not have an aligned trait or half-trait`, value: 0})
+      }
     }
-      
+
+
+    
     // let spec = false
     // for( let i in test.spec )
     //   if( this.has_spec(test.spec[i]) )
