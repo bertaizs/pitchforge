@@ -27,7 +27,7 @@ class Test {
 
     this.stat = arrayify(this.stat);
 
-    // this.randomize = true  // to randomize the test
+    this.randomize ??= options.randomize_tests_by_default
 
     this.trait ??= []
     this.trait = arrayify(this.trait)
@@ -73,7 +73,7 @@ Test.register({stat: 'cool'})
 Test.register({stat: 'sharp'})
 Test.register({stat: 'charm'})
 
-Test.register({name: "attack",    stat: 'tough'})
+Test.register({name: "attack",    stat: 'tough',  randomize: options.randomize_attacks})
 Test.register({name: "defense",   stat: 'tough', status: {'threat': -1}})
 
 Test.register({name: "resistance",   stat: 'charm', status: {'threat': -1}})

@@ -846,7 +846,7 @@ class Entity {
     // }
     
     // considering randomization: rolls two dice, substracts one from the other (todo: advantage / disadvantage)
-    if( 'randomize' in test ) {
+    if( 'randomize' in test && test['randomize'] ) {
       let die_plus = die_roll()
       let die_minus = die_roll()
       explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})

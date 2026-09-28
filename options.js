@@ -54,3 +54,6 @@ options.show_full_knowledge = false  // quests/journal shows the full Info block
 options.show_events_at_other_locations = false
 
 options.show_choice_source = false
+
+options.randomize_attacks = true
+options.randomize_other_tests = false // except for attacks
