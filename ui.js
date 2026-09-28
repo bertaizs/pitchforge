@@ -575,6 +575,9 @@ class UI {
     }
 
     explanation(exp, result = "result") {
+        if( typeof exp == 'string' )
+          exp = JSON.parse(atob(exp))
+      
         let s = ``
         let n = 0
         s+= `<table>`

@@ -1,4 +1,7 @@
 class Test {
+
+
+  // !!! TODO: get rid of these
   static AUTOPASS = -Infinity
   static CHILDSPLAY=-2
   static TRIVIAL = -1

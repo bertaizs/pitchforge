@@ -885,7 +885,7 @@ class Entity {
     
     if( verb.test ) {
       let e = [], e2 = []
-      result = this.performance(verb.test, {}, e)
+      result = this.performance(verb.test, {}, e)   // TEST for *this* entity
       options.log_test_results && console.log(`${this}'s performance: ${result}`)
       
       let vs_result
@@ -899,7 +899,7 @@ class Entity {
           throw `don't know how to process difficulty: ${verb.difficulty}`
       } else
       if( verb.op1 ) {          // versus test
-        // TODO: use Entity.test() ???
+        // TODO: use Entity.test() ???              // TEST for *other* entity
         vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )
       }
       options.log_test_results && console.log(`vs performance: ${vs_result}`)        
