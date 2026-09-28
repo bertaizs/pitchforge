@@ -56,4 +56,5 @@ options.show_events_at_other_locations = false
 options.show_choice_source = false
 
 options.randomize_attacks = true
-options.randomize_other_tests = false // except for attacks
+options.randomize_tests_by_default = false // except for attacks
+options.log_random = true

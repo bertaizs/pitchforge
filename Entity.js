@@ -851,6 +851,7 @@ class Entity {
       let die_minus = die_roll()
       explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})
       n += die_plus-die_minus
+      options.log_random && console.log( `random (${die_plus}-${die_minus})` )
     }
 
     // consider bonus/malus
