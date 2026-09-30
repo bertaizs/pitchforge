@@ -39,10 +39,10 @@ class Verb {
     }
 
     get_name() { return this.name }
-    get_prep() { return this.prep }
-    get_sep() { return this.separator }
-    get_label() { return (options.debug&&this.debug?"*":"")+this.get_name() }
-    get_text() { return this.text }
+    // get_prep() { return this.prep }
+    // get_sep() { return this.separator }
+    // get_label() { return (options.debug&&this.debug?"*":"")+this.get_name() }
+    // get_text() { return this.text }
 
     // executes the test for the verb, with respect to the given command
     run_test(cmd) {

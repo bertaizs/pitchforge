@@ -264,8 +264,19 @@ img.combat_icon {
      width: 100%;
 }
 
-#expl {
+/*#expl {
     display: none;
+}*/
+
+#explanation {
+    /*border: 1px solid cyan;*/
+    background-color: darkslategray;
+    position: absolute;
+    padding: 5px;
+    display: none;
+}
+.explanation_text {
+    background-color: darkslategray;
 }
 
 #debug {

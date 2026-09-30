@@ -582,15 +582,18 @@ class UI {
         let n = 0
         s+= `<table>`
         for( let i in exp ) {
-            s+= `\n<tr><td>${exp[i].label}</td><td style="width: 2em; text-align: right;">${plusminus(exp[i].value)}</td>`
+            s+= `\n<tr><td class="explanation_text">${exp[i].label}</td><td class="explanation_text" style="width: 2em; text-align: right;">${plusminus(exp[i].value)}</td>`
             n+= exp[i].value
         }
         s+= `</table>`
         s+= `<hr/>${result}: ${n}`
         return s
     }
-    show_explanation(exp, label) {
+    show_explanation(event, exp, label) {
         document.getElementById('explanation').innerHTML = this.explanation(exp, label)
+        document.getElementById('explanation').style.left = event.pageX+"px"
+        document.getElementById('explanation').style.top = event.pageY+"px"
+        document.getElementById('explanation').style.display = 'block'
     }
     clear_explanation() {      
       document.getElementById('explanation').innerHTML = ''
@@ -617,10 +620,15 @@ class UI {
         this.show_explanation(e)
     }
 
+    hide_explanation() {
+      document.getElementById('explanation').innerHTML = ''
+      document.getElementById('explanation').style.display = 'none'
+    }
+
     // prints a tag, when the user clicks on it, it shows an explanation
     // explanation is stored here, in the printed tag, in base64
     print_explanation_tag(e, tag = "❔") {
-      let s = `<span onclick="ui.show_explanation('${btoa(JSON.stringify(e))}')">${tag}</span>`
+      let s = `<span onclick="ui.show_explanation(event, '${btoa(JSON.stringify(e))}')">${tag}</span>`
         return s
     }
 
