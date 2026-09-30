@@ -608,12 +608,18 @@ class UI {
 
       this.show_explanation(ex, test.name)
     }
-    
+
+    // called when an explanation is clicked
     explanation_click( entity, stat ) {
         entity = game.entity(entity)
         let e = []
         let n = entity.get_stat(stat, e)
         this.show_explanation(e)
+    }
+
+    print_explanation_tag(e, tag = "❔") {
+      let s = `<span onclick="ui.show_explanation('${btoa(JSON.stringify(e))}')">${tag}</span>`
+        return s
     }
 
     select_entity(id) {
