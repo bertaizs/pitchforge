@@ -872,10 +872,11 @@ class Entity {
   // executes a command of type Cmd, 
   // returns what happens as string (which is not used)
   exec( cmd ) {
-    let result
     let event = ""
     let verb = game.verbs[cmd.verb]
-    
+
+    let result = verb.run_test(cmd)
+    /*
     if( verb.test ) {
       let e = [], e2 = []
       result = this.performance(verb.test, {}, e)   // TEST for *this* entity
@@ -901,7 +902,8 @@ class Entity {
       options.log_test_results && console.log(`no test -> auto success`) 
       result = 1
     }
-
+    */
+    
     // process result of the test based on <, > and = only
     if( result>=0 ) {
       options.log_test_results && console.log( `success!`)

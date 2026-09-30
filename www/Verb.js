@@ -43,6 +43,47 @@ class Verb {
     get_sep() { return this.separator }
     get_label() { return (options.debug&&this.debug?"*":"")+this.get_name() }
     get_text() { return this.text }
+
+    // executes the test for the verb, with respect to the given command
+    run_test(cmd) {
+      let result = 2 // assume success
+      let e = [], e2 = []
+      
+      if( this.test ) {   // if a test is needed, we run it
+        result = cmd.who.performance(this.test, {}, e)   // TEST for the one taking action
+        options.log_test_results && console.log(`${cmd.who}'s performance:`, result, e)
+        
+        let vs_result
+        if( this.difficulty ) {   // fixed difficulty
+          if( typeof this.difficulty == 'number' )
+            vs_result = this.difficulty
+          else
+          if( typeof verb.difficulty == 'function' )
+            vs_result = this.difficulty(cmd)
+          else
+            throw `don't know how to process difficulty: ${this.difficulty}`
+        } else
+        if( this.op1 ) {          // versus test
+          // TODO: use Entity.test() ???              // TEST for *other* entity
+          vs_result = cmd.op1.performance( (this.test_vs ? this.test_vs : this.test), {}, e2 )
+        }
+        options.log_test_results && console.log(`vs performance: ${vs_result}`)        
+        result -= vs_result   // this is where we compare this entity's performance with the other's performance
+
+        ui.text( cmd.who + ui.print_explanation_tag(e), 
+                ` `, this.get_name(), 
+                (this.op1 ? cmd.op1 + ui.print_explanation_tag(e2) : ``),
+                ` result: ${result}`
+        )
+        
+      } else {  // if no test is needed, we just set result as success
+        options.log_test_results && console.log(`no test -> auto success`) 
+        result = 1
+      }
+
+      return result
+    }
+
 }
 
 // called via dedicated path links, not via calling this command

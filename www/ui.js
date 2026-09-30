@@ -617,6 +617,8 @@ class UI {
         this.show_explanation(e)
     }
 
+    // prints a tag, when the user clicks on it, it shows an explanation
+    // explanation is stored here, in the printed tag, in base64
     print_explanation_tag(e, tag = "❔") {
       let s = `<span onclick="ui.show_explanation('${btoa(JSON.stringify(e))}')">${tag}</span>`
         return s
