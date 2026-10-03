@@ -732,6 +732,7 @@ class Entity {
   get_stat(stat, e = {}) {
     e.explain = []
     e.label = stat
+    e.who = this.id
     
     if (!(stat in STATS)) throw `no such stat: ${stat}.`;
 

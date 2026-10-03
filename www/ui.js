@@ -583,6 +583,7 @@ class UI {
       let s = ``
       for( let j in exp ) {
         // console.log(exp[j])
+        let name = game.entity(exp[j].who).get_name()
         
         s += `<div class="explanation_text">`
         // let n = 0
@@ -592,7 +593,7 @@ class UI {
             // n+= exp[j].explain[i].value
         }
         s+= `</table>`
-        s+= `<span class="explanation_result">${exp[j].label}: ${exp[j].result}</span><br/><br/>\n`
+        s+= `<span class="explanation_result">${name}'s ${exp[j].label}: ${exp[j].result}</span><br/><br/>\n`
         s+= `</div>`
       }
       return s
