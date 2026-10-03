@@ -218,10 +218,7 @@ new Verb({
     return cmd.who.performance_attack({}, cmd.e)
   },
   run_op1_test(cmd) {
-    console.log("DEFEND!!!")
-    let result
-    result = cmd.op1.performance_defense({}, cmd.e2)   // TEST for the one taking action
-    return result
+    return cmd.op1.performance_defense({}, cmd.e2)
   },
   
   on_success: function(cmd) {
