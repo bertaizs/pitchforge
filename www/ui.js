@@ -714,6 +714,7 @@ class UI {
       params.right_class ??= "table_right"
       params.prefix ??= ""
       params.not_if_empty ??= false
+      params.show_position ??= false
       
       if( params.not_if_empty && list.length==0 )
         return ""
@@ -729,9 +730,13 @@ class UI {
         s+= params.prefix
         if( 'display' in params ) {
           s+= params.display(item)          
+          if( params.show_position )
+            s+= `[${item.get('position')}]`
         } 
         else if( item instanceof Entity ) {
           s+= this.print_entity(item)
+          if( params.show_position )
+            s+= `[${item.get('position')}]`
         } 
         else throw `no way to display list`
       }
@@ -799,8 +804,8 @@ class UI {
       
       if( ! game.get_player().get_location().is('abstract') ) {        
         s+= `<table>`
-        s+= this.print_list( game.get_player().get_equipped_items(),
-                            {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus} )
+        s+= this.print_list( game.get_player().get_equipped_items().sort((x,y)=>(x.position.localeCompare(y.position))),
+                            {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus, show_position: true} )
         s+= this.print_list( game.get_player().get_nonequipped_items(),
                             {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
         s+= `</table>` 

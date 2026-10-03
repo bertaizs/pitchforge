@@ -220,8 +220,47 @@ class Entity {
     entity = game.entity(entity)
     entity.move_to( this.get_location() )
   }
+
+  // armor slot is item 1
+  // offhand slot is item 2
+  get_inventory_slots() { return ['weapon', 'item 1', 'item 2', 'item 3']}
+  get_armor_slot() {return 'item 1'}
+  get_offhand_slot() {return 'item 2'}
+
+  get_weapon() {
+    let weapons = this.get_equipped_items().filter(x=>x.position=='weapon')
+    if( weapons.length>0 )
+      return weapons[0]
+    else
+      return false
+  }
+  get_weapon_or_self() {
+    let weapon = this.get_weapon()
+    return weapon || this
+  }
   
-  equip( entity ) {
+  equip( entity, as = 'weapon' ) {
+    entity = game.entity(entity)
+    
+    if( !entity.is_at(this) )
+      throw `${this} does not have ${entity}`
+
+    let equipped = this.get_equipped_items()
+    for( let i in equipped )
+      if( equipped[i].position == as ) {
+        equipped[i].position = false
+        ui.text( this, ` unequips `, equipped[i], `.` )
+      }
+
+    if( as=='weapon' && entity.is('weapon') )
+      ui.text( this, ` is now wielding `, entity, `.` )
+    else
+    if( as=='item 1' && entity.is('armor') )
+      ui.text( this, ` is now wearing `, entity, `.` )
+    else
+      ui.text( this, ` now has `, entity, ` equipped.` )
+      
+    entity.position = as
   }
 
   // called when this is 'process'ed
@@ -1008,9 +1047,33 @@ class Entity {
     }
 
     if( this.is('weapon') && game.get_player().has(this) && !this.position ) {
-      c.add_verb('equip', cmd, this)
+      c.add_verb('equip', cmd, this, {label: "wield as weapon"})
     }
-    if( this.is('weapon') && game.get_player().has(this) && this.position ) {
+    if( this.is('armor') && game.get_player().has(this) && !this.position ) {
+      c.add_quick({label: "wear as armor", sortkey: 61,
+          cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: this.get_armor_slot()})})
+    }
+    if( game.get_player().has(this) && !this.is('armor') ) {
+      let slots = game.get_player().get_inventory_slots()
+      for( let i in slots ) {
+        if( slots[i]!='weapon') {
+          c.add_quick({label:  "equip as "+slots[i], sortkey: 60+i,
+            cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: slots[i]})})          
+          // let cmd_clone = clone(cmd)
+          // cmd_clone.verb = 'equip'
+          // cmd_clone.op1 = this
+          // cmd_clone.where = slots[i]
+          // c.add_quick({
+          //   label: "equip as "+slots[i],
+          //   cmd: cmd_clone,
+          //   sortkey: 60+i,
+          // })
+          // c.add_quick('equip', cmd_clone, this, {label: "equip as "+slots[i]})
+        }
+      }
+    }
+    // if( this.is('weapon') && game.get_player().has(this) && this.position ) {
+    if( game.get_player().has(this) && this.position ) {
       c.add_verb('unequip', cmd, this)
     }
 

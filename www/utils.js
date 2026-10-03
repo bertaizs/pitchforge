@@ -114,6 +114,13 @@ function sentence( str ) {
 }
 
 
+function clone(obj) {
+  let o2 = {}
+  for( let i in obj)
+    o2[i] = obj[i]
+  return o2
+}
+
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
 }

@@ -329,16 +329,18 @@ new Verb({
     if( !cmd.who.has( cmd.op1) )
       return ui.text(cmd.who, ` does not have `, cmd.op1)
     
-    let where = 'weapon'
-    cmd.who.list_entities_here()
-        .map( x=>{
-              if(x.position==where) {
-                ui.text(cmd.who, ` unequips `, x)
-                x.position=false
-              }
-        } ) // unequip all
-    cmd.op1.move_to(cmd.who, where) // pick up and equip
-    ui.text(cmd.who, ` now wields `, cmd.op1)
+    let where = cmd.where || 'weapon'
+    cmd.who.equip( cmd.op1, where )
+    
+    // cmd.who.list_entities_here()
+    //     .map( x=>{
+    //           if(x.position==where) {
+    //             ui.text(cmd.who, ` unequips `, x)
+    //             x.position=false
+    //           }
+    //     } ) // unequip all
+    // cmd.op1.move_to(cmd.who, where) // pick up and equip
+    // ui.text(cmd.who, ` now wields `, cmd.op1)
   },
   sortkey: 3,
 })
