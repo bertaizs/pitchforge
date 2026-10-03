@@ -39,15 +39,12 @@ class Verb {
     }
 
     get_name() { return this.name }
-    // get_prep() { return this.prep }
-    // get_sep() { return this.separator }
-    // get_label() { return (options.debug&&this.debug?"*":"")+this.get_name() }
-    // get_text() { return this.text }
 
     // executes the test for the verb, with respect to the given command
+    // writes results of the command back into the cmd record
     run_test(cmd) {
       let result = 2 // assume success
-      let e = [], e2 = []
+      let e = {}, e2 = {}
       
       if( this.test ) {   // if a test is needed, we run it
         result = cmd.who.performance(this.test, {}, e)   // TEST for the one taking action
@@ -66,21 +63,19 @@ class Verb {
         if( this.op1 ) {          // versus test
           // TODO: use Entity.test() ???              // TEST for *other* entity
           vs_result = cmd.op1.performance( (this.test_vs ? this.test_vs : this.test), {}, e2 )
+
+          cmd.e2 = e2
         }
         options.log_test_results && console.log(`vs performance: ${vs_result}`)        
         result -= vs_result   // this is where we compare this entity's performance with the other's performance
 
-        ui.text( cmd.who + ui.print_explanation_tag(e), 
-                ` `, this.get_name(), 
-                (this.op1 ? cmd.op1 + ui.print_explanation_tag(e2) : ``),
-                ` result: ${result}`
-        )
-        
+        cmd.result = result
       } else {  // if no test is needed, we just set result as success
         options.log_test_results && console.log(`no test -> auto success`) 
         result = 1
       }
 
+      cmd.e = e
       return result
     }
 
@@ -210,13 +205,15 @@ new Verb({
     }
     
     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
-    ui.text(cmd.who, ` strikes `, cmd.op1, '.')
+    ui.text(cmd.who, ` strikes `, cmd.op1, '.',
+          (ui.print_explanation_tag(cmd.e)+" vs "+ui.print_explanation_tag(cmd.e2)),
+      )
     let damage = cmd.op1.take_damage({value: 1, tier: cmd.who.get('damage_tier')})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
   },
   on_fail: function(cmd) {
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`)
+    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
   },
 })
 

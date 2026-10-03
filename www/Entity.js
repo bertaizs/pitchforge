@@ -729,16 +729,19 @@ class Entity {
   }
 
   // returns the value of stat (string), with an explanation
-  get_stat(stat, explain = []) {
+  get_stat(stat, e = {}) {
+    e.explain = []
+    e.label = stat
+    
     if (!(stat in STATS)) throw `no such stat: ${stat}.`;
 
     let n = this[stat];
-    explain.push({value: this[stat], label: "base "+stat})
+    e.explain.push({value: this[stat], label: "base "+stat})
     
     for (let t in TRAITS)
       if (this.has_trait(t)) {
         if (stat in TRAITS[t]) {
-          explain.push({value: TRAITS[t][stat], label: t})
+          e.explain.push({value: TRAITS[t][stat], label: t})
           n += TRAITS[t][stat];
         }
       }
@@ -746,26 +749,29 @@ class Entity {
     let wound = this.get_status('wound')
     if( wound ) {
       n -= wound.magnitude
-      explain.push({value: -wound.magnitude, label: "wound"})      
+      e.explain.push({value: -wound.magnitude, label: "wound"})      
     }
-
+    e.result = n
     return n;
   }
+  
   // same as get_stat, but receives an array as stats and returns the highest with its explanation
-  get_best_stat(stats, explain = []) {
-    let n = null
+  get_best_stat(stats, explain = {}) {
+    if( stats.length==0 ) throw "empty stats array in get_best_stat"
+    let best_stat, best_e, e
+    
     for( let i in stats ) {
-      let e = []
-      let r = this.get_stat( stats[i], e )
-      if( n==null || r>n ) {
-        n = r
-        explain.length = 0
-        for( let j=0; j<e.length; j++ )
-          explain[j] = e[j]
+      e = {}
+      let stat = this.get_stat( stats[i], e )
+      if( i==0 || stat > best_stat ) {
+        best_e = e
+        best_stat = stat
       }
     }
-    if( n==null ) throw "empty stats array in get_best_stat"
-    return n
+
+    for( let i in best_e )
+      explain[i] = best_e[i]
+    return best_stat
   }
   
   get_verbs() {
@@ -780,33 +786,32 @@ class Entity {
   // returns performance of this Entity for a Test
   // - can add additional parameters
   // - explain is used for returning how it is calculated
-  performance(test, params = {}, explain = []) {
+  performance(test, params = {}, e = {} ) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
     // let penalty = false
     
-    let n = this.get_best_stat(test.stat, explain);
+    let n = this.get_best_stat(test.stat, e);
+    e.label = test.get_name()
     
     // considering traits
     let trait = this.has_one_of_traits(test.trait)
     if( trait ) {
       let bonus = this.get('level')
       n += bonus
-      explain.push({label: `${this} has aligned trait ${trait}`, value: bonus})
+      e.explain.push({label: `${this} has aligned trait ${trait}`, value: bonus})
     } else {
       // considering half-traits
       let half_trait = this.has_one_of_traits(test.half_trait)
       if( half_trait ) {
         let bonus = Math.trunc( this.get('level')/2 )
         n += bonus
-        explain.push({label: `${this} does not have an aligned trait but has aligned half-trait ${trait}`, value: bonus})
+        e.explain.push({label: `${this} has an aligned half-trait ${trait}`, value: bonus})
       } else {
-        explain.push({label: `${this} does not have an aligned trait or half-trait`, value: 0})
+        e.explain.push({label: `${this} does not have aligned trait`, value: 0})
       }
     }
 
-
-    
     // let spec = false
     // for( let i in test.spec )
     //   if( this.has_spec(test.spec[i]) )
@@ -823,7 +828,7 @@ class Entity {
       if( status ) {
         let diff = status.magnitude * test.status[i]
         n += diff
-        explain.push({value: diff, label: `${status.name}: ${diff}`})
+        e.explain.push({value: diff, label: `${status.name}: ${diff}`})
       }
     }
     
@@ -842,18 +847,21 @@ class Entity {
     if( 'randomize' in test && test['randomize'] ) {
       let die_plus = die_roll()
       let die_minus = die_roll()
-      explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})
+      e.explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})
       n += die_plus-die_minus
       options.log_random && console.log( `random (${die_plus}-${die_minus})` )
+      console.log(e)
     }
 
     // consider bonus/malus
     if( 'bonus' in test ) {
-      explain.push({value: test.bonus, label: `bonus/malus`})
+      e.explain.push({value: test.bonus, label: `bonus/malus`})
       n += test.bonus
     }
 
     options.log_tests && console.log(`testing ${this} for ${test.get_name()}, result: ${n}`)
+
+    e.result = n
     return n;
   }
 

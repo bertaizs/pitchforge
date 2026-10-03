@@ -272,11 +272,18 @@ img.combat_icon {
     /*border: 1px solid cyan;*/
     background-color: darkslategray;
     position: absolute;
-    padding: 5px;
+    padding: 10px;
     display: none;
+    border-radius: 10px;
+    /*margin-top: 1em;*/
 }
-.explanation_text {
+.explanation_text, .explanation_result {
     background-color: darkslategray;
+    color: black;
+}
+.explanation_result {
+    font-weight: bold;
+    /*height: 2em;*/
 }
 
 #debug {

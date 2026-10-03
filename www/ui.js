@@ -72,7 +72,7 @@ class UI {
     this.show_menu()
     ui.show_events()
 
-    ui.clear_explanation()
+    ui.hide_explanation()
 
     switch( this.cmd.verb ) {
       case 'move':
@@ -574,31 +574,42 @@ class UI {
       document.getElementById('main').innerHTML = s
     }
 
+    
     explanation(exp, result = "result") {
-        if( typeof exp == 'string' )
-          exp = JSON.parse(atob(exp))
-      
-        let s = ``
-        let n = 0
-        s+= `<table>`
-        for( let i in exp ) {
-            s+= `\n<tr><td class="explanation_text">${exp[i].label}</td><td class="explanation_text" style="width: 2em; text-align: right;">${plusminus(exp[i].value)}</td>`
-            n+= exp[i].value
+      if( typeof exp == 'string' )
+        exp = JSON.parse(atob(exp))
+      exp = arrayify(exp)
+        
+      let s = ``
+      for( let j in exp ) {
+        // console.log(exp[j])
+        
+        s += `<div class="explanation_text">`
+        // let n = 0
+        s+= `<table style="border-bottom: 1px solid black;">`
+        for( let i in exp[j].explain ) {
+            s+= `\n<tr><td class="explanation_text">${exp[j].explain[i].label}</td><td class="explanation_text" style="width: 2em; text-align: right;">${plusminus(exp[j].explain[i].value)}</td>`
+            // n+= exp[j].explain[i].value
         }
         s+= `</table>`
-        s+= `<hr/>${result}: ${n}`
-        return s
+        s+= `<span class="explanation_result">${exp[j].label}: ${exp[j].result}</span><br/><br/>\n`
+        s+= `</div>`
+      }
+      return s
     }
-    show_explanation(event, exp, label) {
-        document.getElementById('explanation').innerHTML = this.explanation(exp, label)
-        document.getElementById('explanation').style.left = event.pageX+"px"
-        document.getElementById('explanation').style.top = event.pageY+"px"
-        document.getElementById('explanation').style.display = 'block'
-    }
-    clear_explanation() {      
+    
+    show_explanation(event, exp) {
+      exp = arrayify(exp)
       document.getElementById('explanation').innerHTML = ''
+      
+      for( let i in exp )
+        document.getElementById('explanation').innerHTML += this.explanation(exp[i])
+      document.getElementById('explanation').style.left = event.pageX+"px"
+      document.getElementById('explanation').style.top = event.pageY+"px"
+      document.getElementById('explanation').style.display = 'block'
     }
 
+    // called when an explanation is clicked for a test
     show_explanation_for(entity, test) {
       entity = game.entity(entity)
       if( test in TESTS )
@@ -611,13 +622,13 @@ class UI {
 
       this.show_explanation(ex, test.name)
     }
-
-    // called when an explanation is clicked
+    // called when an explanation is clicked for a stat
     explanation_click( entity, stat ) {
         entity = game.entity(entity)
-        let e = []
+        let e = {}
         let n = entity.get_stat(stat, e)
-        this.show_explanation(e)
+        console.log(0, e)
+        this.show_explanation({}, e)
     }
 
     hide_explanation() {
@@ -627,7 +638,7 @@ class UI {
 
     // prints a tag, when the user clicks on it, it shows an explanation
     // explanation is stored here, in the printed tag, in base64
-    print_explanation_tag(e, tag = "❔") {
+    print_explanation_tag(e, tag = "[...]") { //❔
       let s = `<span onclick="ui.show_explanation(event, '${btoa(JSON.stringify(e))}')">${tag}</span>`
         return s
     }
