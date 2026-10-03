@@ -215,7 +215,9 @@ new Verb({
   op1: true,
 
   run_who_test(cmd) {
-    return cmd.who.performance_attack({}, cmd.e)
+    let result = cmd.who.performance_attack({}, cmd.e)
+    cmd.e.label = "attack"
+    return result
   },
   run_op1_test(cmd) {
     return cmd.op1.performance_defense({}, cmd.e2)
@@ -331,16 +333,6 @@ new Verb({
     
     let where = cmd.where || 'weapon'
     cmd.who.equip( cmd.op1, where )
-    
-    // cmd.who.list_entities_here()
-    //     .map( x=>{
-    //           if(x.position==where) {
-    //             ui.text(cmd.who, ` unequips `, x)
-    //             x.position=false
-    //           }
-    //     } ) // unequip all
-    // cmd.op1.move_to(cmd.who, where) // pick up and equip
-    // ui.text(cmd.who, ` now wields `, cmd.op1)
   },
   sortkey: 3,
 })

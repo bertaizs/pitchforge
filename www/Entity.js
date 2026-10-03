@@ -238,6 +238,14 @@ class Entity {
     let weapon = this.get_weapon()
     return weapon || this
   }
+  is_weapon_cool() {
+    let weapon = this.get_weapon()
+    if( weapon && weapon.is('cool') )
+      return true
+    if( this.has_trait('martial arts') )
+      return true
+    return false
+  }
   
   equip( entity, as = 'weapon' ) {
     entity = game.entity(entity)
@@ -909,7 +917,7 @@ class Entity {
     let stats = ['tough']
 
     // TODO: handle weapon cool-ness
-    if( this.get_stat('cool') > this.get_stat('tough') )
+    if( this.get_stat('cool') > this.get_stat('tough') && this.is_weapon_cool() )
       stats.push(['cool'])
     let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})
     let result
@@ -1046,6 +1054,7 @@ class Entity {
           c.add_verb('pickpocket', cmd, this, {label: `pickpocket ${the(this)} from ${the(this.get_location())}`})
     }
 
+    // EQUIPMENT
     if( this.is('weapon') && game.get_player().has(this) && !this.position ) {
       c.add_verb('equip', cmd, this, {label: "wield as weapon"})
     }
@@ -1053,26 +1062,15 @@ class Entity {
       c.add_quick({label: "wear as armor", sortkey: 61,
           cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: this.get_armor_slot()})})
     }
-    if( game.get_player().has(this) && !this.is('armor') ) {
+    if( game.get_player().has(this) && !this.is('armor') && !this.position ) {
       let slots = game.get_player().get_inventory_slots()
       for( let i in slots ) {
         if( slots[i]!='weapon') {
           c.add_quick({label:  "equip as "+slots[i], sortkey: 60+i,
             cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: slots[i]})})          
-          // let cmd_clone = clone(cmd)
-          // cmd_clone.verb = 'equip'
-          // cmd_clone.op1 = this
-          // cmd_clone.where = slots[i]
-          // c.add_quick({
-          //   label: "equip as "+slots[i],
-          //   cmd: cmd_clone,
-          //   sortkey: 60+i,
-          // })
-          // c.add_quick('equip', cmd_clone, this, {label: "equip as "+slots[i]})
         }
       }
     }
-    // if( this.is('weapon') && game.get_player().has(this) && this.position ) {
     if( game.get_player().has(this) && this.position ) {
       c.add_verb('unequip', cmd, this)
     }
