@@ -40,15 +40,28 @@ class Verb {
 
     get_name() { return this.name }
 
+
+    run_who_test(cmd) {
+      let result, e = {}
+      result = cmd.who.performance(this.test, {}, e)   // TEST for the one taking action
+      cmd.e = e
+      return result
+    }
+    run_op1_test(cmd) {
+      
+    }
+
+    
     // executes the test for the verb, with respect to the given command
     // writes results of the command back into the cmd record
     run_test(cmd) {
       let result = 2 // assume success
-      let e = {}, e2 = {}
+      let e2 = {}
       
       if( this.test ) {   // if a test is needed, we run it
-        result = cmd.who.performance(this.test, {}, e)   // TEST for the one taking action
-        options.log_test_results && console.log(`${cmd.who}'s performance:`, result, e)
+        cmd.e = {}
+        result = this.run_who_test(cmd)
+        options.log_test_results && console.log(`${cmd.who}'s performance:`, cmd.e.result, cmd.e)
         
         let vs_result
         if( this.difficulty ) {   // fixed difficulty
@@ -75,7 +88,6 @@ class Verb {
         result = 1
       }
 
-      cmd.e = e
       return result
     }
 
@@ -199,15 +211,19 @@ new Verb({
   test: 'attack',
   test_vs: 'defense',
   op1: true,
+
+  run_who_test(cmd) {
+    console.log("ATTAAAAACK!!!")
+    let result
+    result = cmd.who.performance_attack({}, cmd.e)   // TEST for the one taking action
+    return result
+  },
+  
   on_success: function(cmd) {
     if( !cmd.op1.is_character() ) {
       return ui.text(`There is no point in attacking `, cmd.op1)
     }
-    
-    // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
-    ui.text(cmd.who, ` strikes `, cmd.op1, '.',
-          (ui.print_explanation_tag(cmd.e)+" vs "+ui.print_explanation_tag(cmd.e2)),
-      )
+    ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
     let damage = cmd.op1.take_damage({value: 1, tier: cmd.who.get('damage_tier')})
     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
   },

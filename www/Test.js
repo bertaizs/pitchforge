@@ -76,7 +76,7 @@ Test.register({stat: 'cool'})
 Test.register({stat: 'sharp'})
 Test.register({stat: 'charm'})
 
-Test.register({name: "attack",    stat: 'tough',  randomize: options.randomize_attacks})
+// Test.register({name: "attack",    stat: 'tough',  randomize: options.randomize_attacks})
 Test.register({name: "defense",   stat: 'tough', status: {'threat': -1}})
 
 Test.register({name: "resistance",   stat: 'charm', status: {'threat': -1}})

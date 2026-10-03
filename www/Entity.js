@@ -864,7 +864,21 @@ class Entity {
 
     e.result = n
     return n;
+  }   // performance
+
+  performance_attack(params = {}, e = {}) {
+    let stats = ['tough']
+
+    // TODO: handle weapon cool-ness
+    if( this.get_stat('cool') > this.get_stat('tough') )
+      stats.push(['cool'])
+    let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})
+    let result
+    result = this.performance(test, params, e)   // TEST for the one taking action
+
+    return result
   }
+
 
   // test this entity's performance vs a fixed value vs_value
   // vs_value is meant to be:

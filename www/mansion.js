@@ -904,7 +904,7 @@ new Entity({
 
 new Entity({
     name: "knife",
-    tags: ['melee', 'weapon', 'tool', 'item'],
+    tags: ['cool', 'melee', 'weapon', 'tool', 'item'],
     epithet: ["sharp", "rusty", "old"],
     icon: 'knife.png',
     description: `A simple knife.`,
