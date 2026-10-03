@@ -879,6 +879,19 @@ class Entity {
     return result
   }
 
+  performance_defense(params = {}, e = {}) {
+    let result = this.performance('block', params, e)
+
+    let e_evasion = {}
+    let evade_result = this.performance('evasion', params, e_evasion)
+
+    if( evade_result > result ) {
+      result = evade_result
+      for( let i in e_evasion )
+        e[i] = e_evasion[i]
+    }
+    return result
+  }
 
   // test this entity's performance vs a fixed value vs_value
   // vs_value is meant to be:

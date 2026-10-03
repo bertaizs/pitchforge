@@ -47,41 +47,43 @@ class Verb {
       cmd.e = e
       return result
     }
+    
     run_op1_test(cmd) {
-      
+      let vs_result, e2 = {}
+      vs_result = cmd.op1.performance( (this.test_vs ? this.test_vs : this.test), {}, e2 )
+      cmd.e2 = e2
+      return vs_result
     }
-
     
     // executes the test for the verb, with respect to the given command
     // writes results of the command back into the cmd record
     run_test(cmd) {
       let result = 2 // assume success
-      let e2 = {}
+      let vs_result = 0
       
       if( this.test ) {   // if a test is needed, we run it
         cmd.e = {}
         result = this.run_who_test(cmd)
         options.log_test_results && console.log(`${cmd.who}'s performance:`, cmd.e.result, cmd.e)
+
+        options.log_test_results && console.log(`${cmd.op1}'s performance:`, cmd.e.result, cmd.e)
         
-        let vs_result
         if( this.difficulty ) {   // fixed difficulty
           if( typeof this.difficulty == 'number' )
             vs_result = this.difficulty
           else
-          if( typeof verb.difficulty == 'function' )
-            vs_result = this.difficulty(cmd)
-          else
-            throw `don't know how to process difficulty: ${this.difficulty}`
+            if( typeof verb.difficulty == 'function' )
+              vs_result = this.difficulty(cmd)
+            else
+              throw `don't know how to process difficulty: ${this.difficulty}`
         } else
         if( this.op1 ) {          // versus test
-          // TODO: use Entity.test() ???              // TEST for *other* entity
-          vs_result = cmd.op1.performance( (this.test_vs ? this.test_vs : this.test), {}, e2 )
-
-          cmd.e2 = e2
+          cmd.e2 = {}
+          vs_result = this.run_op1_test(cmd)
         }
+
         options.log_test_results && console.log(`vs performance: ${vs_result}`)        
         result -= vs_result   // this is where we compare this entity's performance with the other's performance
-
         cmd.result = result
       } else {  // if no test is needed, we just set result as success
         options.log_test_results && console.log(`no test -> auto success`) 
@@ -213,9 +215,12 @@ new Verb({
   op1: true,
 
   run_who_test(cmd) {
-    console.log("ATTAAAAACK!!!")
+    return cmd.who.performance_attack({}, cmd.e)
+  },
+  run_op1_test(cmd) {
+    console.log("DEFEND!!!")
     let result
-    result = cmd.who.performance_attack({}, cmd.e)   // TEST for the one taking action
+    result = cmd.op1.performance_defense({}, cmd.e2)   // TEST for the one taking action
     return result
   },
   
