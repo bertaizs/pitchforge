@@ -387,20 +387,24 @@ class UI {
         return false
       }
     }
-    
+
+    // display a stat onto the character sheet
+    // shows explanation tag
+    // if cps can be distributed, it shows options to increase the stat
     print_sheet_stats( entity, params ) {
       let s = ``
       params.mode ??= 'standard'
       ui.mode = params.mode
       for( let i in STATS ) {
-          s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i))}</span> `
+          let e = {}
+          s+= `<tr><td class="table_left table_nopadding">${UI.keyword(i)}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.get_stat(i, e))}</span> `
+          s+= this.print_explanation_tag(e)
           if( params.mode != 'standard' ) {
             if( this.can_modify_stat(entity, i, +1, params) )
               s+= `<a onclick="ui.sheet_click('${i}',+1,${entity.id})">➕</a> `              
             if( this.can_modify_stat(entity, i, -1, params) )
                 s+= `<a onclick="ui.sheet_click('${i}',-1,${entity.id})">➖</a> `
           }
-          // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
           s+= `</td>`
           s+= `</tr>`
       }
@@ -408,15 +412,14 @@ class UI {
       return s
     }
 
+    // display an arbitrary value on the character sheet, adds an explanation tag
     print_sheet_value(label, value, expl = false) {
       let s = ``
       s+= `<tr><td class="table_left table_nopadding">${label}</td><td class="table_right table_nopadding"><span class="numfield">${value}</span> `
       if( expl )
         s+= this.print_explanation_tag(expl)
       s+= `</td>`
-      s+= `</tr>`
-      
-        // !!! // print_explanation_tag
+      s+= `</tr>`      
       return s
     }
 
