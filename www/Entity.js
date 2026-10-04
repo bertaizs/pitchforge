@@ -224,20 +224,22 @@ class Entity {
   // armor slot is item 1
   // offhand slot is item 2
   get_inventory_slots() { return ['weapon', 'item 1', 'item 2', 'item 3']}
+  get_weapon_slot() {return 'weapon'}
   get_armor_slot() {return 'item 1'}
   get_offhand_slot() {return 'item 2'}
 
+  // returns equipment equipped as weapon
   get_weapon() {
-    let weapons = this.get_equipped_items().filter(x=>x.position=='weapon')
-    if( weapons.length>0 )
+    let weapons = this.get_equipped_items().filter(x=>x.position==this.get_weapon_slot())
+    if( weapons.length>0 && weapons[0].is('weapon') )
       return weapons[0]
-    else
-      return false
+    return false
   }
   get_weapon_or_self() {
     let weapon = this.get_weapon()
     return weapon || this
   }
+  // returns if the weapon is cool, i.e. if cool can be used for attacking
   is_weapon_cool() {
     let weapon = this.get_weapon()
     if( weapon && weapon.is('cool') )
@@ -246,6 +248,45 @@ class Entity {
       return true
     return false
   }
+  get_damage_tier(type = 'body') {
+    let weapon = this.get_weapon()
+    if( weapon ) {  // fighting with weapon
+      return weapon.get(type+'_tier')
+    } else { // fighting unarmed
+      let tier = this.get(type+'_tier')
+      if( this.has_trait('martial arts') && type=='body' )
+        tier += 1
+      return tier
+    }
+  }
+  // return amount of damage dealt by entity
+  get_damage_number() {
+    return 2
+  }
+  // returns damage done by the given entity
+  get_damage() {
+    let weapon = this.get_weapon()
+    if( weapon )
+      return weapon.get_damage()
+    
+    return { value: this.get_damage_number(), tier: this.get_damage_tier('body'), type: 'body' }
+  }
+
+  // returns equipment equipped 
+  get_armor() {
+    let armor = this.get_equipped_items().filter(x=>x.position==this.get_armor_slot())
+    if( armor.length>0 && armor[0].is('armor') )
+      return armor[0]
+    return false
+  }
+  get_armor_or_self() {
+    let armor = this.get_armor()
+    return armor|| this
+  }
+  get_armor_tier(type = 'body') {
+    return this.get_armor_or_self().get(type+'_tier')
+  }
+
   
   equip( entity, as = 'weapon' ) {
     entity = game.entity(entity)
@@ -388,37 +429,10 @@ class Entity {
       case 'max_body': return this.get('tough')+3
       case 'max_spirit': return this.get('charm')+3
       case 'size': return this.get('tier')
+      case 'body_tier': return this.get('tier')
+      case 'spirit_tier': return 0
     }
     
-    if(x=='weapon') {
-      let w = this.list_entities_here().filter(x=>x.get('position')=='weapon')
-      if( w.length>0 )
-        return w[0]
-      else
-        return false
-    }
-    if(x=='damage_tier') {
-      let weapon = this.get('weapon')
-      if( weapon )
-        return weapon.get('tier')
-      else
-        return this.get('tier')
-    }
-    
-    if(x=='armour') {
-      let a = this.list_entities_here().filter(x=>x.get('position')=='armour')
-      if( a.length>0 )
-        return a[0]
-      else
-        return false
-    }
-    if(x=='armour_tier') {
-      let armour = this.get('armour')
-      if( armour )
-        return armour.get('tier')
-      else
-        return this.get('tier')
-    }
     if(x=='interior_description') { // && there is no such field (implicit)
       return this.get('description')
     }
@@ -556,36 +570,56 @@ class Entity {
       return false
     }
   }
+
+  build_threat(n = 1, param = {}) {
+    this.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+  }
   
   // lose a resource involuntarily, this entity may receive wounds, may go down
   take_damage(param = {}) {
-    if( typeof param == 'number' )  param = {value: param}
-    param.value ??= 1
-    param.type ??= 'body'
-    param.tier ??= this.get('tier')
-    param.ignore_armour ??= false
+    param = arrayify(param)
+    let total_damage = {body: 0, spirit: 0}
     
-    // damage reduced by difference between damage tier vs target's tier
-    let tier_diff = param.tier - this.get('armour_tier')
-    if( param.ignore_armour )
-      tier_diff = 0
-    let damage = Math.max(param.value + tier_diff, 0)
-    ui.text( {location: this.get_location()}, this,` takes ${damage} points of ${UI.wicon(param.type)} damage.` )
-    console.log(param)
-    this[param.type] -= damage
-    options.log_damage && console.log(`${this} takes ${damage} points of ${UI.wicon(param.type)} damage`)    
-    
-    // checking if damage causes a wound
-    // the wound may make the entity go_down
-    let wound = Math.max(damage - 1, 0)
-    if( wound>0 )
-      this.add_wound(wound)
-    
-    // if any of the points are reduced to zero, the entity shall go_down
-    if( this[param.type] <= 0 )
-      this.go_down()
-    
-    return damage
+    for( let damage of param ) {
+      
+      if( typeof damage == 'number' )  damage = {value: param}
+      damage.value ??= 1
+      damage.type ??= 'body'
+      damage.tier ??= Infinity // this.get('tier')
+      damage.ignore_armour ??= false
+
+      let tier_diff = damage.tier - this.get_armor_tier(damage.type)
+      if( param.ignore_armour )
+        tier_diff = Infinity
+
+      let damage_value = damage.value
+      if( tier_diff>=0 ) {      // higher damage tier: full damage
+        if( tier_diff == 0  )   // same damage tier: half damage (rounded down)
+          damage_value = Math.trunc(damage_value/2)
+        
+        this[damage.type] -= damage_value
+        total_damage[damage.type] += damage_value
+
+        ui.text(`${this} takes `, (tier_diff==0? "half damage only;" : ""),
+          `${damage_value} points of ${UI.wicon(damage.type)} damage.`)
+
+        // if any of the points are reduced to zero, the entity shall go_down
+        if( this[damage.type] <= 0 )
+          this.go_down()        
+      }
+      if( tier_diff<0 ) {       // lower damage tier: no damage
+        damage_value = 0
+        // options.log_damage && console.log(`${this} takes no ${UI.wicon(damage.type)}${damage.type} damage`)
+        ui.text(`${this} takes no ${UI.wicon(damage.type)} damage.`)
+      }  
+      // checking if damage causes a wound
+      // the wound may make the entity go_down
+      // let wound = Math.max(damage - 1, 0)
+      // if( wound>0 )
+      //   this.add_wound(wound)
+      
+    }   // foreach damage
+    return total_damage
   }
   
   // clock ; this is called at the start of this entity's every turn
@@ -755,7 +789,6 @@ class Entity {
       if( !fail ) {
         for( let k of req.knowledge ) {
           if(!(k instanceof Info)) {
-            // console.log(k)
             k = new Info(k)
           }
             
@@ -775,6 +808,37 @@ class Entity {
     return false
   }
 
+  // returns requirements for the given entity (e.g. tough requirement for wearing an armor)
+  get_requirements() {
+    if( 'reqs' in this )
+      return this.reqs
+    return {}
+  }
+
+  // returns if this entity meets the requirements for the other entity (e.g. if player can wear armor)
+  meets_requirements_for( entity ) {
+    entity = game.entity(entity)
+    return this.meets_requirements( entity.get_requirements() )
+  }
+
+  get_bonus( what ) {
+    if( what == undefined ) throw "no param supplied for get_bonus" 
+    let bonus = this.bonus || {}
+    return bonus[what] || 0
+  }
+
+  get_equipment_bonuses(what) {
+    // let items = this.get_equipped_items().filter(x=>this.meets_requirements_for(x))
+    let items = this.get_equipped_items()
+    let bonus = { highest: 0, lowest: 0 }
+    for( let i in items ) {
+      let item_bonus = items[i].get_bonus(what)
+      bonus.highest = Math.max(bonus.highest, item_bonus)
+      bonus.lowest = Math.min(bonus.lowest, item_bonus)
+    }
+    return bonus
+  }
+
   // returns the value of stat (string), with an explanation
   get_stat(stat, e = {}) {
     e.explain = []
@@ -785,6 +849,16 @@ class Entity {
 
     let n = this[stat];
     e.explain.push({value: this[stat], label: "base "+stat})
+
+    let equipment_bonus = this.get_equipment_bonuses(stat)
+    if( equipment_bonus.highest ) {
+      n+= equipment_bonus.highest
+      e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
+    }
+    if( equipment_bonus.lowest ) {
+      n+= equipment_bonus.lowest
+      e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
+    }
     
     for (let t in TRAITS)
       if (this.has_trait(t)) {
@@ -880,7 +954,15 @@ class Entity {
       }
     }
     
-    // todo: consider items ?
+    let equipment_bonus = this.get_equipment_bonuses(test.get_name())
+    if( equipment_bonus.highest ) {
+      n+= equipment_bonus.highest
+      e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
+    }
+    if( equipment_bonus.lowest ) {
+      n+= equipment_bonus.lowest
+      e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
+    }
 
     // considering penalties
     // if( this.has_penalty(test.get_name()) )
@@ -915,8 +997,6 @@ class Entity {
 
   performance_attack(params = {}, e = {}) {
     let stats = ['tough']
-
-    // TODO: handle weapon cool-ness
     if( this.get_stat('cool') > this.get_stat('tough') && this.is_weapon_cool() )
       stats.push(['cool'])
     let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})
@@ -957,35 +1037,7 @@ class Entity {
   exec( cmd ) {
     let event = ""
     let verb = game.verbs[cmd.verb]
-
     let result = verb.run_test(cmd)
-    /*
-    if( verb.test ) {
-      let e = [], e2 = []
-      result = this.performance(verb.test, {}, e)   // TEST for *this* entity
-      options.log_test_results && console.log(`${this}'s performance: ${result}`)
-      
-      let vs_result
-      if( verb.difficulty ) {   // fixed difficulty
-        if( typeof verb.difficulty == 'number' )
-          vs_result = verb.difficulty
-        else
-        if( typeof verb.difficulty == 'function' )
-          vs_result = verb.difficulty(cmd)
-        else
-          throw `don't know how to process difficulty: ${verb.difficulty}`
-      } else
-      if( verb.op1 ) {          // versus test
-        // TODO: use Entity.test() ???              // TEST for *other* entity
-        vs_result = cmd.op1.performance( (verb.test_vs ? verb.test_vs : verb.test), {}, e2 )
-      }
-      options.log_test_results && console.log(`vs performance: ${vs_result}`)        
-      result -= vs_result   // this is where we compare this entity's performance with the other's performance
-    } else {
-      options.log_test_results && console.log(`no test -> auto success`) 
-      result = 1
-    }
-    */
     
     // process result of the test based on <, > and = only
     if( result>=0 ) {

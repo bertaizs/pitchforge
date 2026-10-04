@@ -991,7 +991,7 @@ class UI {
         else
         if( typeof arg == 'string' ) {
           txt+= arg
-          plain_text += arg          
+          plain_text += arg.replace(/<.*?>/g, '')         
         }
       }
       

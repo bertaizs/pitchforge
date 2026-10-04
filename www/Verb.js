@@ -228,12 +228,25 @@ new Verb({
       return ui.text(`There is no point in attacking `, cmd.op1)
     }
     ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
-    let damage = cmd.op1.take_damage({value: 1, tier: cmd.who.get('damage_tier')})
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+
+    cmd.op1.take_damage(cmd.who.get_damage())
+    
+    // damage that could hurt builds threat
+    let dmg = cmd.who.get_damage()
+    if( dmg.tier>= cmd.op1.get_armor_tier() )
+      cmd.op1.build_threat()
+    else 
+      options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
   on_fail: function(cmd) {
-    cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
     ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+
+    // damage that could hurt builds threat
+    let dmg = cmd.who.get_damage()
+    if( dmg.tier>= cmd.op1.get_armor_tier() )
+      cmd.op1.build_threat()
+    else 
+      options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
 })
 
