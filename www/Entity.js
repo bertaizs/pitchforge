@@ -573,6 +573,7 @@ class Entity {
 
   build_threat(n = 1, param = {}) {
     this.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+    options.log_threat && console.log(`threat (${n}) is built on ${this}`)
   }
   
   // lose a resource involuntarily, this entity may receive wounds, may go down
