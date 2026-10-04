@@ -40,6 +40,13 @@ new Entity({
     tier: 1,
 } ).move_to(gloomy_forest)
 
+new Entity({
+    name: "flaming sword",
+    tags: ['melee', 'weapon', 'sword', 'item'],
+    icon: 'knife.png',
+    description: `A simple knife.`,
+    tier: 1,
+} ).move_to(gloomy_forest)
 
 new Entity({
     name: "cowboy hat",
@@ -54,7 +61,7 @@ new Entity({
     name: "jester's hat",
     tags: ['clothing', 'item'],
     // icon: 'knife.png',
-    description: `Howdy?`,
+    description: `Fun!`,
     reqs: { charm: 1 },
     bonus: { cool: 3, sharp: -3 },
 } ).move_to(gloomy_forest)

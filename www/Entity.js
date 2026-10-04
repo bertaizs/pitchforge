@@ -933,15 +933,6 @@ class Entity {
         e.explain.push({label: `${this} does not have aligned trait`, value: 0})
       }
     }
-
-    // let spec = false
-    // for( let i in test.spec )
-    //   if( this.has_spec(test.spec[i]) )
-    //     spec = test.spec[i]
-    // if( spec ) {
-    //   explain.push({value: Entity.stat_specialization_bonus(n), label: `specialized (${spec})`})
-    //   n += n
-    // }
     
     // considering if certain statuses affect the test
     for( let i in test.status ) {
@@ -974,7 +965,10 @@ class Entity {
     // }
     
     // considering randomization: rolls two dice, substracts one from the other (todo: advantage / disadvantage)
-    if( 'randomize' in test && test['randomize'] ) {
+    let randomize = 'randomize' in test && test['randomize']
+    if( 'randomize' in params )
+      randomize = params.randomize
+    if( randomize ) {
       let die_plus = die_roll()
       let die_minus = die_roll()
       e.explain.push({value: die_plus-die_minus, label: `random (${die_plus}-${die_minus})`})
@@ -1002,6 +996,7 @@ class Entity {
     let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})
     let result
     result = this.performance(test, params, e)   // TEST for the one taking action
+    e.label = 'attack'
 
     return result
   }

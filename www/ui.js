@@ -408,6 +408,18 @@ class UI {
       return s
     }
 
+    print_sheet_value(label, value, expl = false) {
+      let s = ``
+      s+= `<tr><td class="table_left table_nopadding">${label}</td><td class="table_right table_nopadding"><span class="numfield">${value}</span> `
+      if( expl )
+        s+= this.print_explanation_tag(expl)
+      s+= `</td>`
+      s+= `</tr>`
+      
+        // !!! // print_explanation_tag
+      return s
+    }
+
     // returns the character sheet of the entity
     // this is also what you see if you LOOK at the entity (from outside)
     print_look_at_entity( entity, params = {} ) { return this.print_sheet(entity, params) }
@@ -419,14 +431,11 @@ class UI {
       let perception = ('perception' in params ? params.perception : Infinity )
       options.log_perception_on_charsheets && console.log( `perception: ${perception}` )
       
-//      let s = `<table><tr><td style="vertical-align: top;">`
       let s = ``
       s+= `<div>`
       if( entity.get('icon') ) {
         s+= this.img(entity.get('icon'))
       }
-//      s+= `</td><td style="vertical-align: top;">`
-
       s+= `</div><div>`
       
       s+= this.print_entity(entity)
@@ -473,28 +482,27 @@ class UI {
       }
       
       // COMBAT
-      let COMBAT = {'attack': true, 'defense': true, 
+      if( perception > Test.EASY && entity.is_creature()) {
+        let e = {}
+        s+= this.print_sheet_value("attack", entity.performance_attack({randomize: false}, e), e)
+        s+= this.print_sheet_value("damage", JSON.stringify(entity.get_damage()) )
+        s+= this.print_sheet_value("damage tier", entity.get_damage_tier() )
+        s+= this.print_sheet_value("defense", entity.performance_defense({}, e), e)
+        s+= this.print_sheet_value("armor tier", entity.get_armor_tier() )
+
+        s+= `<tr><td>&nbsp;</td></tr>`
       }
-      // if( perception > 2 && entity.is_creature()) {
-      //   for( let i in COMBAT ) {
-      //       s+= `<tr><td class="table_left table_nopadding">${i}</td><td class="table_right table_nopadding"><span class="numfield">${plusminus(entity.performance(i))}</span> `
-      //       // s+= `<a onclick="ui.explanation_click('${entity.id}','${i}')">❔</a> `
-      //       // TODO: fix explanation click
-      //       s+= `</td>`
-      //       s+= `</tr>`
-      //   }
-      //   s+= `<tr><td>&nbsp;</td></tr>`
-      // }
 
       // EQUIPMENT & INVENTORY
       if( perception > Test.MUNDANE && entity.is_creature() || entity.is_open_container() ) {
-        let equipped = entity.get_equipped_items()
-        if( equipped.length>0 )
-          s+= this.print_list( equipped, {label: UI.keyword("equipment"), not_if_empty: true, display: ui.print_entity_ministatus} )
-        
-        let nonequipped = entity.get_nonequipped_items()
-        if( nonequipped.length>0 )
-          s+= this.print_list( nonequipped, {label: UI.keyword("inventory"), not_if_empty: false, display: ui.print_entity_ministatus} )
+        s+= this.print_inventory(entity)
+        // let equipped = entity.get_equipped_items()
+        // if( equipped.length>0 )
+        //   s+= this.print_list( equipped, {label: UI.keyword("equipment"), not_if_empty: true, display: ui.print_entity_ministatus} )
+        // 
+        // let nonequipped = entity.get_nonequipped_items()
+        // if( nonequipped.length>0 )
+        //   s+= this.print_list( nonequipped, {label: UI.keyword("inventory"), not_if_empty: false, display: ui.print_entity_ministatus} )
       }
       
       // TRAITS
@@ -790,27 +798,24 @@ class UI {
       }
     }
 
+
+    print_inventory(entity) {
+      entity = game.entity(entity)
+      let s = ``
+      if( ! entity.get_location().is('abstract') ) {        
+        s+= this.print_list( entity.get_equipped_items().sort((x,y)=>(x.position.localeCompare(y.position))),
+                            {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus, show_position: true} )
+        s+= this.print_list( entity.get_nonequipped_items(),
+                            {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
+      }
+      return s
+    }
+    
     // displays player equipment and inventory
     // unless the player's location is abstract
     show_inventory() {
-      let s = ``
-      // if( options.debug ) {
-      //   let d = ``
-      //   d+= `Select: ` +ui.entity_list( game.entities, ui.select_entity )
-      //   d+= ` <a onclick="ui.refresh()">refresh</a> |
-      //   <a onclick="game.tick(); ui.refresh();">tick</a> <br/>`
-      //   document.getElementById('debug').innerHTML = d
-      // }
       
-      if( ! game.get_player().get_location().is('abstract') ) {        
-        s+= `<table>`
-        s+= this.print_list( game.get_player().get_equipped_items().sort((x,y)=>(x.position.localeCompare(y.position))),
-                            {label: "equipment", not_if_empty: true, display: ui.print_entity_ministatus, show_position: true} )
-        s+= this.print_list( game.get_player().get_nonequipped_items(),
-                            {label: "inventory", not_if_empty: true, display: ui.print_entity_ministatus} )
-        s+= `</table>` 
-      }      
-      document.getElementById('inventory').innerHTML = s      
+      document.getElementById('inventory').innerHTML = `<table>`+this.print_inventory(game.get_player())+`</table>`
     }
     
     print_background( background ) {
