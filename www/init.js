@@ -5,6 +5,24 @@
 // player.gain_info({tag: 'alma', category: "Quest", value: 1})
 // player.gain_info({tag: 'korte', category: "Quest", value: "malac"})
 
+let danger_room = new Entity({
+  name: "danger room",
+  tags: ['location'],
+  // icon: 'forest.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Danger room.</p>
+  `,
+})
+
+new Path({
+  from: gloomy_forest, 
+  to: danger_room, 
+  text: `to the danger room`,
+},  {  text: `back into the forest`,  }
+)
+
+
 
 new Entity({
     name: "power armor",
@@ -49,3 +67,25 @@ new Entity({
     reqs: { tough: 2 },
     bonus: { block: 2 },
 } ).move_to(gloomy_forest)
+
+
+
+// enemies
+
+// Entity.spawn( 'ghoul', danger_room )
+
+
+let wight = new Entity({
+    name: "wight",
+    tags: ['undead', 'character', ],
+    // icon: 'vampire4.png',
+    description: `A dangerous wight.`,
+    faction: 'enemy',
+    tough:  3,
+    cool:   2,
+    sharp:  1,
+    charm:  -2,
+    traits: {},
+    tier: 1,
+    location: danger_room,
+})
