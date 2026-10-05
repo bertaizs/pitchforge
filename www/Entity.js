@@ -605,7 +605,7 @@ class Entity {
       let damage = Dmg(d)
 
       let e = Exp({who: this.id, label: `${damage.element} damage`})
-      e.add({label: `incoming ${damage.value} points of tier ${damage.tier} ${damage.type} damage`, value: 0, fixed: true}) 
+      e.add({label: `incoming ${damage.value} points of tier ${damage.tier} ${damage.type} damage`, value: damage.value, fixed: true}) 
       // es.push(e)
 
       let damage_value = damage.value
@@ -643,8 +643,8 @@ class Entity {
           this.go_down()        
       }
       if( tier_diff<0 ) {       // lower damage tier: no damage
+        e.add({label: `ignores low-tier damage`, value: -damage_value})
         damage_value = 0
-        e.add({label: `ignores low-tier damage`, value: 0})
         // options.log_damage && console.log(`${this} takes no ${UI.wicon(damage.type)}${damage.type} damage`)
 
         console.log('e', e)

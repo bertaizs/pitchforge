@@ -11,7 +11,7 @@ class Explanation {
     this.result ??= 0
   }
 
-  add(x = {label: "no label", value: 0}) {
+  add(x = {label: "no label", value: 0, fixed: false}) {
     this.explain.push(x)
   }
 }

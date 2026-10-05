@@ -606,7 +606,7 @@ class UI {
         // let n = 0
         s+= `<table style="border-bottom: 1px solid black;">`
         for( let i in exp[j].explain ) {
-            s+= `\n<tr><td class="explanation_text">${exp[j].explain[i].label}</td><td class="explanation_text" style="width: 2em; text-align: right;">${plusminus(exp[j].explain[i].value)}</td>`
+            s+= `\n<tr><td class="explanation_text">${exp[j].explain[i].label}</td><td class="explanation_text" style="width: 2em; text-align: right;">${ exp[j].explain[i].fixed ? exp[j].explain[i].value : plusminus(exp[j].explain[i].value)  }</td>`
             // n+= exp[j].explain[i].value
         }
         s+= `</table>`
