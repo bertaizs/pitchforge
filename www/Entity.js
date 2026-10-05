@@ -599,34 +599,44 @@ class Entity {
   take_damage(param = {}) {
     param = arrayify(param)
     let total_damage = {body: 0, spirit: 0}
+    // let es = []
     
-    for( let damage of param ) {
-      
-      if( typeof damage == 'number' )  damage = {value: param}
-      damage.value ??= 1
-      damage.type ??= 'body'
-      damage.tier ??= Infinity // this.get('tier')
-      damage.element ??= 'kinetic'
-      damage.ignore_armour ??= false
+    for( let d of param ) {
+      let damage = Dmg(d)
+
+      let e = Exp({who: this.id, label: `${damage.element} damage`})
+      e.add({label: `incoming ${damage.value} points of tier ${damage.tier} ${damage.type} damage`, value: 0, fixed: true}) 
+      // es.push(e)
 
       let damage_value = damage.value
       
       let tier_diff = damage.tier - this.get_armor_tier(damage.type)
       if( tier_diff>=0 ) {      // higher damage tier: full damage
-        if( tier_diff == 0  )   // same damage tier: half damage (rounded down)
+        if( tier_diff == 0  ) { // same damage tier: half damage (rounded down)
+          e.add({label: `damage is halved by same-tier armor`, value: -damage_value+Math.trunc(damage_value/2)})
           damage_value = Math.trunc(damage_value/2)
+        }
         
         if( !param.ignore_armour ) {
           let armor = this.get_armor_or_self().get_armor_value(damage.element)
-          options.log_damage && console.log(`damage is reduced by ${armor} points`)
-          damage_value = Math.max(damage_value-armor,0)   // damage is reduced by armor but cannot go below 0
+          let reduction = Math.min(armor, damage_value)
+
+          let txt = `${damage.element} armor (${armor}) reduces damage by ${reduction} points`
+          options.log_damage && console.log(txt)
+          if( armor )
+            e.add({label: txt, value: -reduction})
+
+          damage_value -= reduction
+          // damage_value = Math.max(damage_value-armor,0)   // damage is reduced by armor but cannot go below 0
         }
 
+        e.result = damage_value
         this[damage.type] -= damage_value
         total_damage[damage.type] += damage_value
 
         ui.text(`${this} takes `, (tier_diff==0? "half damage only;" : ""),
-          `${damage_value} points of ${UI.wicon(damage.type)} damage.`)
+          `${damage_value} points of ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e)
+        )
 
         // if any of the points are reduced to zero, the entity shall go_down
         if( this[damage.type] <= 0 )
@@ -634,9 +644,13 @@ class Entity {
       }
       if( tier_diff<0 ) {       // lower damage tier: no damage
         damage_value = 0
+        e.add({label: `ignores low-tier damage`, value: 0})
         // options.log_damage && console.log(`${this} takes no ${UI.wicon(damage.type)}${damage.type} damage`)
-        ui.text(`${this} takes no ${UI.wicon(damage.type)} damage.`)
-      }  
+
+        console.log('e', e)
+        ui.text(`${this} takes no ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e))
+      }
+      
       // checking if damage causes a wound
       // the wound may make the entity go_down
       // let wound = Math.max(damage - 1, 0)
