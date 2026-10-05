@@ -3,19 +3,27 @@ todo
 
 # top bugs
 
+- arrives is output even if the character does not actually arrive
+
+- a dead player can still walk away if walks just before receiving a finishing blow
+
+# must have
+
 - verb: swapwithweapon
+
 - equipment should display bonuses
 - equipment should display requirements
   - marking requirements not met
 - threat should be displayed more prominently (ministatus?)
 
+- ? high tier damage should ignore armor (order of halving and minus) ?
+
+- ? graze
+
 <!--reworked moves, they now happen at turn end always; this brings up problems:
   - need to ui.event the moves as an attack may happen after the player issued the move command
   - logs about attacks after the player issued a move command are clickable; player can attack someone who is just not there-->
 
-- arrives is output even if the character does not actually arrive
-
-- a dead player can still walk away if walks just before receiving a finishing blow
 
 events should look nicer, there should be an event class
 

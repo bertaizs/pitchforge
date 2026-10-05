@@ -63,6 +63,14 @@ new Entity({
     kinetic_armor: 2,
 }, {template: 'plate mail'})
 
+new Entity({
+    name: "greataxe",
+    tags: ['melee', 'two-handed', 'weapon', 'item',],
+    icon: 'axe.png',
+    description: `A mighty axe forged by the dwarves.`,
+    // tier: 2,
+    damage: Dmg({value: 3, tier: 2}),
+}, {template: 'greataxe'} )
 
 
 
@@ -76,12 +84,12 @@ new Entity({
     tier: 1,
 } ).move_to(gloomy_forest)
 
-new Entity({
+let flaming_sword = new Entity({
     name: "flaming sword",
     tags: ['melee', 'weapon', 'sword', 'item'],
     icon: 'knife.png',
     description: `A simple knife.`,
-    tier: 1,
+    damage: [Dmg({value: 2, tier: 1}), Dmg({value: 1, tier: 1, element: 'energy'})]
 } ).move_to(gloomy_forest)
 
 new Entity({
@@ -139,3 +147,5 @@ let power_armor = Entity.spawn( 'power armor', gloomy_forest )
 let leather_armor = Entity.spawn( 'leather armor', gloomy_forest )
 let chain_mail = Entity.spawn( 'chain mail', gloomy_forest )
 let plate_mail = Entity.spawn( 'plate mail', gloomy_forest )
+
+let greataxe = Entity.spawn( 'greataxe', gloomy_forest )

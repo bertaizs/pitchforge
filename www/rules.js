@@ -40,12 +40,12 @@ const POINTS = {
 }
 
 const ELEMENTS = {
-  kinetic: true,
-  energy: true,
-  bio: true,
-  cyber: true,
-  psy: true,
-  true: true,
+  kinetic: true,  // blue
+  energy: true,   // orange
+  bio: true,      // green
+  cyber: true,    // purple
+  psy: true,      // yellow
+  true: true,     // white
 }
 
 

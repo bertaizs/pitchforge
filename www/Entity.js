@@ -35,9 +35,15 @@ class Entity {
     } else if(this.is_item() ) {
       this.tier ??= -1
     } else {  // location
-      this.tier ?? 2
+      this.tier ??= 2
     }
 
+    if( 'damage' in this ) {
+      this.damage = arrayify(this.damage)
+      for( let i in this.damage )
+        this.damage[i] = Dmg(this.damage[i])
+    }
+    
     if( this.is('weapon') || this.is('armor') || this.is('clothing') )
       this.set_tag('equipment')
         
@@ -263,16 +269,19 @@ class Entity {
     }
   }
   // return amount of damage dealt by entity
-  get_damage_number() {
-    return 2
-  }
+  // get_damage_number() {
+  //   return 2
+  // }
   // returns damage done by the given entity
   get_damage() {
     let weapon = this.get_weapon()
     if( weapon )
       return weapon.get_damage()
-    
-    return { value: this.get_damage_number(), tier: this.get_damage_tier('body'), type: 'body' }
+  
+    if( 'damage' in this )
+      return this.damage
+    else
+      return Dmg({value: 2, type: 'body', element: 'kinetic', tier: this.get('tier')})
   }
 
   // returns equipment equipped as armor; false if no armor is equipped
