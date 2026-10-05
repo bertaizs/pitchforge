@@ -38,7 +38,7 @@ class Entity {
       this.tier ?? 2
     }
 
-    if( this.is('weapon') || this.is('armor') )
+    if( this.is('weapon') || this.is('armor') || this.is('clothing') )
       this.set_tag('equipment')
         
     if( this.is('locked') ) {
@@ -1148,7 +1148,7 @@ class Entity {
       c.add_quick({label: "wear as armor", sortkey: 61,
           cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: this.get_armor_slot()})})
     }
-    if( game.get_player().has(this) && !this.is('armor') && !this.position ) {
+    if( game.get_player().has(this) && this.is('equipment') && !this.is('armor') && !this.position ) {
       let slots = game.get_player().get_inventory_slots()
       for( let i in slots ) {
         if( slots[i]!='weapon') {
