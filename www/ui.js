@@ -493,6 +493,12 @@ class UI {
         s+= this.print_sheet_value("defense", entity.performance_defense({}, e), e)
         s+= this.print_sheet_value("armor tier", entity.get_armor_tier() )
 
+        for( let i in ELEMENTS ) {
+          let armor = entity.get_armor_value(i)
+          if( armor )
+            s+= this.print_sheet_value(i+" armor", armor )
+        }
+        
         s+= `<tr><td>&nbsp;</td></tr>`
       }
 

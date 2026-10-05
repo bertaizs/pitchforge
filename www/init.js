@@ -22,15 +22,51 @@ new Path({
 },  {  text: `back into the forest`,  }
 )
 
-
+// test entities
 
 new Entity({
     name: "power armor",
     tags: ['heavy', 'armor', 'item'],
     // icon: 'axe.png',
     description: `I'VE GOT THE POWER!`,
-    tier: 4,
-} ).move_to(gloomy_forest)
+    tier: 2,
+    kinetic_armor: 2,
+    energy_armor: 2,
+    psy_armor: 1,
+}, {template: 'power armor'})
+
+new Entity({
+    name: "leather armor",
+    tags: ['armor', 'item'],
+    // icon: 'axe.png',
+    description: `I'VE GOT THE POWER!`,
+    tier: 0,
+    kinetic_armor: 1,
+    energy_armor: 1,
+}, {template: 'leather armor'})
+
+new Entity({
+    name: "chain mail",
+    tags: ['armor', 'item'],
+    // icon: 'axe.png',
+    description: `I'VE GOT THE POWER!`,
+    tier: 1,
+    kinetic_armor: 1,
+}, {template: 'chain mail'})
+
+new Entity({
+    name: "plate mail",
+    tags: ['heavy', 'armor', 'item'],
+    // icon: 'axe.png',
+    description: `I'VE GOT THE POWER!`,
+    tier: 1,
+    kinetic_armor: 2,
+}, {template: 'plate mail'})
+
+
+
+
+
 
 new Entity({
     name: "dagger",
@@ -96,3 +132,10 @@ let wight = new Entity({
     tier: 1,
     location: danger_room,
 })
+
+
+
+let power_armor = Entity.spawn( 'power armor', gloomy_forest )
+let leather_armor = Entity.spawn( 'leather armor', gloomy_forest )
+let chain_mail = Entity.spawn( 'chain mail', gloomy_forest )
+let plate_mail = Entity.spawn( 'plate mail', gloomy_forest )

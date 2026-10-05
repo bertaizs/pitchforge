@@ -37,6 +37,9 @@ class Entity {
     } else {  // location
       this.tier ?? 2
     }
+
+    if( this.is('weapon') || this.is('armor') )
+      this.set_tag('equipment')
         
     if( this.is('locked') ) {
       this.tough ??= Test.ADVANCED
@@ -272,19 +275,35 @@ class Entity {
     return { value: this.get_damage_number(), tier: this.get_damage_tier('body'), type: 'body' }
   }
 
-  // returns equipment equipped 
+  // returns equipment equipped as armor; false if no armor is equipped
   get_armor() {
     let armor = this.get_equipped_items().filter(x=>x.position==this.get_armor_slot())
     if( armor.length>0 && armor[0].is('armor') )
       return armor[0]
     return false
   }
+  // returns armor; if no armor is equipped, return this entity (who will act as their own armor)
   get_armor_or_self() {
     let armor = this.get_armor()
     return armor|| this
   }
+  // returns the tier either from this entity or from the equipped armor (whichever is better)
   get_armor_tier(type = 'body') {
-    return this.get_armor_or_self().get(type+'_tier')
+    let armor_tier = this.get('tier')     // natural armor tier
+    let armor = this.get_armor()
+    if( armor && armor.get('tier') > armor_tier )
+      armor_tier = armor.get('tier')
+    return armor_tier
+  }
+  // return armor value for a given damage element (kinetic, energy, etc)
+  // either from this entity or from the equipped armor (whichever is better)
+  get_armor_value(element = 'kinetic') {
+    let armor_attr = element + '_armor'
+    let armor_value = this.get(armor_attr, 0)   // natural armor
+    let armor = this.get_armor()
+    if( armor && armor.get(armor_attr, 0)>armor_value )
+      armor_value = armor.get(armor_attr, 0)    // if equipped armor is better, return that one
+    return armor_value
   }
 
   
@@ -587,17 +606,22 @@ class Entity {
       damage.value ??= 1
       damage.type ??= 'body'
       damage.tier ??= Infinity // this.get('tier')
+      damage.element ??= 'kinetic'
       damage.ignore_armour ??= false
 
-      let tier_diff = damage.tier - this.get_armor_tier(damage.type)
-      if( param.ignore_armour )
-        tier_diff = Infinity
-
       let damage_value = damage.value
+      
+      let tier_diff = damage.tier - this.get_armor_tier(damage.type)
       if( tier_diff>=0 ) {      // higher damage tier: full damage
         if( tier_diff == 0  )   // same damage tier: half damage (rounded down)
           damage_value = Math.trunc(damage_value/2)
         
+        if( !param.ignore_armour ) {
+          let armor = this.get_armor_or_self().get_armor_value(damage.element)
+          options.log_damage && console.log(`damage is reduced by ${armor} points`)
+          damage_value = Math.max(damage_value-armor,0)   // damage is reduced by armor but cannot go below 0
+        }
+
         this[damage.type] -= damage_value
         total_damage[damage.type] += damage_value
 

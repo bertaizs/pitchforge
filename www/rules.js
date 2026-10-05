@@ -39,6 +39,15 @@ const POINTS = {
   }
 }
 
+const ELEMENTS = {
+  kinetic: true,
+  energy: true,
+  bio: true,
+  cyber: true,
+  psy: true,
+  true: true,
+}
+
 
 // const CP_PER_LEVEL = 4;
 
