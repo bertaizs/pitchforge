@@ -11,19 +11,28 @@ todo
 
 - verb: swapwithweapon
 
+- threat should be displayed more prominently (ministatus?)
+
 - equipment should display bonuses
+
 - equipment should display requirements
   - marking requirements not met
-- threat should be displayed more prominently (ministatus?)
 
 - ? high tier damage should ignore armor (order of halving and minus) ?
 
-- ? graze
+- ? graze hits
 
-<!--reworked moves, they now happen at turn end always; this brings up problems:
-  - need to ui.event the moves as an attack may happen after the player issued the move command
-  - logs about attacks after the player issued a move command are clickable; player can attack someone who is just not there-->
 
+- greades
+  - frag grenade
+  - emp grendade
+  - poison grenade
+
+- robots
+  - patrol droid
+  - cyber droid
+  - battle droid
+  - drone
 
 events should look nicer, there should be an event class
 
