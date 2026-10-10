@@ -215,14 +215,14 @@ class Entity {
   // true if this entity has at least one entity/item whose name matches the given pattern
   has_a( pattern ) {
     for( let item of this.get_inventory() )
-      if( item.get_name().match(pattern) )
+      if( item.get_name().match(pattern) || item.is(pattern) )
         return true
     return false
   }
 
   // true if this entity has at least one entity/item whose name matches the given pattern
   has_a_equipped( pattern ) {
-    for( let item of this.get_equipped_items() )
+    for( let item of this.get_equipped_items() || item.is(pattern) )
       if( item.get_name().match(pattern) )
         return true
     return false
