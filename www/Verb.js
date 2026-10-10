@@ -394,6 +394,22 @@ new Verb({
   sortkey: 4,
 })
 
+new Verb({
+  name: 'control',
+  icon: '🕹️',
+  text: `Control another creature.`,
+  type: 'control',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    cmd.who.controlling = cmd.op1.id
+    cmd.op1.add_status({name: 'controlled'})
+    cmd.op1.add_status({name: 'stunned'})
+    ui.text(cmd.who, `takes control of`, cmd.op1, `.`)
+  },
+  sortkey: 6,
+})
+
 
 // new Verb({
 //   name: 'use',

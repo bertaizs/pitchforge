@@ -80,6 +80,23 @@ new Entity({
 }, {template: 'cyberdeck'} )
 
 
+new Entity({
+    name: "battle droid",
+    tags: ['robot', 'character', ],
+    // icon: 'vampire4.png',
+    description: `A huge armored droid.`,
+    faction: 'enemy',
+    tough:  8,
+    cool:   2,
+    sharp:  3,
+    charm:  1,
+    traits: {},
+    tier: -2,
+}, {template: "battle droid"})
+
+
+
+
 
 new Entity({
     name: "dagger",
@@ -155,3 +172,5 @@ let chain_mail = Entity.spawn( 'chain mail', gloomy_forest )
 
 let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
 let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
+
+let droid = Entity.spawn( 'battle droid', gloomy_forest )

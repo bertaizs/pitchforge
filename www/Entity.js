@@ -222,8 +222,8 @@ class Entity {
 
   // true if this entity has at least one entity/item whose name matches the given pattern or meets tag
   has_a_equipped( pattern ) {
-    for( let item of this.get_equipped_items() || item.is(pattern) )
-      if( item.get_name().match(pattern) )
+    for( let item of this.get_equipped_items() )
+      if( item.get_name().match(pattern) || item.is(pattern) )
         return true
     return false
   }
@@ -1222,6 +1222,13 @@ class Entity {
       c.add( new Choice({label: `attack ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'attack', op1: this}
       }), 'attack' )
+    }
+
+    if( this.is('robot') && this.id!=game.get_player().id 
+        && game.get_player().has_a_equipped('cyberdeck')
+    ) {
+      c.add_quick({label:  `hack ${this} and take control`,
+        cmd: new Cmd({who: game.get_player(), verb: 'control', op1: this})})                  
     }
 
     if( game.get_player().id == this.id ) {
