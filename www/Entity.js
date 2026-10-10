@@ -212,7 +212,7 @@ class Entity {
     return item.get_location().id == this.id
   }
   
-  // true if this entity has at least one entity/item whose name matches the given pattern
+  // true if this entity has at least one entity/item whose name matches the given pattern or meets tag
   has_a( pattern ) {
     for( let item of this.get_inventory() )
       if( item.get_name().match(pattern) || item.is(pattern) )
@@ -220,7 +220,7 @@ class Entity {
     return false
   }
 
-  // true if this entity has at least one entity/item whose name matches the given pattern
+  // true if this entity has at least one entity/item whose name matches the given pattern or meets tag
   has_a_equipped( pattern ) {
     for( let item of this.get_equipped_items() || item.is(pattern) )
       if( item.get_name().match(pattern) )
@@ -1175,7 +1175,7 @@ class Entity {
       c.add_verb('unequip', cmd, this)
     }
     if( this.is('weapon') && game.get_player().has(this) && this.get('position') && this.get('position')!='weapon'  ) {
-      c.add_quick({label:  "swap with weapon", sortkey: 70,
+      c.add_quick({label:  "swap with weapon"+UI.icon('quick'), sortkey: 70,
         cmd: new Cmd({who: game.get_player(), verb: 'swap', op1: this})})                  
     }
 

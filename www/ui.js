@@ -13,6 +13,7 @@ class UI {
     if( text in POINTS ) return POINTS[text].icon
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
     if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].icon || ''
+    if( text=='quick' ) return `⏩`
     // if( text=='moves' ) return '➡️'    
     return ''
   }

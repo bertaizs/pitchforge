@@ -72,7 +72,12 @@ new Entity({
     damage: Dmg({value: 3, tier: 2}),
 }, {template: 'greataxe'} )
 
-
+new Entity({
+    name: "deck super 2000",
+    tags: ['cyberdeck', 'equipment', 'item',],
+    // icon: 'axe.png',
+    description: `A cyberdeck for hacking stuff.`,
+}, {template: 'cyberdeck'} )
 
 
 
@@ -143,9 +148,10 @@ let wight = new Entity({
 
 
 
-let power_armor = Entity.spawn( 'power armor', gloomy_forest )
+// let power_armor = Entity.spawn( 'power armor', gloomy_forest )
 let leather_armor = Entity.spawn( 'leather armor', gloomy_forest )
 let chain_mail = Entity.spawn( 'chain mail', gloomy_forest )
-let plate_mail = Entity.spawn( 'plate mail', gloomy_forest )
+// let plate_mail = Entity.spawn( 'plate mail', gloomy_forest )
 
 let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
+let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
