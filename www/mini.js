@@ -35,3 +35,19 @@ class Damage {
   }  
 }
 function Dmg(x) { return new Damage(x) }
+
+
+class Requirements {
+  constructor(value = {}) {
+    for( let i in value )
+        this[i] = value[i]
+
+    this.traits ??= {}
+    this.knowledge ??= []
+    this.knowledge = arrayify(this.knowledge)
+    this.items ??= []
+    this.items = arrayify(this.items)
+    this.equipment ??= []
+  }  
+}
+function Reqs(x) { return new Requirements(x) }

@@ -804,25 +804,16 @@ class Entity {
   // - knowledge
   // - items like items: [/compass/, ham] (these are validate via has_a and match)
   meets_requirements( reqs ) {
-    if( !(reqs instanceof Array) )
-      reqs = [reqs]   // ensures we have an array
+    reqs = arrayify(reqs)
+    for( let req in reqs )
+      if( !(reqs[req] instanceof Requirements) )
+        reqs[req] = Reqs(reqs[req])
     
     if( reqs.length==0 || (reqs.length==1 && isEmpty(reqs[0])) )  // empty list means no requirements --> fulfilled
       return true
     
-    for( let req of reqs ) {
-      req.traits ??= {}
-      req.knowledge ??= []
-      
-      req.items ??= []
-      if( !Array.isArray(req.items)) 
-        req.items = [req.items]
-      // if( 'item' in req ) 
-      //   req.items.push(req.item)
-      
-      if( !(req.knowledge instanceof Array) )
-        req.knowledge = [req.knowledge]
-      
+    for( let req of reqs ) {      
+      console.log(req)
       let fail = false
 
       for( let i in req ) {

@@ -20,7 +20,7 @@ todo
 
 - ? high tier damage should ignore armor (order of halving and minus) ?
 
-- ? graze hits
+- ? graze hits: half damage
 
 
 - greades
