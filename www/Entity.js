@@ -1174,7 +1174,13 @@ class Entity {
     if( game.get_player().has(this) && this.position ) {
       c.add_verb('unequip', cmd, this)
     }
+    if( this.is('weapon') && game.get_player().has(this) && this.get('position') && this.get('position')!='weapon'  ) {
+      c.add_quick({label:  "swap with weapon", sortkey: 70,
+        cmd: new Cmd({who: game.get_player(), verb: 'swap', op1: this})})                  
+    }
 
+
+    
     if( this.is('open') ) {
       c.add_verb('close', cmd, this)  
     }

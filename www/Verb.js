@@ -334,7 +334,7 @@ new Verb({
 })
 
 new Verb({
-  name: 'equip',  // as weapon
+  name: 'equip',  // as weapon or into one of the item slots
   icon: '🧤', // 🧤🧢
   text: `Wield the given item as a weapon or equip it as armour.`,
   type: 'inventory',
@@ -351,7 +351,7 @@ new Verb({
 })
 
 new Verb({
-  name: 'unequip',  // as weapon
+  name: 'unequip',  // from any item slot
   type: 'inventory',
   test: false,
   op1: true,
@@ -366,6 +366,34 @@ new Verb({
   },
   sortkey: 4,
 })
+
+new Verb({
+  name: 'swap',  // as weapon
+  icon: '🔁',
+  text: `Swap the given equipped weapon with the weapon in your hand.`,
+  type: 'inventory',
+  test: false,
+  op1: true,
+  on_success: function(cmd) {
+    if( !cmd.who.has( cmd.op1) )
+      return ui.text(cmd.who, ` does not have `, cmd.op1, `.`)
+    if( !cmd.op1.get('position') )
+      return ui.text(cmd.who, ` does not have `, cmd.op1, `equipped.`)
+    if( !cmd.op1.is('weapon') )
+      return ui.text(cmd.op1, ` is not a weapon.`)
+    
+    let original_weapon = cmd.who.get_weapon()
+    let original_location = cmd.op1.get('position')
+
+    cmd.who.equip( cmd.op1, 'weapon' )
+    if( original_weapon )
+      cmd.who.equip( original_weapon, original_location )
+
+    cmd.quick = true
+  },
+  sortkey: 4,
+})
+
 
 // new Verb({
 //   name: 'use',
