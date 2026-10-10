@@ -219,6 +219,14 @@ class Entity {
         return true
     return false
   }
+
+  // true if this entity has at least one entity/item whose name matches the given pattern
+  has_a_equipped( pattern ) {
+    for( let item of this.get_equipped_items() )
+      if( item.get_name().match(pattern) )
+        return true
+    return false
+  }
   
   pick_up( entity ) {
     entity = game.entity(entity)
@@ -838,6 +846,12 @@ class Entity {
       if( !fail ) {
         for( let it in req.items ) {
           if( !this.has_a(req.items[it]) )
+            fail = true
+        }
+      }
+      if( !fail ) {
+        for( let it in req.equipment ) {
+          if( !this.has_a_equipped(req.equipment[it]) )
             fail = true
         }
       }
