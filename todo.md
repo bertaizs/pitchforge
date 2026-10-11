@@ -3,8 +3,6 @@ todo
 
 # top bugs
 
-- arrives is output even if the character does not actually arrive
-
 - a dead player can still walk away if walks just before receiving a finishing blow
 
 # must have

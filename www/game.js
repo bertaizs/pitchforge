@@ -172,6 +172,7 @@ class Game {
         ui.text(this.initiative_order[i], ' arrives at ', destination_entity) 
         
         this.initiative_order[i].move_to(destination_entity)
+        delete this.initiative_order[i].heading
       }
       
     }
