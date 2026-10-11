@@ -526,10 +526,18 @@ class Entity {
     this.spirit = this.get('max_spirit')
   }
 
+  remove_all_threat() {
+    if( this.has_status('threat') ) {
+      // options.log_threat && console.log(`${this} is no longer under threat`)
+      ui.text(this, ` is no longer under threat.`)
+      this.remove_status('threat')
+    }
+  }
+  
   recover() {
     this.body = this.get('max_body')
     this.spirit = this.get('max_spirit')
-    this.remove_status('threat')
+    this.remove_all_threat()
   }
   
   add_status( status = {}, params = {} ) {
@@ -689,7 +697,10 @@ class Entity {
   tick() {
     if( options.no_ticks ) return false
     options.log_entity_ticks && console.log(`tick: ${this} (#${this.id})`)
-    
+
+    if( !this.is_in_combat() ) 
+      this.remove_all_threat()
+  
     for( let i in this.status ) {
       if(this.status[i].timer) this.status[i].timer--
       

@@ -195,6 +195,9 @@ class Game {
     }
 
     let current_entity = this.get_current_entity()
+
+
+    // computer controlled entities take their turn here, this loop goes on until we reach a player
     while( current_entity.is_machine_controlled() || current_entity.has_status('stunned') ) { 
       current_entity.tick() // machine controlled entity's turn starts with tick
 
@@ -211,9 +214,10 @@ class Game {
       current_entity = this.next_entity()  // proceed to next entity
     }
     
-    current_entity.tick() // player controlled entity's turn starts with tick
     options.log_character_turns && console.log(`It is ${current_entity}'s (#${current_entity.id}) turn; handing control to user.`)
-    // options.log_character_turns && console.log(`Handing control to user.`)
+    current_entity.tick()
+    // handling control back to player...
+
   } // main_loop
   
   run() { 

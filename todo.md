@@ -7,8 +7,6 @@ todo
 
 # bugs
 
-threat does not seem to disappear???
-
 greataxe damage is explicitly defined, so returned as an array
   ... some things don't work with damage arrays
   same with flaming sword

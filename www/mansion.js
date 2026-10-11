@@ -6,7 +6,7 @@ game.set_title("Secrets of the Mansion - Revamped")
 
 // define the start location
 let gloomy_forest = new Entity({
-  name: "Gloomy Forest",
+  name: "gloomy forest",
   tags: ['start', 'location'],
   icon: 'forest.png',
   // description: `<p></p>`,
@@ -69,7 +69,7 @@ let player = new Entity({
   
 
 let clearing_edge = new Entity({
-  name: "Edge of the clearing",
+  name: "edge of the clearing",
   icon: 'forest_mansion_in_distance.png',
   // description: `<p></p>`,
   interior_description: 
@@ -152,7 +152,7 @@ let cellar_door = new Entity({
   })
   
 let mansion_front = new Entity({
-  name: "In front of the Mansion",
+  name: "mansion front",
   icon: 'mansion_front.png',
   // description: `<p></p>`,
   interior_description: 

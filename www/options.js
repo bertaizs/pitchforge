@@ -19,7 +19,7 @@ options.log_tests = false
 options.log_test_results = false
 
 options.log_damage = true
-options.log_threat = false
+options.log_threat = true
 
 options.log_move = false
 options.log_move_actions = true
