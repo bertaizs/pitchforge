@@ -227,7 +227,7 @@ new Verb({
     if( !cmd.op1.is_character() ) {
       return ui.text(`There is no point in attacking `, cmd.op1, `.`)
     }
-    ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
+    ui.text(cmd.who, ` attacks `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
     let dmg = cmd.who.get_damage()
     cmd.op1.take_damage(dmg)
@@ -239,7 +239,7 @@ new Verb({
       options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
   on_fail: function(cmd) {
-    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+    ui.text(cmd.who, ` attacks `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
 
     // damage that could hurt builds threat
     let dmg = cmd.who.get_damage()
@@ -273,7 +273,7 @@ new Verb({
     if( !cmd.op1.is_character() ) {
       return ui.text(`There is no point in attacking `, cmd.op1, `.`)
     }
-    ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
+    ui.text(cmd.who, ` performs a heavy attack on `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
     let dmg = cmd.who.get_damage()
     dmg.value += HEAVY_ATTACK_BONUS_DAMAGE
@@ -286,7 +286,7 @@ new Verb({
       options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
   on_fail: function(cmd) {
-    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+    ui.text(cmd.who, ` attempts a heavy attack vs `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
 
     // damage that could hurt builds threat
     let dmg = cmd.who.get_damage()

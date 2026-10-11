@@ -2,7 +2,7 @@
 game.set_title("Secrets of the Mansion - Revamped")
 
 
-game.character_backgrounds2 = {
+game.character_backgrounds = {
   private_eye: {
     label: `private eye`,
     tough:  2,

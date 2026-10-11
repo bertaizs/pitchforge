@@ -508,16 +508,21 @@ class UI {
         s+= `<tr><td>&nbsp;</td></tr>`
       }
 
-      // EQUIPMENT & INVENTORY
-      if( perception > Test.MUNDANE && entity.is_creature() || entity.is_open_container() ) {
-        s+= this.print_inventory(entity)
-        // let equipped = entity.get_equipped_items()
-        // if( equipped.length>0 )
-        //   s+= this.print_list( equipped, {label: UI.keyword("equipment"), not_if_empty: true, display: ui.print_entity_ministatus} )
-        // 
-        // let nonequipped = entity.get_nonequipped_items()
-        // if( nonequipped.length>0 )
-        //   s+= this.print_list( nonequipped, {label: UI.keyword("inventory"), not_if_empty: false, display: ui.print_entity_ministatus} )
+      // bonuses
+      if( perception >= 0 && entity.is_item() && 'bonus' in entity ) {
+        s+= this.print_sheet_value( UI.keyword("<br/>bonuses"), "" )                  
+        for( let b in entity.bonus ) {
+          s+= this.print_sheet_value( b, entity.get_bonus(b) )          
+        }
+      }
+      // requirements
+      if( perception >= 0 && entity.is_item() && 'reqs' in entity ) {
+        let reqs = entity.get_requirements()
+        let met = game.get_player().meets_requirements(reqs)
+        s+= this.print_sheet_value( UI.keyword("<br/>requirements"), (met ? "" : "<br/><div class='reqs_not_met'>not met</div>") )
+        for( let r in reqs ) {
+          s+= this.print_sheet_value( r, reqs[r] )          
+        }
       }
       
       // TRAITS
@@ -528,6 +533,11 @@ class UI {
             Object.keys(traits),
             {label: UI.keyword("traits"), not_if_empty: true, display: (x)=>UI.keyword(x) }
           )        
+      }
+
+      // EQUIPMENT & INVENTORY
+      if( perception > Test.MUNDANE && entity.is_creature() || entity.is_open_container() ) {
+        s+= this.print_inventory(entity)
       }
       
       // STATUSES
@@ -1028,7 +1038,8 @@ class UI {
       if( 'type' in event == false ) throw `printing event without a type ${event}`
       
       if( event.type == 'text' ) {
-        return `<p>`+sentence(event.text)+`</p>`
+        return `<p>`+event.text+`</p>`
+        // return `<p>`+sentence(event.text)+`</p>`
       }
       throw `don't know what to do with an event of type `+event.type
     }

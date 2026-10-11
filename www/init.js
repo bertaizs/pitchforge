@@ -124,7 +124,7 @@ let flaming_sword = new Entity({
     damage: [Dmg({value: 2, tier: 1}), Dmg({value: 1, tier: 1, element: 'energy'})]
 } ).move_to(gloomy_forest)
 
-new Entity({
+let cowboy_hat = new Entity({
     name: "cowboy hat",
     tags: ['clothing', 'item'],
     // icon: 'knife.png',
