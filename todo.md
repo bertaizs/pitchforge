@@ -12,17 +12,13 @@ greataxe damage is explicitly defined, so returned as an array
   same with flaming sword
 default damage is returned as an object
 
-
 # must have
-
-- equipment should display bonuses
-
-- equipment should display requirements
-  - marking requirements not met
 
 - ? high tier damage should ignore armor (order of halving and minus) ?
 
 - ? graze hits: half damage
+
+
 
 
 - grenades
