@@ -229,10 +229,10 @@ new Verb({
     }
     ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
-    cmd.op1.take_damage(cmd.who.get_damage())
+    let dmg = cmd.who.get_damage()
+    cmd.op1.take_damage(dmg)
     
     // damage that could hurt builds threat
-    let dmg = cmd.who.get_damage()
     if( dmg.tier>= cmd.op1.get_armor_tier() )
       cmd.op1.build_threat()
     else 
@@ -275,12 +275,11 @@ new Verb({
     }
     ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
-    let damage = cmd.who.get_damage()
-    damage.value += HEAVY_ATTACK_BONUS_DAMAGE
-    cmd.op1.take_damage(damage)
+    let dmg = cmd.who.get_damage()
+    dmg.value += HEAVY_ATTACK_BONUS_DAMAGE
+    cmd.op1.take_damage(dmg)
     
     // damage that could hurt builds threat
-    let dmg = cmd.who.get_damage()
     if( dmg.tier>= cmd.op1.get_armor_tier() )
       cmd.op1.build_threat()
     else 
@@ -297,6 +296,54 @@ new Verb({
       options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
 })
+
+
+new Verb({
+  name: 'feint',
+  icon: '⚔️',
+  text: `Feint an attack; do no damage, but if it works, build threat.`,
+  type: 'combat',
+  test: 'feint',
+  test_vs: 'perception',
+  op1: true,
+
+  // run_who_test(cmd) {
+  //   let result = cmd.who.performance_attack({bonus: HEAVY_ATTACK_DIFFICULTY}, cmd.e)
+  //   cmd.e.label = "attack"
+  //   return result
+  // },
+  // run_op1_test(cmd) {
+  //   return cmd.op1.performance_defense({}, cmd.e2)
+  // },
+  
+  on_success: function(cmd) {
+    if( !cmd.op1.is_character() ) {
+      return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    }
+    ui.text(cmd.who, ` feints `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
+
+    let dmg = cmd.who.get_damage()
+    // damage.value += HEAVY_ATTACK_BONUS_DAMAGE
+    
+    // damage that could hurt builds threat
+    if( dmg.tier>= cmd.op1.get_armor_tier() )
+      cmd.op1.build_threat(dmg.value)
+    else 
+      options.log_threat && console.log(`no threat is built as attack could not damage`)
+  },
+  on_fail: function(cmd) {
+    ui.text(cmd.who, ` feints, but `, cmd.op1, ` does not fall for it.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+
+    // damage that could hurt builds threat
+    // let dmg = cmd.who.get_damage()
+    // if( dmg.tier>= cmd.op1.get_armor_tier() )
+    //   cmd.op1.build_threat()
+    // else 
+    //   options.log_threat && console.log(`no threat is built as attack could not damage`)
+  },
+})
+
+
 
 
 // new Verb({

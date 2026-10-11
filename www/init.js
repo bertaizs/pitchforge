@@ -22,7 +22,7 @@ new Path({
 },  {  text: `back into the forest`,  }
 )
 
-// test entities
+// test entity templates
 
 new Entity({
     name: "power armor",
@@ -79,6 +79,15 @@ new Entity({
     description: `A cyberdeck for hacking stuff.`,
 }, {template: 'cyberdeck'} )
 
+new Entity({
+    name: "wooden shield",
+    tags: ['shield', 'item'],
+    // icon: 'knife.png',
+    description: `A sturdy wooden shield.`,
+    reqs: { tough: 2 },
+    bonus: { block: 2 },
+}, {template: "shield"} ).move_to(gloomy_forest)
+
 
 new Entity({
     name: "battle droid",
@@ -95,8 +104,9 @@ new Entity({
 }, {template: "battle droid"})
 
 
-
-
+//
+// Entity instances
+// 
 
 new Entity({
     name: "dagger",
@@ -123,29 +133,8 @@ new Entity({
     bonus: { cool: 3, perception: 10 },
 } ).move_to(gloomy_forest)
 
-new Entity({
-    name: "jester's hat",
-    tags: ['clothing', 'item'],
-    // icon: 'knife.png',
-    description: `Fun!`,
-    reqs: { charm: 1 },
-    bonus: { cool: 3, sharp: -3 },
-} ).move_to(gloomy_forest)
-
-new Entity({
-    name: "wooden shield",
-    tags: ['shield', 'item'],
-    // icon: 'knife.png',
-    description: `A sturdy wooden shield.`,
-    reqs: { tough: 2 },
-    bonus: { block: 2 },
-} ).move_to(gloomy_forest)
-
-
 
 // enemies
-
-// Entity.spawn( 'ghoul', danger_room )
 
 
 let wight = new Entity({
@@ -174,3 +163,6 @@ let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
 let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
 
 let droid = Entity.spawn( 'battle droid', gloomy_forest )
+
+
+player.gain_trait("combat")

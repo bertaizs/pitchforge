@@ -5,6 +5,14 @@ todo
 
 - a dead player can still walk away if walks just before receiving a finishing blow
 
+# bugs
+
+greataxe damage is explicitly defined, so returned as an array
+  ... some things don't work with damage arrays
+  same with flaming sword
+default damage is returned as an object
+
+
 # must have
 
 - chargen should be moved into game-specific part

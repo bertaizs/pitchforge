@@ -80,6 +80,8 @@ Test.register({stat: 'charm'})
 Test.register({name: "block",     trait: 'combat',      stat: 'tough',  status: {'threat': -1}})
 Test.register({                   trait: 'evasion',     stat: 'cool',   status: {'threat': -1}})
 
+Test.register({name: "feint",     trait: 'combat',     stat: 'cool', randomize: true})
+
 
 Test.register({name: "resistance",   stat: 'charm', status: {'threat': -1}})
 

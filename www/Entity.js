@@ -613,6 +613,8 @@ class Entity {
   }
 
   build_threat(n = 1, param = {}) {
+    console.log(999)
+    ui.text(this, ` receives ${n} points of ${UI.wicon('threat')}.`)
     this.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
     options.log_threat && console.log(`threat (${n}) is built on ${this}`)
   }
@@ -1232,7 +1234,12 @@ class Entity {
             cmd: {who: game.get_player(), verb: 'heavy attack', op1: this},
             reqs: {tough: 2},
         } )        
+        c.add( {label: `feint ${the(this)}`,
+            cmd: {who: game.get_player(), verb: 'feint', op1: this},
+            reqs: {tough: 2},
+        } )        
       }
+
       
     }
 

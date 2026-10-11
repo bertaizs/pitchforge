@@ -14,6 +14,7 @@ class UI {
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
     if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].icon || ''
     if( text=='quick' ) return `⏩`
+    if( text=='threat' ) return `❗`
     // if( text=='moves' ) return '➡️'    
     return ''
   }
@@ -1010,7 +1011,8 @@ class UI {
         }
       }
       
-      event.text = sentence(txt)
+      // event.text = sentence(txt)
+      event.text = txt
       event.plaintext = plain_text
       
       ui.add_event(event)
