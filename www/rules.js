@@ -44,7 +44,7 @@ const ELEMENTS = {
   energy: true,   // orange
   bio: true,      // green
   cyber: true,    // purple
-  psy: true,      // yellow
+  psy: true,      // cyan
   true: true,     // white
 }
 
@@ -113,6 +113,11 @@ function DIFFICULTY(d = {}) {
   stat += d.difficulty
   return stat
 }
+
+
+const HEAVY_ATTACK_DIFFICULTY = -2
+const HEAVY_ATTACK_BONUS_DAMAGE = 2
+
 
 const BONUS = 3;
 const PENALTY = -BONUS;

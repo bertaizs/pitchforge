@@ -225,7 +225,7 @@ new Verb({
   
   on_success: function(cmd) {
     if( !cmd.op1.is_character() ) {
-      return ui.text(`There is no point in attacking `, cmd.op1)
+      return ui.text(`There is no point in attacking `, cmd.op1, `.`)
     }
     ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
@@ -249,6 +249,55 @@ new Verb({
       options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
 })
+
+
+new Verb({
+  name: 'heavy attack',
+  icon: '⚔️',
+  text: `Heavy attack someone with the currently equipped melee weapon.`,
+  type: 'combat',
+  test: 'attack',
+  test_vs: 'defense',
+  op1: true,
+
+  run_who_test(cmd) {
+    let result = cmd.who.performance_attack({bonus: HEAVY_ATTACK_DIFFICULTY}, cmd.e)
+    cmd.e.label = "attack"
+    return result
+  },
+  run_op1_test(cmd) {
+    return cmd.op1.performance_defense({}, cmd.e2)
+  },
+  
+  on_success: function(cmd) {
+    if( !cmd.op1.is_character() ) {
+      return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    }
+    ui.text(cmd.who, ` strikes `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
+
+    let damage = cmd.who.get_damage()
+    damage.value += HEAVY_ATTACK_BONUS_DAMAGE
+    cmd.op1.take_damage(damage)
+    
+    // damage that could hurt builds threat
+    let dmg = cmd.who.get_damage()
+    if( dmg.tier>= cmd.op1.get_armor_tier() )
+      cmd.op1.build_threat()
+    else 
+      options.log_threat && console.log(`no threat is built as attack could not damage`)
+  },
+  on_fail: function(cmd) {
+    ui.text(cmd.who, ` swings at `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+
+    // damage that could hurt builds threat
+    let dmg = cmd.who.get_damage()
+    if( dmg.tier>= cmd.op1.get_armor_tier() )
+      cmd.op1.build_threat()
+    else 
+      options.log_threat && console.log(`no threat is built as attack could not damage`)
+  },
+})
+
 
 // new Verb({
 //   name: 'kick',

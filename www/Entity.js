@@ -265,6 +265,11 @@ class Entity {
       return true
     return false
   }
+  is_weapon_melee() {
+    let weapon = this.get_weapon()
+    if( ! weapon ) return true  // unarmed is melee
+    return weapon.is('melee')
+  }
   get_damage_tier(type = 'body') {
     let weapon = this.get_weapon()
     if( weapon ) {  // fighting with weapon
@@ -821,7 +826,6 @@ class Entity {
       return true
     
     for( let req of reqs ) {      
-      console.log(req)
       let fail = false
 
       for( let i in req ) {
@@ -1032,7 +1036,7 @@ class Entity {
 
     // consider bonus/malus
     if( 'bonus' in test ) {
-      e.explain.push({value: test.bonus, label: `bonus/malus`})
+      e.explain.push({value: test.bonus, label: `bonus/minus`})
       n += test.bonus
     }
 
@@ -1179,8 +1183,6 @@ class Entity {
         cmd: new Cmd({who: game.get_player(), verb: 'swap', op1: this})})                  
     }
 
-
-    
     if( this.is('open') ) {
       c.add_verb('close', cmd, this)  
     }
@@ -1218,10 +1220,20 @@ class Entity {
       }) )
     }
 
+    // hostile creatures
     if( this.is_hostile_to(game.get_player()) ) {
-      c.add( new Choice({label: `attack ${the(this)}`,
+
+      c.add( {label: `attack ${the(this)}`,
           cmd: {who: game.get_player(), verb: 'attack', op1: this}
-      }), 'attack' )
+      }, 'attack' )
+
+      if( cmd.who.has_trait('combat') && cmd.who.is_weapon_melee() ) {
+        c.add( {label: `heavy attack ${the(this)}`,
+            cmd: {who: game.get_player(), verb: 'heavy attack', op1: this},
+            reqs: {tough: 2},
+        } )        
+      }
+      
     }
 
     if( this.is('robot') && this.id!=game.get_player().id 

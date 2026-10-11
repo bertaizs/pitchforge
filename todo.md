@@ -9,7 +9,7 @@ todo
 
 # must have
 
-- verb: swapwithweapon
+- chargen should be moved into game-specific part
 
 - threat should be displayed more prominently (ministatus?)
 
@@ -23,9 +23,9 @@ todo
 - ? graze hits: half damage
 
 
-- greades
+- grenades
   - frag grenade
-  - emp grendade
+  - emp grenade
   - poison grenade
 
 - robots
@@ -39,7 +39,6 @@ events should look nicer, there should be an event class
 
 # lesser multi-choice bugs
 
-- chargen should be moved into game-specific part
 
 - choices should use builtin test features of verbs
 
@@ -120,7 +119,6 @@ cemetery, ghost
   weapon bonuses
 
 * alternative moves
-  - heavy attack
   - feint
   - aim / snipe
   - kick / martial arts

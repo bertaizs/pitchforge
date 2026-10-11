@@ -64,6 +64,9 @@ class ChoiceList {
   }
 
   add( choice, tag = false ) {
+    if( !(choice instanceof Choice) ) // ensure we are using a Choice
+      choice = new Choice(choice)
+    
     if( !tag ) { // if no tag, add the choice with a number as its tag
       this.arr.push(choice)
       return this
@@ -76,6 +79,7 @@ class ChoiceList {
     return this
   }
 
+  // TODO: retire, replaced by add
   add_quick( choice_data, tag = false ) {
     this.add( new Choice(choice_data), tag )
     return this
