@@ -15,8 +15,6 @@ default damage is returned as an object
 
 # must have
 
-- chargen should be moved into game-specific part
-
 - equipment should display bonuses
 
 - equipment should display requirements

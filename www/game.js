@@ -307,112 +307,44 @@ game.base_char = {cp: 0}
 game.character_icons = ['male0.png', 'male1.png', 'male2.png', 'female_trenchcoat4.png', 'female2.png', 'female3.png', 'female_trenchcoat2.png', 'unknown_trenchcoat.png', 'unknown_raincoat2.png', 'chargen2.png',],
 
 game.character_backgrounds = {
-  private_eye: {
-    label: `private eye`,
-    tough:  2,
-    cool:   2,
-    sharp:  2,
-    charm:  1,
-    inventory: ['magnifying glass'],
-    traits: ['perception'],
-  },
-  doctor: {
-    label: `doctor`,
-    tough:  0,
-    cool:   2,
-    sharp:  3,
-    charm:  0,
-    cp:     1,
-    traits: ['medicine'],
-    inventory: ["doctor's bag"],
-  },
-  bruiser: {
-    label: `bruiser`,
+  fighter: {
+    label: `fighter`,
     tough:  4,
     cool:   0,
     sharp:  0,
     charm:  0,
-    // traits: ['bruiser'],
-    inventory: ['crowbar', 'knife']  
+    // inventory: ['knife', 'crowbar'],
+    traits: ['combat', 'perception', 'survival'],
   },
-  secretAgent: {
-    label: `secret agent`,
-    tough:  1,
-    cool:   2,
-    sharp:  2,
-    charm:  2,
-    traits: ['sneaking', 'social'],
-    inventory: ['knife'], // revolver?
-  },
-  thief: {
-    label: `thief`,
+
+  trickster: {
+    label: `trickster`,
     tough:  1,
     cool:   3,
     sharp:  2,
     charm:  0,
-    traits: ['sneaking', 'lockpicking', 'pickpocket'],
-    inventory: ['lockpicks', 'crowbar']
+    // inventory: ['knife', 'lockpicks'],
+    traits: ['perception', 'evasion', 'stealth', 'lockpicking'],
   },
-  handyman: {
-    label: `handyman`,
-    tough:  2,
-    cool:   3,
-    sharp:  1,
-    charm:  0,
-    traits: ['crafting', 'repair'],
-    inventory: ['toolkit', 'crowbar']
-  },
-  office_worker: {
-    label: `office worker`,
+
+  brainy: {
+    label: `brainy`,
     tough:  0,
-    cool:   0,
-    sharp:  0,
-    charm:  0,
-    cp: 10,
-    inventory: ['red stapler']
-  },
-  kungfu: {
-    label: `kung-fu master`,
-    tough:  2,
-    cool:   3,
-    sharp:  1,
-    charm:  0,
-    traits: ['martial arts'],
-  },
-  chess: {
-    label: `chess player`,
-    tough: -1,
     cool:   1,
-    sharp:  5,
-    charm:  0,
-    traits: ['chess', 'absent minded'],
-  },
-  salesman: {
-    label: `salesman`,
-    tough:  1,
-    cool:  -2,
-    sharp:  1,
-    charm:  4,
-    traits: ['social'],
-  },
-  occultist: {
-    label: `occultist`,
-    tough: -1,
-    cool:   0,
-    sharp:  1,
-    charm:  4,
-    traits: ['occultism', 'sixth sense', 'creepy'],
-    knowledge: [
-      { tag: 'slaying_vampires',
-        text: `As an occultist, you know how to slay creatures of the night. For example, ghouls are simple creatures, you just need to beat them and they go down. However, to slay a vampire you need to drive a stake through their heart. You can also destroy them if you incinerate them completely, either by fire or by exposure to direct sunlight.` }
-    ]
-  },
-  sandwichman: {
-    label: `sandwichman`,
-    tough:  2,
-    cool:   1,
-    sharp:  2,
+    sharp:  3,
     charm:  2,
-    cp: 3,
+    // inventory: [],
+    traits: ['science', 'tech use', 'lore'],
   },
+  
+  talker: {
+    label: `talker`,
+    tough:  1,
+    cool:   0,
+    sharp:  2,
+    charm:  3,
+    // inventory: [],
+    traits: ['social', 'persuasion'],
+  },
+  
 }
