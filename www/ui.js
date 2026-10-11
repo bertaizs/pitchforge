@@ -208,6 +208,7 @@ class UI {
     params.body ??= true
     params.spirit ??= false
     // params.moves ??= false
+    params.threat ??= true
     
     let s = ``
     s+= `<span class="ministatus">`
@@ -222,6 +223,9 @@ class UI {
         s+= " "+UI.icon('body')+entity.get('body')
       if( params.spirit )
         s+= " "+UI.icon('spirit')+entity.get('spirit')
+      if( params.threat && entity.get_status('threat') )
+        s+= " &ndash; "+UI.icon('threat')+entity.get_status('threat').magnitude
+      
       // if( params.moves ) {
       //   s+= " "
       //   for( let i=0; i<entity.get('moves'); i++ )

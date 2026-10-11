@@ -7,6 +7,8 @@ todo
 
 # bugs
 
+threat does not seem to disappear???
+
 greataxe damage is explicitly defined, so returned as an array
   ... some things don't work with damage arrays
   same with flaming sword
@@ -16,8 +18,6 @@ default damage is returned as an object
 # must have
 
 - chargen should be moved into game-specific part
-
-- threat should be displayed more prominently (ministatus?)
 
 - equipment should display bonuses
 

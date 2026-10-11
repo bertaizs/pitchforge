@@ -615,7 +615,7 @@ class Entity {
   build_threat(n = 1, param = {}) {
     console.log(999)
     ui.text(this, ` receives ${n} points of ${UI.wicon('threat')}.`)
-    this.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
+    this.add_status({name: 'threat', timer: false, magnitude: n}, {stack_magnitude: true})
     options.log_threat && console.log(`threat (${n}) is built on ${this}`)
   }
   
