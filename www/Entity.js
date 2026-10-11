@@ -44,7 +44,7 @@ class Entity {
         this.damage[i] = Dmg(this.damage[i])
     }
     
-    if( this.is('weapon') || this.is('armor') || this.is('clothing') )
+    if( this.is('weapon') || this.is('armor') || this.is('offhand') || this.is('shield')|| this.is('clothing') )
       this.set_tag('equipment')
         
     if( this.is('locked') ) {
@@ -1172,17 +1172,17 @@ class Entity {
 
     // EQUIPMENT
     if( this.is('weapon') && game.get_player().has(this) && !this.position ) {
-      c.add_verb('equip', cmd, this, {label: "wield as weapon"})
+      c.add_verb('equip', cmd, this, {label: `wield ${the(this)} as weapon`})
     }
     if( this.is('armor') && game.get_player().has(this) && !this.position ) {
-      c.add_quick({label: "wear as armor", sortkey: 61,
+      c.add_quick({label: `wear ${the(this)} as armor`, sortkey: 61,
           cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: this.get_armor_slot()})})
     }
     if( game.get_player().has(this) && this.is('equipment') && !this.is('armor') && !this.position ) {
       let slots = game.get_player().get_inventory_slots()
       for( let i in slots ) {
         if( slots[i]!='weapon') {
-          c.add_quick({label:  "equip as "+slots[i], sortkey: 60+i,
+          c.add_quick({label:  `equip ${the(this)} as `+slots[i], sortkey: 60+i,
             cmd: new Cmd({who: game.get_player(), verb: 'equip', op1: this, where: slots[i]})})          
         }
       }
@@ -1191,7 +1191,7 @@ class Entity {
       c.add_verb('unequip', cmd, this)
     }
     if( this.is('weapon') && game.get_player().has(this) && this.get('position') && this.get('position')!='weapon'  ) {
-      c.add_quick({label:  "swap with weapon"+UI.icon('quick'), sortkey: 70,
+      c.add_quick({label:  `swap ${the(this)} with weapon`+UI.icon('quick'), sortkey: 70,
         cmd: new Cmd({who: game.get_player(), verb: 'swap', op1: this})})                  
     }
 

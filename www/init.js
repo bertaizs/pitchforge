@@ -159,6 +159,8 @@ let leather_armor = Entity.spawn( 'leather armor', gloomy_forest )
 let chain_mail = Entity.spawn( 'chain mail', gloomy_forest )
 // let plate_mail = Entity.spawn( 'plate mail', gloomy_forest )
 
+let shield = Entity.spawn( 'shield', gloomy_forest )
+
 let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
 let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
 

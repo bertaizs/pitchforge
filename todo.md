@@ -47,6 +47,7 @@ events should look nicer, there should be an event class
   * may add a period (.) inside a link
 
 - choices from templates do not work properly :( workaroud: global choices.. not good...
+  --> hook table with functions, remains static, refer to these functions
 
 
 # rework as multiple-choice
