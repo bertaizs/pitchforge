@@ -18,6 +18,13 @@ class Game {
     this.current_entity_n = 0   // index of the current entity in the initiative order
 
     this.global_choices = new ChoiceList()
+
+    this.fn = {
+      nop: function( cmd ) {
+        console.log("nop", cmd)
+      }
+      
+    }
   }
 
   entity(e) {
@@ -39,6 +46,15 @@ class Game {
     this.player_id = e.id
     ui.cmd.who = e
   }
+
+  // register function fn in this.fn under the key tag;
+  // tag becomes a fresh number omitted
+  register_fn( fn, tag = false ) {
+    if( !tag )
+      tag = Object.keys(this.fn).length + ""    
+    this.fn[tag] = fn
+  }
+
   
   // disable all verbs in the game; none will work
   // only debug verbs will remain, as they are for debugging
