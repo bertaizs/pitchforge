@@ -505,7 +505,12 @@ let cage = new Entity({
   })
     game.register_fn( cmd=>{
       if( dogmeat.is_at(cage) && cage.is('open') ) {
-        dogmeat.head_towards(mansion_right)
+        cage.icon = 'empty_cage.png'
+        cage.name = 'empty cage'
+        cage.description = `The cage is empty now.`
+        ui.text(dogmeat, ` comes out of the cage.`)
+        dogmeat.move_to(mansion_right)
+        // dogmeat.head_towards(mansion_right)
       }
       ui.text(dogmeat, `barks.`)
     }, 'bark')

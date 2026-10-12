@@ -508,9 +508,9 @@ class Entity {
   get_description() {
     let s = this.get('description') 
     if( this.is('open') )
-      s+= `<p>${sentence(this.get_name())} is open.</p>`
+      s+= `<p>${capitalize(this.get_name())} is open.</p>`
     if( this.is('closed') )
-      s+= `<p>${sentence(this.get_name())} is closed.</p>`
+      s+= `<p>${capitalize(this.get_name())} is closed.</p>`
     return s
   }
 
@@ -1116,15 +1116,18 @@ class Entity {
   
   
   // this entity picks a hostile target and attack it
-  autoattack() {
+  autoattack(params = {}) {
+    params.nop_text ??= ` has no target, passes.`
+    
     let hostiles = this.list_hostiles_here()  // auto-attack hostiles
     if( hostiles.length>0 ) {
       let target = hostiles[random(hostiles.length)]
       game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
       return true
     }    
-    else {    // TODO: ?? move to act() ??
-      ui.add_event({text: `${this} has no target, passes.`, location: this.get_location()})
+    else {
+      ui.text(this, params.nop_text)
+      // ui.add_event({text: `${this} has no target, passes.`, location: this.get_location()})
       return false
     }
   }
