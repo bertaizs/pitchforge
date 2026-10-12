@@ -473,6 +473,47 @@ let shed = new Entity({
   `,
 })
 
+let cage = new Entity({
+  name: "cage with a dog inside",
+  tags: ['prop', 'locked', 'closed'],
+  icon: 'dog_caged.jpg',
+  description: `<p>A hungry dog is locked in a cage.</p>`,
+  interior_description: 
+  `<p>You are inside the dog's cage. You really shouldn't be here.</p>
+  `,
+}).move_to(mansion_right)
+
+  let dogmeat = new Entity({
+      name: "dog",
+      tags: ['beast', 'character'],
+      icon: 'dog_angry.png',
+      description: `A very angry dog.`,
+      faction: 'neutral',
+      attitude: -2,
+      tough:  5,
+      cool:   3,
+      sharp:  3,
+      charm:  3,
+      traits: {},
+      location: cage,
+      // location: mansion_right,
+      clues: [
+        new Clue({ text: `'Dogmeat' reads a name tag on his collar. Why would anyone give this name to a dog?`, reqs: {perception: Test.EASY}, flag: true }),
+      ],
+      act_fn: 'bark',
+      knocked: false,
+  })
+    game.register_fn( cmd=>{
+      if( dogmeat.is_at(cage) && cage.is('open') ) {
+        dogmeat.head_towards(mansion_right)
+      }
+      ui.text(dogmeat, `barks.`)
+    }, 'bark')
+
+
+
+
+
   new Path({
     from: gloomy_forest, 
     to: clearing_edge, 

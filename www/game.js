@@ -55,6 +55,14 @@ class Game {
     this.fn[tag] = fn
   }
 
+  // run registered function fn with parameter Command cmd and return its result
+  invoke_fn(tag, cmd = false) {
+    if( !(tag in this.fn) ) throw `no such custom function: `+fn
+
+    options.log_game_fns && console.log(`invoked`, tag, cmd)
+    return this.fn[tag](cmd)
+  }
+
   
   // disable all verbs in the game; none will work
   // only debug verbs will remain, as they are for debugging
@@ -185,7 +193,7 @@ class Game {
         if( options.log_move_actions ) 
           console.log(`${this.initiative_order[i]} moves to ${destination_entity}`)
 
-        ui.text(this.initiative_order[i], ' arrives at ', destination_entity) 
+        ui.text(this.initiative_order[i], ' arrives at ', destination_entity, '.') 
         
         this.initiative_order[i].move_to(destination_entity)
         delete this.initiative_order[i].heading

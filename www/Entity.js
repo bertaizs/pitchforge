@@ -679,7 +679,7 @@ class Entity {
         // options.log_damage && console.log(`${this} takes no ${UI.wicon(damage.type)}${damage.type} damage`)
 
         console.log('e', e)
-        ui.text(`${this} takes no ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e))
+        ui.text(this, `takes no ${UI.wicon(damage.type)} damage. `+ui.print_explanation_tag(e))
       }
       
       // checking if damage causes a wound
@@ -1134,6 +1134,9 @@ class Entity {
   act() {
     if( !this.is_character() )    // only characters do something by default
       return false
+
+    if( 'act_fn' in this )
+      game.invoke_fn(this.act_fn)
     
     this.autoattack()   // default action is an autoattack
   }

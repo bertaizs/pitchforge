@@ -1024,9 +1024,9 @@ class UI {
           plain_text += arg.replace(/<.*?>/g, '')         
         }
       }
-      
+
       // event.text = sentence(txt)
-      event.text = txt
+      event.text = capitalizeFirstWordHTML(txt)
       event.plaintext = plain_text
       
       ui.add_event(event)

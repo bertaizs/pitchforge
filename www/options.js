@@ -41,7 +41,7 @@ options.log_events = true       // also log anything outputted as an event
 
 options.show_tags = false
 
-
+options.log_game_fns = true
 
 options.debug = false    // debug mode
 
