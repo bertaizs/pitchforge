@@ -1,7 +1,7 @@
 
 var options = {}
 
-options.pictures_location = 'pics'
+options.pictures_location = '../pics'
 options.picture_ext = 'png'
 
 // check if running online

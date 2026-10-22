@@ -3,24 +3,25 @@
   <head>
     <meta charset="utf-8">
     <title>chargen</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="${style}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="utils.js"></script>
-    <script src="options.js"></script>
+    <script src="${pitchforge}/utils.js"></script>
+    <script src="${pitchforge}/options.js"></script>
 
-    <script src="Info.js"></script>
-    <script src="Test.js"></script>
-    <script src="rules.js"></script>
-    <script src="Entity.js"></script>
-    <script src="Path.js"></script>
-    <script src="Clue.js"></script>
-    <script src="Verb.js"></script>
-    <script src="Choice.js"></script>
-    <script src="Cmd.js"></script>
-    <script src="game.js"></script>
+    <script src="${pitchforge}/mini.js"></script>
+    <script src="${pitchforge}/Info.js"></script>
+    <script src="${pitchforge}/Test.js"></script>
+    <script src="${pitchforge}/rules.js"></script>
+    <script src="${pitchforge}/Entity.js"></script>
+    <script src="${pitchforge}/Path.js"></script>
+    <script src="${pitchforge}/Clue.js"></script>
+    <script src="${pitchforge}/Verb.js"></script>
+    <script src="${pitchforge}/Choice.js"></script>
+    <script src="${pitchforge}/Cmd.js"></script>
+    <script src="${pitchforge}/game.js"></script>
 
-    <script src="ui.js"></script>
+    <script src="${pitchforge}/ui.js"></script>
 
   </head>
   <body>
@@ -41,21 +42,22 @@
               <div id="entity_choices"><!-- choices appear here for the entity you click --></div>
           </td></tr>
           <tr><td>
+              <div id="explanation" onclick="ui.hide_explanation()"></div>
+          </td></tr>
+          <tr><td>
               <div id="player_info" ></div>
               <div id="inventory" ></div>
           </td></tr>
       </table>
   
-  
-      <!-- hide all these, not needed -->
-      <!--<div id="cmd" >cmd</div>-->
-      
-      <!--<div id="expl" >&nbsp;</div>-->
       <div id="debug" ></div>
 
   </body>
 <!-- the below points to the file defining the game; everything else can be standard -->
-  <script src="game_stub.js"></script>
+
+    ${game_include}
+
+    <script src="${pitchforge}/init.js"></script>
   
   <script>
     game.run()    // starts main loop, returns when player is in control

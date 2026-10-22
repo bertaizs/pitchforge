@@ -3,6 +3,9 @@ JPG_DIR := jpg
 
 
 
+orc:
+	node tools/populate.js games/orcpie.json template/game_stub.html >  www/orcpie/orc_and_pie.html
+
 
 upload:
 	gcloud config set project revamped-berta-hu
@@ -26,4 +29,4 @@ test:
 	gsutil -m -h "Cache-Control:no-store" rsync -r tmp/  gs://revamped-test.berta.hu/
 
 docs:
-    echo docs
+	echo docs
