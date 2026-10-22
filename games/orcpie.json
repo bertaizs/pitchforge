@@ -1,0 +1,7 @@
+{
+  "style": "../style.css",
+  "pitchforge": "../pf",
+
+  "game_include": "<script src='orc_and_pie.js'></script>"
+  
+}
