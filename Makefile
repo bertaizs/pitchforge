@@ -1,14 +1,17 @@
 PNG_DIR := png
 JPG_DIR := jpg
 
-games: orc mansion
+games: orc mansion stub
 
 orc:
-	node tools/populate.js games/orcpie.json template/game_stub.html >  www/orcpie/orc_and_pie.html
+	node tools/populate.js games/orcpie.json template/game_template.html >  www/orcpie/orc_and_pie.html
 
 mansion:
-	node tools/populate.js games/mansion.json template/game_stub.html >  www/mansion/mansion.html
+	node tools/populate.js games/mansion.json template/game_template.html >  www/mansion/mansion.html
 
+stub:
+	node tools/populate.js games/game_stub.json template/game_template.html >  www/stub/game_stub.html
+	
 upload:
 	gcloud config set project revamped-berta-hu
 	gcloud app deploy
