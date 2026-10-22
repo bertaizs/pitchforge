@@ -1,0 +1,7 @@
+{
+  "style": "../style.css",
+  "pitchforge": "../pf",
+
+  "game_include": "<script src='mansion.js'></script>"
+  
+}
