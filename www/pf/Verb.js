@@ -224,36 +224,19 @@ new Verb({
   },
   
   on_success: function(cmd) {
-    console.log( 'ATTACK!', 'cmd', cmd)
-
-    let graze = cmd.result
-    let p = {}
-    if(graze)
-      p.half = "graze"
-    
-    if( !cmd.op1.is_character() ) {
-      return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    // if( !cmd.op1.is_character() ) {
+    //   return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    // }
+    let p = {
+      attack_text: "attacks",
     }
-    ui.text(cmd.who, ` attacks `, cmd.op1, ` and ${graze?'grazes':'hits'}.`, ui.print_explanation_tag([cmd.e, cmd.e2])    )
-
-    let dmg = cmd.who.get_damage()
-    cmd.op1.take_damage(dmg, p)
-    
-    // damage that could hurt builds threat
-    if( dmg.tier>= cmd.op1.get_armor_tier() )
-      cmd.op1.build_threat()
-    else 
-      options.log_threat && console.log(`no threat is built as attack could not damage`)
+    cmd.who.hit( cmd.op1, p, cmd )        
   },
   on_fail: function(cmd) {
-    ui.text(cmd.who, ` attacks `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
-
-    // damage that could hurt builds threat
-    let dmg = cmd.who.get_damage()
-    if( dmg.tier>= cmd.op1.get_armor_tier() )
-      cmd.op1.build_threat()
-    else 
-      options.log_threat && console.log(`no threat is built as attack could not damage`)
+    let p = {
+      attack_text: "attacks",
+    }
+    cmd.who.miss( cmd.op1, p, cmd )
   },
 })
 
@@ -277,30 +260,20 @@ new Verb({
   },
   
   on_success: function(cmd) {
-    if( !cmd.op1.is_character() ) {
-      return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    // if( !cmd.op1.is_character() ) {
+    //   return ui.text(`There is no point in attacking `, cmd.op1, `.`)
+    // }
+    let p = {
+      attack_text: "performs heavy attack",
+      extra_damage_first: HEAVY_ATTACK_BONUS_DAMAGE,
     }
-    ui.text(cmd.who, ` performs a heavy attack on `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
-
-    let dmg = cmd.who.get_damage()
-    dmg.value += HEAVY_ATTACK_BONUS_DAMAGE
-    cmd.op1.take_damage(dmg)
-    
-    // damage that could hurt builds threat
-    if( dmg.tier>= cmd.op1.get_armor_tier() )
-      cmd.op1.build_threat()
-    else 
-      options.log_threat && console.log(`no threat is built as attack could not damage`)
+    cmd.who.hit( cmd.op1, p, cmd )    
   },
   on_fail: function(cmd) {
-    ui.text(cmd.who, ` attempts a heavy attack vs `, cmd.op1, ` but misses.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
-
-    // damage that could hurt builds threat
-    let dmg = cmd.who.get_damage()
-    if( dmg.tier>= cmd.op1.get_armor_tier() )
-      cmd.op1.build_threat()
-    else 
-      options.log_threat && console.log(`no threat is built as attack could not damage`)
+    let p = {
+      attack_text: "performs heavy attack",
+    }
+    cmd.who.miss( cmd.op1, p, cmd )
   },
 })
 

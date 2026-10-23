@@ -627,26 +627,39 @@ class Entity {
   }
   
   // lose a resource involuntarily, this entity may receive wounds, may go down
+  // damages is ultimately converted into a list of one and more Damage objects 
+  // (it can be a list or an individual value or an object which is not Damage, it is converted regardless)
   take_damage(damages = {}, param = {}) {
-    damages = arrayify(damages)
+    damages = arrayify(damages)   // ensuring param is array
     let total_damage = {body: 0, spirit: 0}
-    
-    for( let d of damages ) {
-      let damage = Dmg(d)
 
-      let e = Exp({who: this.id, label: `${damage.element} damage`})
-      e.add({label: `incoming ${damage.value} points of tier ${damage.tier} ${damage.type} damage`, value: damage.value, fixed: true}) 
+    options.log_damage && console.log( 'damage', damages, param )
+    
+    let first = true    // used for applying modifiers to first instance only
+    for( let d of damages ) {
+      let damage = Dmg(d)         // ensuring it is a Damage object
 
       let damage_value = damage.value
+      if(param.extra_damage_all) {
+        damage_value += param.extra_damage_all        
+      }
+      if(first && param.extra_damage_first ) {
+        damage_value += param.extra_damage_first
+      }
+
+      let e = Exp({who: this.id, label: `${damage.element} damage`})
+      e.add({label: `incoming ${damage_value} points of tier ${damage.tier} ${damage.type} damage`, value: damage_value, fixed: true}) 
+
       
       let tier_diff = damage.tier - this.get_armor_tier(damage.type)
       if( tier_diff>=0 ) {      // higher or equal damage tier: full damage
-        if( tier_diff == 0  ) { // same tier damage, armor applies
 
-          if( param.half ) {
-            e.add({label: `damage is halved ${typeof param.half=='string' ? " ("+param.half+")" : "" }`, value: -damage_value+Math.trunc(damage_value/2)})
-            damage_value = Math.trunc(damage_value/2)            
-          }
+        if( param.half ) {
+          e.add({label: `damage is halved ${typeof param.half=='string' ? " ("+param.half+")" : "" }`, value: -damage_value+Math.trunc(damage_value/2)})
+          damage_value = Math.trunc(damage_value/2)            
+        }
+
+        if( tier_diff == 0  ) { // same tier damage, armor applies
 
           if( !d.ignore_armour ) {
             let armor = this.get_armor_or_self().get_armor_value(damage.element)
@@ -671,10 +684,13 @@ class Entity {
         this[damage.type] -= damage_value
         total_damage[damage.type] += damage_value
 
-        ui.text(`${this} takes `, (tier_diff==0? "half damage only;" : ""),
-          `${damage_value} points of ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e)
-        )
+        ui.text( this, ` takes `,` ${damage_value} points of ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e) ) 
+        // ui.text(`${this} takes `, (tier_diff==0? "half damage only;" : ""),
+        //   `${damage_value} points of ${UI.wicon(damage.type)} damage.`+ui.print_explanation_tag(e)
+        // )
 
+        first = false
+        
         // if any of the points are reduced to zero, the entity shall go_down
         if( this[damage.type] <= 0 )
           this.go_down()        
@@ -696,6 +712,77 @@ class Entity {
       
     }   // foreach damage
     return total_damage
+  }
+
+  can_be_hurt_by( damages ) {
+    damages = arrayify(damages)
+    let armor_tier = this.get_armor_tier()
+    
+    for( let damage of damages ) {
+      if( damage.tier >= armor_tier )
+        return true
+    }
+    return false
+  }
+  
+  // called when this entity hits Entity whom with command cmd
+  hit(whom,  params = {}, cmd = {}) {
+
+    let who = this
+    whom = game.entity(whom)
+
+    params.attack_text ??= `attacks`
+    params.hit_text ??= `hits`
+    params.graze_text ??= `grazes the target`
+    params.no_damage ??= false
+    params.threat_damage ??= false
+    params.build_threat ??= 1
+    params.allow_graze ??= true
+    params.half_damage_on_graze ??= true
+    params.damages ??= false
+    params.extra_damage_first ??= 0
+    params.extra_damage_all ??= 0
+
+    let graze = ((cmd.result == 0) && params.allow_graze)
+    console.log( 'graze', graze )
+    let damages = params.damages || who.get_damage()
+
+    ui.text( who, ` ${params.attack_text} `, whom, ` and ${graze?params.graze_text:params.hit_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
+    
+    let p = {}
+    if( graze && params.half_damage_on_graze )
+      p.half = "graze"
+    p.extra_damage_all = params.extra_damage_all
+    p.extra_damage_first = params.extra_damage_first
+    
+    if( !params.no_damage ) {
+      whom.take_damage(damages, p)
+    }
+
+    if( whom.is_up() && params.build_threat && whom.can_be_hurt_by(damages) ) {
+      if( params.threat_damage ) {
+        console.log("TODO!!!")        // todo: threat damage (feint)
+      } else {
+        whom.build_threat(params.build_threat)
+      }
+    }
+  }
+
+  // called when this entity misses Entity whom with command cmd
+  miss(whom, params = {}, cmd) {
+    let who = this
+    whom = game.entity(whom)
+
+    params.build_threat ??= 1
+    params.attack_text ??= `attacks`
+    params.miss_text ??= `but misses`
+
+    ui.text( who, ` ${params.attack_text} `, whom, ` and ${params.miss_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
+    
+    if( params.build_threat ) {
+      whom.build_threat(params.build_threat)      
+    }
+    
   }
   
   // clock ; this is called at the start of this entity's every turn

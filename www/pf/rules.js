@@ -43,7 +43,7 @@ const ELEMENTS = {
   kinetic: true,  // blue
   energy: true,   // orange
   bio: true,      // green
-  cyber: true,    // purple
+  tech: true,     // purple
   psy: true,      // cyan
   true: true,     // white
 }
