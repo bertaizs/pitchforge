@@ -494,8 +494,10 @@ class UI {
       if( perception > Test.EASY && entity.is_creature()) {
         let e = {}
         s+= this.print_sheet_value("attack", entity.performance_attack({randomize: false}, e), e)
-        s+= this.print_sheet_value("damage", JSON.stringify(entity.get_damage()) )
-        s+= this.print_sheet_value("damage tier", entity.get_damage_tier() )
+        let damages = entity.get_damage()
+        
+        s+= this.print_sheet_value("damage", '<div class="value">'+entity.get_damage().map(x=>x.toString()).join(" + <br/> ")+'</div>' )
+        // s+= this.print_sheet_value("damage tier", entity.get_damage_tier() )
         s+= this.print_sheet_value("defense", entity.performance_defense({}, e), e)
         s+= this.print_sheet_value("armor tier", entity.get_armor_tier() )
 

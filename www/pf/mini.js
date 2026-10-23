@@ -32,7 +32,11 @@ class Damage {
     this.element ??= 'kinetic'
 
     this.ignore_armor ??= false
-  }  
+  }
+
+  toString() {
+    return `${this.value} points of ${this.element} damage vs ${this.type} (tier ${this.tier})`
+  }
 }
 function Dmg(x) { return new Damage(x) }
 

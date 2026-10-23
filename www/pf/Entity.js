@@ -291,10 +291,14 @@ class Entity {
     if( weapon )
       return weapon.get_damage()
   
-    if( 'damage' in this )
-      return this.damage
+    if( 'damage' in this ) {
+      if( this.damage instanceof Array )
+        return this.damage
+      else 
+        return [Dmg(this.damage)]
+    }
     else
-      return Dmg({value: 2, type: 'body', element: 'kinetic', tier: this.get('tier')})
+      return [Dmg({value: 2, type: 'body', element: 'kinetic', tier: this.get('tier')})]
   }
 
   // returns equipment equipped as armor; false if no armor is equipped

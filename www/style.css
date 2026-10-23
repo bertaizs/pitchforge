@@ -42,6 +42,10 @@ a.verb {
     margin: 1rem;
 }
 
+.value {
+    white-space: nowrap;    
+}
+
 .reqs_not_met {
     white-space: nowrap;
     color: red;
