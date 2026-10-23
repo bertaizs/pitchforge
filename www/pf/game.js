@@ -188,7 +188,7 @@ class Game {
     // TODO: if entity is following someone else at the same location, set their heading value
     
     for(let i in this.initiative_order) {
-      if('heading' in this.initiative_order[i]) {
+      if('heading' in this.initiative_order[i] && this.initiative_order[i].is_up() ) {
         let destination_entity = game.entity(this.initiative_order[i].heading)
         if( options.log_move_actions ) 
           console.log(`${this.initiative_order[i]} moves to ${destination_entity}`)
