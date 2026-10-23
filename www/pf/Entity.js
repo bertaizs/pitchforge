@@ -642,25 +642,33 @@ class Entity {
       let damage_value = damage.value
       
       let tier_diff = damage.tier - this.get_armor_tier(damage.type)
-      if( tier_diff>=0 ) {      // higher damage tier: full damage
-        if( tier_diff == 0  ) { // same damage tier: half damage (rounded down)
-          e.add({label: `damage is halved by same-tier armor`, value: -damage_value+Math.trunc(damage_value/2)})
-          damage_value = Math.trunc(damage_value/2)
+      if( tier_diff>=0 ) {      // higher or equal damage tier: full damage
+        if( tier_diff == 0  ) { // same tier damage, armor applies
+
+          if( param.half ) {
+            e.add({label: `damage is halved ${typeof param.half=='string' ? " ("+param.half+")" : "" }`, value: -damage_value+Math.trunc(damage_value/2)})
+            damage_value = Math.trunc(damage_value/2)            
+          }
+
+          if( !param.ignore_armour ) {
+            let armor = this.get_armor_or_self().get_armor_value(damage.element)
+            let reduction = Math.min(armor, damage_value)
+  
+            let txt = `${damage.element} armor (${armor}) reduces damage by ${reduction} points`
+            options.log_damage && console.log(txt)
+            if( armor )
+              e.add({label: txt, value: -reduction})
+  
+            damage_value -= reduction
+            // damage_value = Math.max(damage_value-armor,0)   // damage is reduced by armor but cannot go below 0
+          } else {
+            e.add({label: `armor ignored`, value: 0})                      
+          }
+          
+        } else {
+          e.add({label: `higher tier damage, armor does not apply`, value: 0})          
         }
         
-        if( !param.ignore_armour ) {
-          let armor = this.get_armor_or_self().get_armor_value(damage.element)
-          let reduction = Math.min(armor, damage_value)
-
-          let txt = `${damage.element} armor (${armor}) reduces damage by ${reduction} points`
-          options.log_damage && console.log(txt)
-          if( armor )
-            e.add({label: txt, value: -reduction})
-
-          damage_value -= reduction
-          // damage_value = Math.max(damage_value-armor,0)   // damage is reduced by armor but cannot go below 0
-        }
-
         e.result = damage_value
         this[damage.type] -= damage_value
         total_damage[damage.type] += damage_value
