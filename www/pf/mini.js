@@ -27,7 +27,7 @@ class Damage {
         this[i] = value[i]
 
     this.value ??= 2
-    this.tier ??= 1
+    this.tier ??= 1   // weapon damage
     this.type ??= 'body'
     this.element ??= 'kinetic'
 

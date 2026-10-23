@@ -224,13 +224,20 @@ new Verb({
   },
   
   on_success: function(cmd) {
+    console.log( 'ATTACK!', 'cmd', cmd)
+
+    let graze = cmd.result
+    let p = {}
+    if(graze)
+      p.half = "graze"
+    
     if( !cmd.op1.is_character() ) {
       return ui.text(`There is no point in attacking `, cmd.op1, `.`)
     }
-    ui.text(cmd.who, ` attacks `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
+    ui.text(cmd.who, ` attacks `, cmd.op1, ` and ${graze?'grazes':'hits'}.`, ui.print_explanation_tag([cmd.e, cmd.e2])    )
 
     let dmg = cmd.who.get_damage()
-    cmd.op1.take_damage(dmg)
+    cmd.op1.take_damage(dmg, p)
     
     // damage that could hurt builds threat
     if( dmg.tier>= cmd.op1.get_armor_tier() )

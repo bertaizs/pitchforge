@@ -627,17 +627,15 @@ class Entity {
   }
   
   // lose a resource involuntarily, this entity may receive wounds, may go down
-  take_damage(param = {}) {
-    param = arrayify(param)
+  take_damage(damages = {}, param = {}) {
+    damages = arrayify(damages)
     let total_damage = {body: 0, spirit: 0}
-    // let es = []
     
-    for( let d of param ) {
+    for( let d of damages ) {
       let damage = Dmg(d)
 
       let e = Exp({who: this.id, label: `${damage.element} damage`})
       e.add({label: `incoming ${damage.value} points of tier ${damage.tier} ${damage.type} damage`, value: damage.value, fixed: true}) 
-      // es.push(e)
 
       let damage_value = damage.value
       
@@ -650,7 +648,7 @@ class Entity {
             damage_value = Math.trunc(damage_value/2)            
           }
 
-          if( !param.ignore_armour ) {
+          if( !d.ignore_armour ) {
             let armor = this.get_armor_or_self().get_armor_value(damage.element)
             let reduction = Math.min(armor, damage_value)
   
