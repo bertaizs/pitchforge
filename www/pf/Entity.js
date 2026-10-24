@@ -177,6 +177,27 @@ class Entity {
     this.heading = game.entity(location).id
     this.heading_pos = pos || undefined
   }
+
+  get_heading() {
+    if('heading' in this )
+      return this.heading
+    else
+      return false
+  }
+
+  // follow another entity
+  follow( entity ) {
+    entity = game.entity(entity)
+    this.following = entity
+    ui.text(this, ` has started following `, entity, `.`)
+  }
+
+  get_following() {
+    if( 'following' in this )
+      return this.following
+    else
+      return false
+  }
   
   destroy() {
     this.move_to(game.universe)

@@ -186,6 +186,17 @@ class Game {
     if( options.log_move_actions ) console.log(`performing move actions...`)
     
     // TODO: if entity is following someone else at the same location, set their heading value
+
+    for(let entity of this.initiative_order) {
+      let following = entity.get_following()
+      if( following ) {
+        let heading_towards = following.get_heading()
+        if( heading_towards ) {
+          entity.head_towards(heading_towards)
+          ui.text(entity, ` is following `, following)          
+        }
+      }
+    }
     
     for(let i in this.initiative_order) {
       if('heading' in this.initiative_order[i] && this.initiative_order[i].is_up() ) {

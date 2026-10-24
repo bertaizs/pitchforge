@@ -515,6 +515,17 @@ let cage = new Entity({
       ui.text(dogmeat, `barks.`)
     }, 'bark')
 
+    dogmeat.add_choice({
+        label: "give your ham to the dog",
+        fn: ()=>{
+          ui.text(`The dog starts eating the ham, and is happily wagging its tail!`)
+          dogmeat.faction = 'player'
+          dogmeat.follow(player)
+        },
+        reqs: {
+          items: /ham/,
+        }
+      })
 
 
 
