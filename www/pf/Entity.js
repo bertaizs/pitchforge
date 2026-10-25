@@ -117,7 +117,6 @@ class Entity {
       if( where )
         entity.move_to(where) // otherwise game.universe
 
-
       // if icon is an array, pick one!
       if( entity.icon instanceof Array ) {
         entity.icon = entity.icon[ entity.id % entity.icon.length  ]
@@ -314,7 +313,7 @@ class Entity {
   
     if( 'damage' in this ) {
       if( this.damage instanceof Array )
-        return this.damage
+        return this.damage.map(x=>Dmg(x))
       else 
         return [Dmg(this.damage)]
     }
@@ -786,7 +785,12 @@ class Entity {
 
     if( whom.is_up() && params.build_threat && whom.can_be_hurt_by(damages) ) {
       if( params.threat_damage ) {
-        console.log("TODO!!!")        // todo: threat damage (feint)
+        let sum = 0
+        for(let d of damages) {
+          if(whom.can_be_hurt_by(d))
+            sum += d.value
+        }
+        whom.build_threat(1+sum)
       } else {
         whom.build_threat(params.build_threat)
       }

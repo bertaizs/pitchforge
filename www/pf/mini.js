@@ -35,7 +35,10 @@ class Damage {
   }
 
   toString() {
-    return `${this.value} points of ${this.element} damage vs ${this.type} (tier ${this.tier})`
+    let vs = ''
+    if( this.type != 'body' )
+      vs = `vs ${this.type}`
+    return `${this.value} points of ${this.element} damage ${vs} (tier ${this.tier})`
   }
 }
 function Dmg(x) { return new Damage(x) }
