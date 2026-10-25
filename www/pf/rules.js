@@ -11,6 +11,10 @@ class RuleBook {
   POINTS = ()=> POINTS
   
   // STATS() { return STATS }
+
+  difficulty(d) {
+    return DIFFICULTY(d)
+  }
   
 }
 

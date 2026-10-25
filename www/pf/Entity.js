@@ -373,7 +373,10 @@ class Entity {
       ui.text( this, ` is now wearing `, entity, `.` )
     else
       ui.text( this, ` now has `, entity, ` equipped.` )
-      
+  
+    if(!this.meets_requirements_for(entity))
+      ui.text( this, ` does not meet the requirements for `, entity, `.` )
+    
     entity.position = as
   }
 
@@ -950,7 +953,9 @@ class Entity {
   // - traits like traits: {traitname: true}
   // - knowledge
   // - items like items: [/compass/, ham] (these are validate via has_a and match)
-  meets_requirements( reqs ) {
+  meets_requirements( reqs, p = {} ) {
+    p.with_equipment ??= true
+    
     reqs = arrayify(reqs)
     for( let req in reqs )
       if( !(reqs[req] instanceof Requirements) )
@@ -963,8 +968,8 @@ class Entity {
       let fail = false
 
       for( let i in req ) {
-        if( i in STATS && req[i]>this.get(i) ) fail = true
-        if( i in TESTS && req[i]>this.performance(i) ) fail = true
+        if( i in STATS && req[i]>this.get_stat(i, {}, p) ) fail = true
+        if( i in TESTS && req[i]>this.performance(i, p) ) fail = true
       }
       if(!fail) {
         for( let t in req.traits )
@@ -1009,7 +1014,7 @@ class Entity {
   // returns if this entity meets the requirements for the other entity (e.g. if player can wear armor)
   meets_requirements_for( entity ) {
     entity = game.entity(entity)
-    return this.meets_requirements( entity.get_requirements() )
+    return this.meets_requirements( entity.get_requirements(), {with_equipment: false} )
   }
 
   get_bonus( what ) {
@@ -1019,8 +1024,8 @@ class Entity {
   }
 
   get_equipment_bonuses(what) {
-    // let items = this.get_equipped_items().filter(x=>this.meets_requirements_for(x))
-    let items = this.get_equipped_items()
+    let items = this.get_equipped_items().filter(x=>this.meets_requirements_for(x))
+    // let items = this.get_equipped_items()
     let bonus = { highest: 0, lowest: 0 }
     for( let i in items ) {
       let item_bonus = items[i].get_bonus(what)
@@ -1031,25 +1036,28 @@ class Entity {
   }
 
   // returns the value of stat (string), with an explanation
-  get_stat(stat, e = {}) {
+  get_stat(stat, e = {}, p = {}) {
     e.explain = []
     e.label = stat
     e.who = this.id
+    p.with_equipment ??= true
     
     if (!(stat in STATS)) throw `no such stat: ${stat}.`;
 
     let n = this[stat];
     e.explain.push({value: this[stat], label: "base "+stat})
 
-    let equipment_bonus = this.get_equipment_bonuses(stat)
-    if( equipment_bonus.highest ) {
-      n+= equipment_bonus.highest
-      e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
-    }
-    if( equipment_bonus.lowest ) {
-      n+= equipment_bonus.lowest
-      e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
-    }
+    if( p.with_equipment ) {
+      let equipment_bonus = this.get_equipment_bonuses(stat)
+      if( equipment_bonus.highest ) {
+        n+= equipment_bonus.highest
+        e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
+      }
+      if( equipment_bonus.lowest ) {
+        n+= equipment_bonus.lowest
+        e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
+      }      
+    } 
     
     for (let t in TRAITS)
       if (this.has_trait(t)) {
@@ -1069,13 +1077,13 @@ class Entity {
   }
   
   // same as get_stat, but receives an array as stats and returns the highest with its explanation
-  get_best_stat(stats, explain = {}) {
+  get_best_stat(stats, explain = {}, params = {}) {
     if( stats.length==0 ) throw "empty stats array in get_best_stat"
     let best_stat, best_e, e
     
     for( let i in stats ) {
       e = {}
-      let stat = this.get_stat( stats[i], e )
+      let stat = this.get_stat( stats[i], e, params )
       if( i==0 || stat > best_stat ) {
         best_e = e
         best_stat = stat
@@ -1102,9 +1110,11 @@ class Entity {
   performance(test, params = {}, e = {} ) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
-    // let penalty = false
+    let penalty = false
+
+    params.with_equipment ??= true
     
-    let n = this.get_best_stat(test.stat, e);
+    let n = this.get_best_stat(test.stat, e, params);
     e.label = test.get_name()
     
     // considering traits
@@ -1135,15 +1145,17 @@ class Entity {
         e.explain.push({value: diff, label: `${status.name}: ${diff}`})
       }
     }
-    
-    let equipment_bonus = this.get_equipment_bonuses(test.get_name())
-    if( equipment_bonus.highest ) {
-      n+= equipment_bonus.highest
-      e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
-    }
-    if( equipment_bonus.lowest ) {
-      n+= equipment_bonus.lowest
-      e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
+
+    if(params.with_equipment) {
+      let equipment_bonus = this.get_equipment_bonuses(test.get_name())
+      if( equipment_bonus.highest ) {
+        n+= equipment_bonus.highest
+        e.explain.push({value: equipment_bonus.highest, label: "from equipment"})
+      }
+      if( equipment_bonus.lowest ) {
+        n+= equipment_bonus.lowest
+        e.explain.push({value: equipment_bonus.lowest, label: "from equipment"})
+      }      
     }
 
     // considering penalties

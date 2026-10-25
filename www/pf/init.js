@@ -71,6 +71,7 @@ new Entity({
     description: `A mighty axe forged by the dwarves.`,
     // tier: 2,
     damage: Dmg({value: 3, tier: 2}),
+    reqs: Reqs({tough: 4}),
 }, {template: 'greataxe'} )
 
 new Entity({
