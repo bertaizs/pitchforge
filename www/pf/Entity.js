@@ -267,7 +267,7 @@ class Entity {
 
   // returns equipment equipped as weapon
   get_weapon() {
-    let weapons = this.get_equipped_items().filter(x=>x.position==this.get_weapon_slot())
+    let weapons = this.get_equipped_items().filter(x=>x.position==this.get_weapon_slot()).filter(x=>this.meets_requirements_for(x, {with_equipment: false}))
     if( weapons.length>0 && weapons[0].is('weapon') )
       return weapons[0]
     return false
