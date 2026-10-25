@@ -1,7 +1,31 @@
-console.log("init");
 
-const MAX_STAT = Infinity
-const MIN_STAT = -3
+class RuleBook {
+
+  MAX_STAT() { return Infinity } 
+  MIN_STAT() { return -3 }
+
+  AVG_STAT = ()=> 99
+
+  STATS = ()=> STATS
+
+  POINTS = ()=> POINTS
+  
+  // STATS() { return STATS }
+  
+}
+
+var rules = new RuleBook()
+globalThis.rules = rules
+
+
+var RULEBOOK = {}
+globalThis.RULEBOOK = RULEBOOK
+var RB = RULEBOOK
+globalThis.RB = RULEBOOK
+
+
+
+
 const STATS = {
   tough: {
     icon: "⚔️", // 🦾💪⚔️ 🐉🦖🪨🔨⚓
@@ -25,7 +49,7 @@ const STATS = {
   // },
 };
 
-const POINTS = {
+POINTS = {
   body: {
     text: "Physical wellbeing and readiness. Lose body points when you taking damage, getting hurt, getting tired or off-ballance. One can recover body points quickly, but one will go down when losing all body points.",
     icon: "❤️",  //💖
@@ -39,7 +63,7 @@ const POINTS = {
   }
 }
 
-const ELEMENTS = {
+ELEMENTS = {
   kinetic: true,  // blue
   energy: true,   // orange
   bio: true,      // green
@@ -118,11 +142,6 @@ function DIFFICULTY(d = {}) {
 const HEAVY_ATTACK_DIFFICULTY = -2
 const HEAVY_ATTACK_BONUS_DAMAGE = 2
 
-
-const BONUS = 3;
-const PENALTY = -BONUS;
-
-const LETHAL_WOUND = 6
 
 const TRAITS = {
 

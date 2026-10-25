@@ -598,8 +598,8 @@ class Entity {
     if( this.get_status('wound').magnitude == n )
       n+= 1   // if already had a wound with this magnitude, the wound gets worse    
     ui.text(this, ` is wounded (${n}).`)
-    if( n>=LETHAL_WOUND )
-      this.go_down()
+    // if( n>=LETHAL_WOUND )
+      // this.go_down()
     return this.add_status({name: 'wound', magnitude: n, timer: false})
   }
 

@@ -10,7 +10,7 @@ class UI {
   
   static icon(text) {
     if( text in STATS ) return STATS[text].icon
-    if( text in POINTS ) return POINTS[text].icon
+    if( text in rules.POINTS() ) return POINTS[text].icon
     if( text in VERBS && 'icon' in VERBS[text] ) return VERBS[text].icon
     if( text in OTHER_KEYWORDS ) return OTHER_KEYWORDS[text].icon || ''
     if( text=='quick' ) return `⏩`
@@ -377,7 +377,7 @@ class UI {
       if( params.mode == 'edit' )       // any change is allowed in edit mode
         return true
       if( params.mode == 'respec' ) {   // legit changes only
-        if( change==-1 && entity[stat] > MIN_STAT ) {   // cannot decrease below minimum
+        if( change==-1 && entity[stat] > rule.MIN_STAT() ) {   // cannot decrease below minimum
           return true
         } else                                          // can only increase if enough cp
         if( change==+1 && entity.cp >= CP_COST_OF_STAT_POINT(entity[stat]+1) )
