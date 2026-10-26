@@ -512,15 +512,37 @@ let cage = new Entity({
       }
       ui.text(dogmeat, `barks.`)
     }, 'bark')
+    
+    game.register_fn(
+      cmd=>{
+        dogmeat.description = `Your new best friend!`
+        dogmeat.icon = 'dog_free'
+        dogmeat.faction = 'player'
+        dogmeat.follow(player)
+        player.level_up()
+      }, 
+      'dog becomes friend' )
+
+    game.register_fn( cmd=>{
+      let explain = []
+      if( dogmeat.faction!='player' ) {
+        if( player.test('nature empathy', rules.difficulty('ADVANCED'), explain ) ) {
+          ui.text(player, ` focuses on the `, dogmeat, ` and calms him down. `, ui.print_explanation_tag(explain))
+          game.invoke_fn('dog becomes friend')
+        } else {
+          ui.text(player, ` tries to calm `, dogmeat, ` down, but this just angered him more. `, ui.print_explanation_tag(explain))        
+        }        
+      } else {
+        ui.text(dogmeat, ` is already calm.`)
+      }
+    }, 'tame the dog')
 
     game.register_fn(
       cmd=>{
         ui.text(`The dog starts eating the ham, and is happily wagging its tail!`)
-        dogmeat.faction = 'player'
-        dogmeat.follow(player)
+        game.invoke_fn('dog becomes friend')
       }, 
-      'give_ham_to_dog'
-    )
+      'give_ham_to_dog' )
     
     dogmeat.add_choice({
         label: "give your ham to the dog",
@@ -535,6 +557,14 @@ let cage = new Entity({
         reqs: {
           items: /ham/,
         }
+      })
+    dogmeat.add_choice({
+        label: "calm the dog down",
+        fn: 'tame the dog',
+      })
+    cage.add_choice({
+        label: "calm down the dog in the cage",
+        fn: 'tame the dog',
       })
 
 

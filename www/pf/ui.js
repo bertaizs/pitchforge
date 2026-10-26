@@ -463,13 +463,13 @@ class UI {
       
       // from here on, the sheet is viewed in a table
       s+= `<table>`      
-      if( perception > Test.EASY && entity.is_creature() ) {
+      if( perception > rules.difficulty('MEDIUM') && entity.is_creature() ) {
         s+= this.print_list(
           [entity.get('level')],
           {label: UI.keyword("level"), display: UI.numfield }
         )
       }
-      if( perception >= Test.MUNDANE && entity.is_creature() ) {
+      if( perception >= 0 && entity.is_creature() ) {
         s+= this.print_list(
           [`${UI.numfield(entity.get('body'))}/${entity.get('max_body')}`],
           {label: UI.keyword('body'), display: (x)=>x,
@@ -482,7 +482,7 @@ class UI {
       }
       
       // STATS
-      if( perception > Test.EASY && entity.is_creature()) {
+      if( perception > rules.difficulty('EASY') && entity.is_creature()) {
         this.original_stats = {}
         for(let stat in STATS)
           this.original_stats[stat] = entity[stat]  // here we are NOT using Entity.get as we need the raw info
@@ -491,7 +491,7 @@ class UI {
       }
       
       // COMBAT
-      if( perception > Test.EASY && entity.is_creature()) {
+      if( perception > rules.difficulty('MEDIUM') && entity.is_creature()) {
         let e = {}
         s+= this.print_sheet_value("attack", entity.performance_attack({randomize: false}, e), e)
         let damages = entity.get_damage()
@@ -529,7 +529,7 @@ class UI {
       }
 
       // TRAITS
-      if( (perception > Test.MEDIUM && entity.is_creature()) || entity.is_item() ) {
+      if( (perception > rules.difficulty('HARD') && entity.is_creature()) || entity.is_item() ) {
         let traits = entity.get('traits')
         if( !isEmpty(traits) ) {
           s+= this.print_list(
@@ -540,12 +540,12 @@ class UI {
       }
 
       // EQUIPMENT & INVENTORY
-      if( perception > Test.MUNDANE && entity.is_creature() || entity.is_open_container() ) {
+      if( perception > rules.difficulty('EASY') && entity.is_creature() || entity.is_open_container() ) {
         s+= this.print_inventory(entity)
       }
       
       // STATUSES
-      if( perception > Test.BASIC && entity.is_creature()) {
+      if( perception >= 0 && entity.is_creature()) {
         let status = entity.get('status')
         s+= this.print_list(
           Object.keys(status),
