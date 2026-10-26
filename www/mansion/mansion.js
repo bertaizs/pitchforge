@@ -431,7 +431,7 @@ let bushes = new Entity({
   car.choices.add( new Choice({
       label: "hotwire the car",
       fn: ()=>{
-        if( cmd.who.test('crafting', rules.difficulty('ADVANCED')) ) {
+        if( player.test('crafting', rules.difficulty('ADVANCED')) ) {
           ui.text(`You have hotwired the car. Cool! The engine is running.`)
           ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)        
           car.set_tag('running')
