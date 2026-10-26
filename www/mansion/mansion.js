@@ -190,7 +190,7 @@ let clearing_edge = new Entity({
   <p>There is absolutely no point in going back into the forest. You would just die there among the trees.
   `,
   location_clues: [
-    new Clue({ text: `Tracks on the ground show something has been dragged into the bushes.`, reqs: {perception: Test.BASIC} }),
+    new Clue({ text: `Tracks on the ground show something has been dragged into the bushes.`, reqs: {perception: rules.difficulty({type: 'EASY', trait: false})} }),
   ]
 })
 
@@ -199,7 +199,7 @@ let small_key = new Entity({
   tags: ['item', 'key',],
   description: `<p>What lock will this key will open?</p>`,
   clues: [
-    new Clue({ text: `The key does not look complicated, it probably opens some lock inside the mansion. Its simple design suggests it is less likely to open a bedroom door, rather a pantry or a cellar.`, reqs: {sharp: Test.ADVANCED, cool: Test.EASY} }),
+    new Clue({ text: `The key does not look complicated, it probably opens some lock inside the mansion. Its simple design suggests it is less likely to open a bedroom door, rather a pantry or a cellar.`, reqs: {sharp: rules.difficulty({TYPE: 'EASY', trait: false})} }),
   ],
 })
 
@@ -208,7 +208,7 @@ let copper_key = new Entity({
   tags: ['item', 'key',],
   description: `<p>The key is somewhat dirty but it can probably still work.</p>`,
   clues: [
-    new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: Test.MEDIUM} }),
+    new Clue({ text: `This key is likely to open the mansion's front door.`, reqs: {sharp: rules.difficulty({type: 'MEDIUM'})} }),
   ],
 })
 
@@ -233,7 +233,7 @@ let cellar_door = new Entity({
 
 
   
-  let clue_knocking = new Clue({ text: `Knocking could be a way to get in, but may also draw unwanted attention.`, reqs: {sharp: Test.MEDIUM}, flag: '💡' })
+  let clue_knocking = new Clue({ text: `Knocking could be a way to get in, but may also draw unwanted attention.`, reqs: {sharp: rules.difficulty({type: 'MEDIUM'})}, flag: '💡' })
   let mansion_front_door_knocker = new Entity({
     name: "knocker",
     // tags: ['door', 'closed', 'locked'],
@@ -246,19 +246,19 @@ let cellar_door = new Entity({
     name: "front door",
     tags: ['door', 'closed', 'locked'],
     // icon: 'mansion_front.png',
-    tough: Test.ADVANCED,
-    cool: Test.MEDIUM,
+    tough: rules.difficulty({type: 'HARD', trait: false}),
+    cool: rules.difficulty({type: 'MEDIUM', trait: false}),
     keys: [copper_key, keyring],
     description: `<p>A heavy wooden double door stands in the mansion's main entrance. There is a ${ui.e(mansion_front_door_knocker, "knocker")} on the door. You may want to consider knocking..</p>`,
     clues: [
-      new Clue({ text: `Considering the overall state of the mansion, this door looks surprisingly sturdy.`, reqs: {perception: Test.EASY} }),
+      new Clue({ text: `Considering the overall state of the mansion, this door looks surprisingly sturdy.`, reqs: {perception: rules.difficulty({type: 'VERY_EASY'})} }),
       clue_knocking,
       new Clue({ text: ()=>{
                               if( copper_key.get_location()==game.universe ) {
                                 copper_key.move_to(mansion_front)
                                 return `You find a ${ui.e(copper_key)} under the door mat.`
                               } else return ''
-                            }, flag: true, reqs: {perception: Test.ADVANCED} }),
+                            }, flag: true, reqs: {perception: rules.difficulty('ADVANCED')} }),
     ],
   })
   
@@ -276,9 +276,9 @@ let mansion_front = new Entity({
   `,
   location_clues: [
     new Clue({text: ()=>`The ${ui.e(mansion_front_door, "front door")} leading into the mansion is ${mansion_front_door.is('open') ? "wide open" : "closed"}.`, reqs: {} }),
-    new Clue({text: `There is a ${ui.e(mansion_front_door_knocker,"knocker")} on the door.`, reqs: {'perception': Test.EASY}}),
-    new Clue({text: `Did this place belong to some very rich person? Was the home of a family? The mansion could support a couple of people and their servants.`, reqs: {'sharp': Test.EASY}}),
-    new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': Test.EASY}}),
+    new Clue({text: `There is a ${ui.e(mansion_front_door_knocker,"knocker")} on the door.`, reqs: {'perception': rules.difficulty('EASY')}}),
+    new Clue({text: `Did this place belong to some very rich person? Was the home of a family? The mansion could support a couple of people and their servants.`, reqs: {'sharp': rules.difficulty('EASY')}}),
+    new Clue({text: `Something is very-very wrong with this place.`, reqs: {'sixth sense': rules.difficulty('EASY')}}),
   ],
 })
 
@@ -415,7 +415,7 @@ let bushes = new Entity({
       }
     },
     clues: [
-      new Clue({text: `This car is a possible way to get away from this awful place!`, reqs: {sharp: Test.EASY}, flag: true})
+      new Clue({text: `This car is a possible way to get away from this awful place!`, reqs: {sharp: rules.difficulty('EASY')}, flag: true})
     ]
   })
 
@@ -425,13 +425,13 @@ let bushes = new Entity({
         ui.text(`You start the engine. The car is old, but it is working!`)
         ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)
         car.set_tag('running')
-      }
-      // !!! reqs: player has the keys
+      },
+      reqs: {items: car_keys},
     })
   car.choices.add( new Choice({
       label: "hotwire the car",
       fn: ()=>{
-        if( cmd.who.test('crafting', Test.ADVANCED) ) {
+        if( cmd.who.test('crafting', rules.difficulty('ADVANCED')) ) {
           ui.text(`You have hotwired the car. Cool! The engine is running.`)
           ui.text(`Now all you need to do is <i>use</i> the car to get out of here.`)        
           car.set_tag('running')
@@ -439,7 +439,6 @@ let bushes = new Entity({
           ui.text(`You have no idea how to hotwire the car. You will need to use keys.`)
         }
       }
-      // !!! reqs: player can hotwire the car
     })  )
   car.choices.add( new Choice({
       label: "hop into the car and drive away",
@@ -498,7 +497,7 @@ let cage = new Entity({
       location: cage,
       // location: mansion_right,
       clues: [
-        new Clue({ text: `'Dogmeat' reads a name tag on his collar. Why would anyone give this name to a dog?`, reqs: {perception: Test.EASY}, flag: true }),
+        new Clue({ text: `'Dogmeat' reads a name tag on his collar. Why would anyone give this name to a dog?`, reqs: {perception: rules.difficulty('MEDIUM')}, flag: true }),
       ],
       act_fn: 'bark',
   })
@@ -620,7 +619,7 @@ let cage = new Entity({
     from: well_area, 
     to: well, 
     text: `climb down the stony side of the well`,
-    reqs: {climbing: Test.VERYHARD},  
+    reqs: {climbing: rules.difficulty('HARD')},  
   }, {
     text: `climb up the stones on the well's side`,  
   })
@@ -630,7 +629,7 @@ let cage = new Entity({
     from: clearing_edge, 
     to: bushes, 
     text: `follow the trail into the bushes`,
-    reqs: {perception: Test.BASIC},
+    reqs: {perception: rules.difficulty('EASY')},
   }, {
     text: `back to the clearing`,
     reqs: {},
@@ -640,10 +639,10 @@ let cage = new Entity({
     from: mansion_left, 
     to: mansion_roof, 
     text: `climb up to the roof`,
-    reqs: {climbing: 3},
+    reqs: {climbing: rules.difficulty('HARD')},
   }, {
     text: `climb down to the ground`,
-    reqs: {climbing: 3},
+    reqs: {climbing: rules.difficulty('HARD')},
   })
 
   new Path({
@@ -756,7 +755,7 @@ let pantry = new Entity({
     description: `You wonder why this huge barrel has been bolted to the far wall of the cellar. When you knock on it, it gives a hollow sound, so it is probably empty. This makes no sense.`,
     clues: [
       new Clue({text: `When you push the lid of the barrel, it opens, and you see there is a secret passage inside it!`, flag: true,
-        reqs: {perception: Test.EASY},
+        reqs: {perception: rules.difficulty('EASY')},
         info: new Info({tag: 'secret_passage', text: `There is a secret passage in the cellar, via an empty barrel.`}) })
     ],
   })
@@ -798,7 +797,7 @@ let cellar = new Entity({
   This place has clearly been preserved in much better shape than the rest of the mansion.</p>
   `,
   location_clues: [
-    new Clue({text: `You notice a secret passage inside one of the barrels!`, reqs: {perception: Test.MEDIUM},}),
+    new Clue({text: `You notice a secret passage inside one of the barrels!`, reqs: {perception: rules.difficulty('MEDIUM')},}),
   ],
 })
 
@@ -961,7 +960,7 @@ let ladies_bedroom = new Entity({
     to: coffin_room, 
     text: `explore the secret passage behind the barrels`,
     reqs: [
-      {perception: Test.MEDIUM},
+      {perception: rules.difficulty('MEDIUM')},
       {knowledge: 'secret_passage'},
     ]
   }, {
@@ -1274,7 +1273,7 @@ new Entity({
     location: mansion_roof,
     clues: [
       new Clue({text: `While most of the book is academic, there is a really practical advice which shines through all parts:<br/>
-        <i>By all means, do NOT look into the eyes of a vampire!</i>`, reqs: {sharp: Test.EASY},
+        <i>By all means, do NOT look into the eyes of a vampire!</i>`, reqs: {sharp: rules.difficulty('EASY')},
         info: new Info({tag: 'slaying_vampires', text: `Vampires can be slain by driving a stake through their heart or by complete incineration.`}) })
     ],
 })
@@ -1340,8 +1339,8 @@ let ham = new Entity({
   location: pantry,
   position: `A [ham] is hanging from the ceiling.`,
   clues: [
-    new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': Test.BASIC} }),
-    new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': Test.MEDIUM} }),
+    new Clue({ text: `The ham looks intact, not touched by the corruption.`, reqs: {'sixth sense': rules.difficulty('MEDIUM')} }),
+    new Clue({ text: `The ham is smoked and salted, it thus remained edible.`, reqs: {'perception': rules.difficulty('MEDIUM')} }),
   ],
   consumed_by: (who)=>{
     ui.text(`You eat the ham. Finally, some food!`)
@@ -1358,8 +1357,8 @@ let whisky = new Entity({
   location: study,
   position: `A [bottle with some mysterious liquid] is standing on the floor, still intact for some reason.`,
   clues: [
-    new Clue({ text: `It smells like alcohol...`, reqs: {'perception': Test.MUNDANE} }),
-    new Clue({ text: `This is definitely whisky! Some <i>very good</i> whisky!`, reqs: {'perception': Test.MEDIUM} }),
+    new Clue({ text: `It smells like alcohol...`, reqs: {'perception': rules.difficulty('SUPER_EASY')} }),
+    new Clue({ text: `This is definitely whisky! Some <i>very good</i> whisky!`, reqs: {'perception': rules.difficulty('MEDIUM')} }),
   ],
   consumed_by: (who)=>{
     ui.text(`The whisky burns your throat but gives you new strength!`)
@@ -1378,9 +1377,9 @@ let idol = new Entity({
     The black obsidian statue has a chaotic and malign aura and radiates an eerie glow.`,
     location: coffin,
     clues: [
-      new Clue({ text: `You have a very bad feeling about this idol. You fear touching it and you would like to be as far away from it as possible.`, reqs: {'sixth sense': Test.BASIC} }),
-      new Clue({ text: `You fear touching the idol and you would like to be as far away from it as possible. It is not safe to hold this... thing!`, reqs: {'sixth sense': Test.MEDIUM} }),
-      new Clue({ text: `This idol is a singularity, a focus of malign energy and the sheer hatred it radiates distorts reality. Knowing of its existence already hurts you. This status must be gone for good.`, reqs: {'sixth sense': Test.ADVANCED}, flag: true }),
+      new Clue({ text: `You have a very bad feeling about this idol. You fear touching it and you would like to be as far away from it as possible.`, reqs: {'sixth sense': rules.difficulty('EASY')} }),
+      new Clue({ text: `You fear touching the idol and you would like to be as far away from it as possible. It is not safe to hold this... thing!`, reqs: {'sixth sense': rules.difficulty('MEDIUM')} }),
+      new Clue({ text: `This idol is a singularity, a focus of malign energy and the sheer hatred it radiates distorts reality. Knowing of its existence already hurts you. This status must be gone for good.`, reqs: {'sixth sense': rules.difficulty('HARD')}, flag: true }),
     ],
     act() {
       if( !this.is('remains') && this.get_location()==game.get_player() ) {
@@ -1556,7 +1555,7 @@ let butler = new Entity({
   // sharp: 2,
   // charm: 2,
   clues: [
-    new Clue({ text: `There is something more to this person... You are feeling uneasy.`, reqs: {'sixth sense': Test.MEDIUM}, flag: true }),
+    new Clue({ text: `There is something more to this person... You are feeling uneasy.`, reqs: {'sixth sense': rules.difficulty('MEDIUM')}, flag: true }),
   ],
 })
   
@@ -1575,7 +1574,7 @@ let the_staff = new Entity({
     location: main_hall,
     // location: player_ship,
     clues: [
-      new Clue({ text: `One of the arms of the creature is holding a keyring, this might be useful.`, reqs: {perception: Test.EASY}, flag: true }),
+      new Clue({ text: `One of the arms of the creature is holding a keyring, this might be useful.`, reqs: {perception: rules.difficulty('EASY')}, flag: true }),
     ],
     knocked: false,
 })
@@ -1642,7 +1641,7 @@ butler.choices.add(new Choice({
   label: `introduce yourself and ask him to let you in`,
   fn: ()=>{
     if( the_staff.is_up() && the_staff.knocked ) {
-      if( player.test('social', Test.EASY-the_staff.attitude) ) {
+      if( player.test('social', rules.difficulty('EASY')-the_staff.attitude) ) {
         ui.text(ui.img('butler_behind_door.png') ,
                 `<br/><i>Please come in, I shall announce your arrival to the master.</i>` )
         ui.text(`He moves away from the doorway, the mansion's door opens up and now you can enter.`)

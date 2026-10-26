@@ -849,7 +849,7 @@ class Entity {
   level_up(n = 1) {
     for (let i = 0; i < n; i++) {
       this.level++;
-      this.cp += CP_GAINED_AT_LEVEL(this.level)
+      this.cp += rules.cp_gained_at_level(this.level)
       ui.text(`<span class="progress">`, this, ` has gained a level!</span>`)
     }
     return this;
@@ -860,9 +860,9 @@ class Entity {
 
     if (delta == 1) {
       this[stat] += 1;
-      this.cp -= CP_COST_OF_STAT_POINT(this[stat]);
+      this.cp -= rules.cp_cost_of_stat_point(this[stat]);
     } else if (delta == -1) {
-      this.cp += CP_COST_OF_STAT_POINT(this[stat]);
+      this.cp += rules.cp_cost_of_stat_point(this[stat]);
       this[stat] -= 1;
     } else throw `invalid stat change; not +1 or -1`;
   }
@@ -1127,14 +1127,14 @@ class Entity {
     // considering traits
     let trait = this.has_one_of_traits(test.trait)
     if( trait ) {
-      let bonus = this.get('level')
+      let bonus = rules.level_bonus( this.get('level') )
       n += bonus
       e.explain.push({label: `${this} has aligned trait ${trait}`, value: bonus})
     } else {
       // considering half-traits
       let half_trait = this.has_one_of_traits(test.half_trait)
       if( half_trait ) {
-        let bonus = Math.trunc( this.get('level')/2 )
+        let bonus = rules.level_bonus_half( this.get('level') )
         n += bonus
         e.explain.push({label: `${this} has an aligned half-trait ${trait}`, value: bonus})
       } else {

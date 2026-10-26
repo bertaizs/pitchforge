@@ -12,10 +12,82 @@ class RuleBook {
   
   // STATS() { return STATS }
 
-  difficulty(d) {
-    return DIFFICULTY(d)
+  starting_cp() { return 14 }     // # of cps a character starts with
+  cp_gained_fixed() { return 1 }  // # of cps a character always gains at each level
+  cp_gained_variable(n) { return 0.5 } // # of cps a character gains at each level depending on level
+  cp_gained_at_level(n) { return Math.trunc( this.cp_gained_fixed() + this.cp_gained_variable(n)*n ) } // # of cps a character gains when levelling up to level n
+
+  total_cp_at_level(n) {          // # of cps a character can spend once reached level n
+    let sum = this.starting_cp()
+    while(n>0) {
+      sum += this.cp_gained_at_level(n)
+      n--
+    }
+    return sum
+  }
+
+  cp_cost_of_stat_point(n) {       // cp cost when increasing a stat from n-1 to n 
+    if(n>0) return n
+      else  return 1
   }
   
+  total_cp_cost_of_stat(n) {      // total cp cost of increasing a stat from 0 to n
+    sum = 0
+    while(n>0) {
+      sum += this.cp_cost_of_stat_point(n)
+      n--
+    }
+    return sum
+  }
+
+  highest_stat_from_cps(cps) {    // how high one can increase a stat from 0 from cps character points
+    let stat = 0
+    let cost = this.cp_cost_of_stat_point(0)
+    while( cost<=cps ) {
+      stat++
+      cost += this.cp_cost_of_stat_point(stat)
+    }
+    return (stat-1)
+  }
+
+  level_bonus(n) { return n + 1 }   // full level bonus to performance if there is an aligned trait
+  level_bonus_half(n) { return Math.trunc( this.level_bonus(n)/2 ) }  // half level bonus to performance if there is an aligned half-trait
+
+  static GLOBAL_DIFFICULTY = 0
+  
+  // calculates a difficulty rating based on the below
+  difficulty(d = {}) {
+    if(typeof d == 'string') d = {type: d, trait: false, level: 1}
+    d.type ??= 'MEDIUM' // calculate this level of difficulty
+    d.level ??= 1       // for a character of this level - calculating stats and any level bonus
+    d.trait ??= true    // who has an aligned trait (true, false, "half") - if level bonus should be applied
+    d.difficulty ??= 0  // extra +/-
+    // also influenced by GLOBAL_DIFFICULTY
+  
+    const TYPE = {
+      'SUPER_EASY': 0,
+      'VERY_EASY':  1/8,
+      'EASY':       1/4,
+      'MEDIUM':     0.4, 
+      'ADVANCED':  0.5, 
+      'HARD':       0.75,
+      'SUPER_HARD': 1,
+    }
+    let cps = this.total_cp_at_level(d.level)
+    cps = Math.trunc( TYPE[d.type]*cps )
+  
+    let stat = this.highest_stat_from_cps(cps)
+  
+    if( d.trait === true )
+      stat += rules.level_bonus(d.level)
+    else if( d.trait == "half" )
+      stat += rules.level_bonus_half(d.level)
+  
+    stat += d.difficulty
+    stat += RuleBook.GLOBAL_DIFFICULTY
+    return stat
+  }
+    
 }
 
 var rules = new RuleBook()
@@ -77,70 +149,9 @@ ELEMENTS = {
 }
 
 
-// const CP_PER_LEVEL = 4;
 
-function STARTING_CP() { return 14 }
-function CP_GAINED_FIXED() { return 1 }
-function CP_GAINED_VARIABLE(n) { return 0.5 } 
-function CP_GAINED_AT_LEVEL(n) { return Math.trunc( CP_GAINED_FIXED() + CP_GAINED_VARIABLE(n)*n ) }
-function TOTAL_CP_AT_LEVEL(n) {
-  sum = STARTING_CP()
-  while(n>0) {
-    sum += CP_GAINED_AT_LEVEL(n)
-    n--
-  }
-  return sum
-}
 
-function CP_COST_OF_STAT_POINT(n) {
-  if(n>0) return n
-    else  return 1
-}
-function TOTAL_CP_COST_OF_STAT(n) {
-  sum = 0
-  while(n>0) {
-    sum += CP_COST_OF_STAT_POINT(n)
-    n--
-  }
-  return sum
-}
-function HIGHEST_STAT_FROM_CPS(cps) {
-  let stat = 0
-  let cost = CP_COST_OF_STAT_POINT(0)
-  while( cost<=cps ) {
-    stat++
-    cost += CP_COST_OF_STAT_POINT(stat)
-  }
-  return (stat-1)
-}
 
-function DIFFICULTY(d = {}) {
-  d.level ??= 1
-  d.trait ??= true // true, false, "half"
-  d.difficulty ??= 0
-  d.type ??= 'MEDIUM'
-
-  const TYPE = {
-    'SUPER_EASY': 0,
-    'VERY_EASY':  1/8,
-    'EASY':       1/4,
-    'MEDIUM':     0.5, 
-    'HARD':       0.75,
-    'SUPER_HARD': 1,
-  }
-  let cps = TOTAL_CP_AT_LEVEL(d.level)
-  cps = Math.trunc( TYPE[d.type]*cps )
-
-  let stat = HIGHEST_STAT_FROM_CPS(cps)
-
-  if( d.trait === true )
-    stat += d.level
-  else if( d.trait == "half" )
-    stat += Math.trunc(d.level/2)
-
-  stat += d.difficulty
-  return stat
-}
 
 
 const HEAVY_ATTACK_DIFFICULTY = -2
