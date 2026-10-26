@@ -523,18 +523,20 @@ class UI {
         let met = game.get_player().meets_requirements(reqs)
         s+= this.print_sheet_value( UI.keyword("<br/>requirements"), (met ? "" : "<br/><div class='reqs_not_met'>not met</div>") )
         for( let r in reqs ) {
-          s+= this.print_sheet_value( r, reqs[r] )          
+          if( !isEmpty(reqs[r]) )
+            s+= this.print_sheet_value( r, reqs[r] )          
         }
       }
-      
+
       // TRAITS
       if( (perception > Test.MEDIUM && entity.is_creature()) || entity.is_item() ) {
         let traits = entity.get('traits')
-        if( !isEmpty(traits) )
+        if( !isEmpty(traits) ) {
           s+= this.print_list(
             Object.keys(traits),
             {label: UI.keyword("traits"), not_if_empty: true, display: (x)=>UI.keyword(x) }
           )        
+        }
       }
 
       // EQUIPMENT & INVENTORY
