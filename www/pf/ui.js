@@ -1015,8 +1015,7 @@ class UI {
       for( let arg of args ) {
         if(txt || event.whitespace) txt+= " "
         if( arg instanceof Entity ) {
-          // txt+= ui.print_entity(arg, {the: true})
-          txt += the(arg.get_name())
+          txt += the(`<b>`+arg.get_name()+`</b>`)
           plain_text += arg.get_name()+`#${arg.id}`
           
           event.relevant_for.push(arg.id)
