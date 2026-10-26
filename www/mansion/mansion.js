@@ -501,7 +501,6 @@ let cage = new Entity({
         new Clue({ text: `'Dogmeat' reads a name tag on his collar. Why would anyone give this name to a dog?`, reqs: {perception: Test.EASY}, flag: true }),
       ],
       act_fn: 'bark',
-      knocked: false,
   })
     game.register_fn( cmd=>{
       if( dogmeat.is_at(cage) && cage.is('open') ) {
@@ -515,18 +514,29 @@ let cage = new Entity({
       ui.text(dogmeat, `barks.`)
     }, 'bark')
 
+    game.register_fn(
+      cmd=>{
+        ui.text(`The dog starts eating the ham, and is happily wagging its tail!`)
+        dogmeat.faction = 'player'
+        dogmeat.follow(player)
+      }, 
+      'give_ham_to_dog'
+    )
+    
     dogmeat.add_choice({
         label: "give your ham to the dog",
-        fn: ()=>{
-          ui.text(`The dog starts eating the ham, and is happily wagging its tail!`)
-          dogmeat.faction = 'player'
-          dogmeat.follow(player)
-        },
+        fn: 'give_ham_to_dog',
         reqs: {
           items: /ham/,
         }
       })
-
+    cage.add_choice({
+        label: "give your ham to the dog",
+        fn: 'give_ham_to_dog',
+        reqs: {
+          items: /ham/,
+        }
+      })
 
 
 

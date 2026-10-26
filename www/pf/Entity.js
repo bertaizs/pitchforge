@@ -138,9 +138,16 @@ class Entity {
     return game.entity(this.location_id)
   }
 
+  // true if this entity is at location loc
   is_at(loc) {
     loc = game.entity(loc)
     return this.get_location().id == loc.id
+  }
+
+  // true if this entity and entity share the same location
+  is_where(entity) {
+    entity = game.entity(entity)
+    return this.get_location().id == entity.get_location().id
   }
   
   // returns entities contained by this entity

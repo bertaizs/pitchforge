@@ -20,7 +20,7 @@ class Game {
     this.global_choices = new ChoiceList()
 
     this.fn = {
-      nop: function( cmd ) {
+      'nop': function( cmd ) {
         console.log("nop", cmd)
       }
       
@@ -53,14 +53,23 @@ class Game {
     if( !tag )
       tag = Object.keys(this.fn).length + ""    
     this.fn[tag] = fn
+    return tag
   }
+
+  // true iff there is a function with the given tag
+  fn_exists( tag ) {
+    return (tag in this.fn)
+  }
+
+  // returns the function with the given tag
+  get_fn(tag) { return this.fn[tag] }
 
   // run registered function fn with parameter Command cmd and return its result
   invoke_fn(tag, cmd = false) {
     if( !(tag in this.fn) ) throw `no such custom function: `+fn
 
     options.log_game_fns && console.log(`invoked`, tag, cmd)
-    return this.fn[tag](cmd)
+    return this.fn[tag](cmd)    // returns true if action is done, false if default actions will follow
   }
 
   
@@ -101,34 +110,6 @@ class Game {
     this.global_choices.add(choice)
     return this
   }
-    
-  // returns true if the cmd (Cmd) matches the pattern
-  // pattern is created by game.add_trigger
-  // match( pattern, cmd ) {
-  //   options.log_matching_details && console.log(`matching `, pattern, `vs`, cmd)
-  //   if( ! cmd.match( 'verb', pattern['verb'] ) ) {
-  //     // options.log_matching_details && console.log(`no match`)
-  //     return false
-  //   }
-  //   if( ! cmd.match( 'who', pattern['who'] ) ) {
-  //     // options.log_matching_details && console.log(`no match`)
-  //     return false
-  //   }
-  //   // for op1 and op2, check if EITHER order matches
-  //   if( cmd.match('op1',pattern['op1']) && cmd.match('op2',pattern['op2']) ) {
-  //     options.log_matching_details && console.log(`match!`)
-  //     return true
-  //   }
-  //   if( cmd.match('op1', pattern['op2']) && cmd.match('op2', pattern['op1']) ) {
-  //     options.log_matching_details && console.log(`match!`)
-  //     // replace op1 ond op2, so that the trigger needs to be defined only once
-  //     let x = cmd.op1
-  //     cmd.op1 = cmd.op2
-  //     cmd.op2 = x
-  //     return true
-  //   }
-  //   return false
-  // }
 
   
   // called when someone executes a command
@@ -185,13 +166,11 @@ class Game {
   perform_move_actions() {
     if( options.log_move_actions ) console.log(`performing move actions...`)
     
-    // TODO: if entity is following someone else at the same location, set their heading value
-
     for(let entity of this.initiative_order) {
       let following = entity.get_following()
       if( following ) {
         let heading_towards = following.get_heading()
-        if( heading_towards ) {
+        if( heading_towards && entity.is_where(following) ) {
           entity.head_towards(heading_towards)
           ui.text(entity, ` is following `, following)          
         }

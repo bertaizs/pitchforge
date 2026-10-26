@@ -5,15 +5,12 @@ todo
 
 # bugs
 
-item requirements
-
-threat damage
-
 
 # must have
 
 
 
+----
 
 - grenades
   - frag grenade

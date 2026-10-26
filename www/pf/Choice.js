@@ -20,6 +20,8 @@ class Choice {
     this.reqs ??= {}
 
     this.fn ??= (cmd)=>"nothing happens"
+    if( typeof this.fn == 'string' && game.fn_exists(this.fn) )
+      this.fn = game.get_fn(this.fn)
   }
 
   viable_for(who) {
@@ -40,7 +42,6 @@ class Choice {
     // console.log(`command`, cmd)
     ui.cmd = cmd
     let r = game.exec(cmd)      
-    // ui.exec(cmd)
   }
 
 }
