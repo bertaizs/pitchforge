@@ -681,6 +681,28 @@ class UI {
         return s
     }
 
+
+    // * * * new style expl * * *
+
+    show_explanation2(event, explanation_b64) {
+      document.getElementById('explanation').innerHTML = ''
+      document.getElementById('explanation').innerHTML += `<div class="explanation_text">`+atob(explanation_b64)+`</div>`
+      document.getElementById('explanation').style.left = event.pageX+"px"
+      document.getElementById('explanation').style.top = event.pageY+"px"
+      document.getElementById('explanation').style.display = 'block'
+    }
+    
+    print_explained(text, exp_str) {
+      let s = ``
+      console.log('exp_str', exp_str)
+      s+= `<a class='explained' onclick="ui.show_explanation2(event, '${btoa(exp_str)}')">${text}</a>`
+      return s
+    }
+    print_expl(e, text = "...") {
+      return this.print_explained(text, e)
+    }
+
+    
     select_entity(id) {
       // console.log( id + " has been selected")
       // game.player_id = game.entity(id).id

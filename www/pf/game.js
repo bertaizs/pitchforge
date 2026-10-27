@@ -47,6 +47,23 @@ class Game {
     ui.cmd.who = e
   }
 
+  // DIFFICULTY LEVEL SCALING
+  difficulty_level( type = 'MEDIUM', p = {} ) {
+    p.type = type
+    p.trait ??= false
+    p.level ??= 1
+    return rules.difficulty(p)
+  }
+  mundane(p={}) {return 0}
+  basic(p={}) {return this.difficulty_level('VERY_EASY', p)}
+  very_easy(p={}) {return this.difficulty_level('VERY_EASY', p)}
+  easy(p={}) {return this.difficulty_level('EASY', p)}
+  medium(p={}) {return this.difficulty_level('MEDIUM', p)}
+  advanced(p={}) {return this.difficulty_level('ADVANCED', p)}
+  hard(p={}) {return this.difficulty_level('HARD', p)}
+  super_hard(p={}) {return this.difficulty_level('SUPER_HARD', p)}
+ 
+
   // register function fn in this.fn under the key tag;
   // tag becomes a fresh number omitted
   register_fn( fn, tag = false ) {

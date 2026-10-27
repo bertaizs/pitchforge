@@ -813,10 +813,10 @@ class Entity {
     whom = game.entity(whom)
 
     params.build_threat ??= 1
-    params.attack_text ??= `attacks`
+    params.attack_text ??= `attacks `
     params.miss_text ??= `but misses`
 
-    ui.text( who, ` ${params.attack_text} `, whom, ` and ${params.miss_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
+    ui.text( who, ` ${params.attack_text} `, whom, ` ${params.miss_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
     
     if( params.build_threat ) {
       whom.build_threat(params.build_threat)      
@@ -1114,7 +1114,7 @@ class Entity {
   // returns performance of this Entity for a Test
   // - can add additional parameters
   // - explain is used for returning how it is calculated
-  performance(test, params = {}, e = {} ) {
+  performance(test, params = {}, e = [] ) {
     if (typeof test == "string" && test in TESTS) test = TESTS[test];
     test = new Test( test, params )
     let penalty = false
@@ -1199,6 +1199,27 @@ class Entity {
     return n;
   }   // performance
 
+  Performance(test, params = {}) {
+    if (typeof test == "string" && test in TESTS) test = TESTS[test];
+    test = new Test( test, params )
+    let e = {}
+    let v = this.performance(test, params, e)
+    // console.log("expl: ", e)    
+    let value = new Value(v, {
+      who: this,
+      what: test.get_name(),
+    })
+    // value.who = this
+    // value.what = test.get_name()
+    value.explain(
+        value.get_label()+ "<br/>\n"+
+        e.explain.map(x=>`${x.label}:\t${x.value}`).join("<br>\n")+
+        "<br>\n<hr/>\n"+
+        e.label+": "+e.result
+    )
+    return value
+  }
+  
   performance_attack(params = {}, e = {}) {
     let stats = ['tough']
     if( this.get_stat('cool') > this.get_stat('tough') && this.is_weapon_cool() )
@@ -1232,10 +1253,43 @@ class Entity {
   test( test, vs_value, params = {}, explain = [] ) {
     let result = this.performance( test, params, explain )
     explain.push({value: -vs_value, label: `vs`})
+    console.log(5667899, explain)
     result -= vs_value
     // return result
     return (result>=0)
   }
+
+  Challenge_result( test, perf2, params = {} ) {
+    let perf1 = this.Performance(test, params)
+    if( perf2 == undefined ) throw `no challenge provided`
+    if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
+      perf2 = new Value(perf2).explain(`static value: ${perf2}`)
+    }
+
+    // let result = new Value(perf1-perf2).explain( `<p>`+perf1.get_expl()+ `</p>vs<p>`+ perf2.get_expl()+`</p>`)
+    let result = new Value(perf1-perf2).explain( 
+              // this.get_name()+`:<br/>\n`+
+              perf1.get_expl()+ 
+              `<br/><br/>\n&nbsp;&nbsp;vs<br/><br/>\n`+ 
+              perf2.get_expl()+
+              `<br/>`)
+    
+    return result
+  }
+
+  Challenge_text( test, perf2, text, params = {} ) {
+    if( perf2 == undefined ) throw `no challenge provided`
+    if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
+      perf2 = new Value(perf2).explain(`static value: ${perf2}`)
+    }
+    
+    let result = this.Challenge_result(test, perf2, params)
+    ui.text(this, ui.print_expl(result.get_expl(), text), ('who' in perf2 ? perf2.who : ""), `.` )
+    // console.log(result.get_expl())
+    return result
+  }
+
+
   
   // executes a command of type Cmd, 
   // returns what happens as string (which is not used)

@@ -294,6 +294,11 @@ img.combat_icon {
     font-weight: bold;
     /*height: 2em;*/
 }
+.explained {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
 
 #debug {
      margin-bottom: 15px; 

@@ -58,3 +58,34 @@ class Requirements {
   }  
 }
 function Reqs(x) { return new Requirements(x) }
+
+
+class Value {
+
+  constructor(value, p = {}) {
+    this.value = value
+    for( let i in p)
+      this[i] = p[i]
+    this.explanation ??= ``   // explanation
+    this.who ??= false        // to whom (entity) the value belongs to
+    this.what ??= false       // what is the value about
+  }
+
+  valueOf() { return this.value }
+  get() { return this.valueOf() }
+  toString() { return this.valueOf()+"" }
+  
+  explain(str) { 
+    this.explanation += str
+    return this
+  }
+  get_expl() { return this.explanation }
+  get_expl_b64() { return btoa(this.get_expl()) }
+
+  get_label() {
+    if( !this.who )
+      return `static value`
+    else
+      return this.who.get_name() +( this.what ? "'s "+this.what : '' ) 
+  }
+}

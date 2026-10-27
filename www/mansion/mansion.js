@@ -526,8 +526,8 @@ let cage = new Entity({
     game.register_fn( cmd=>{
       let explain = []
       if( dogmeat.faction!='player' ) {
-        if( player.test('nature empathy', rules.difficulty('ADVANCED'), explain ) ) {
-          ui.text(player, ` focuses on the `, dogmeat, ` and calms him down. `, ui.print_explanation_tag(explain))
+        if( player.test('nature empathy', rules.difficulty('ADVANCED'), {}, explain ) ) {
+          ui.text(player, ` focuses on the `, dogmeat, ` and calms him down. `, ui.print_explanation_tag(Exp({who: player.id, explain: explain})))
           game.invoke_fn('dog becomes friend')
         } else {
           ui.text(player, ` tries to calm `, dogmeat, ` down, but this just angered him more. `, ui.print_explanation_tag(explain))        
