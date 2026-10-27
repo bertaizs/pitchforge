@@ -194,12 +194,10 @@ for cutting a tree - test for *tough*.
 
 ## Combat-related
 
-  * **melee**: All melee weapons and throwing weapons. 
+  * **combat**: All melee and ranged weapons, including throwing weapons. 
     Generic trait, specialized science traits require this, such as:
     - **swordfighting**: special attacks for one handed swords
     - **martial arts**: unarmed fighting techniques
-  
-  * **marksmanship**: all ranged weapons
     - firearms (free supplementary trait, based on game world)
     - archery (free supplementary trait, based on game world)
   
@@ -226,6 +224,9 @@ for cutting a tree - test for *tough*.
   The below specialized traits require this and may use it as cross-trait:
   - **horse riding**, **animal taming**, etc.
   - specialized traits for biomes (desert, arctic, etc)
+
+* **sixth sense**: Hunches, danger sense.
+
 
 ## Skill-related
 
