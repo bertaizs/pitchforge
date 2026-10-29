@@ -11,6 +11,11 @@ mansion:
 
 stub:
 	node tools/populate.js games/game_stub.json template/game_template.html >  www/stub/game_stub.html
+
+documentation: docs/pmrpg.md docs/doc_gen.js
+	node docs/doc_gen.js > docs/pmrpg_populated.md
+
+
 	
 upload:
 	gcloud config set project revamped-berta-hu
@@ -32,6 +37,3 @@ test:
 	mkdir -p tmp/
 	cp *.html *.js *.css *.ico *.png tmp/
 	gsutil -m -h "Cache-Control:no-store" rsync -r tmp/  gs://revamped-test.berta.hu/
-
-docs:
-	echo docs

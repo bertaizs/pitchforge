@@ -94,10 +94,10 @@ var rules = new RuleBook()
 globalThis.rules = rules
 
 
-var RULEBOOK = {}
-globalThis.RULEBOOK = RULEBOOK
-var RB = RULEBOOK
-globalThis.RB = RULEBOOK
+// var RULEBOOK = {}
+// globalThis.RULEBOOK = RULEBOOK
+// var RB = RULEBOOK
+// globalThis.RB = RULEBOOK
 
 
 

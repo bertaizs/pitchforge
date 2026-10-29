@@ -10,7 +10,7 @@ This document describes a simple RPG system utilized by the [pitchforge](https:/
   3) Unlimited progress, but will reach diminishing returns.
   4) Combat is dangerous, even for the strong if outnumbered.
   5) Allow a diverse set of viable character builds, both specialists and generalists.
-  6) No powergaming (no complex stacking of bonuses).
+  6) No complex stacking of bonuses, so that minmaxing/powergaming is discouraged.
 
 
 # Character
@@ -19,8 +19,10 @@ Your character is the one you play during the game. As you become more experienc
 Your **level of experience** determines how much you learned, it makes you better in what you are skilled at.
 Adventurers at levels 1-3 are beginners; levels 4-6 are adepts; levels 7-9 are seasoned veterans; levels 10+ are superheroes.
 
+## Character creation
+
 We shall use **Character Points** (CPs) to keep a balance between characters. 
-Your level 1 character gains `14` CPs, and you gain `1` more at each level.
+Your level 1 character gains `${starting_cp}` CPs, and you gain `${cp_gained_fixed}` more at each level, which increases by one every ${cp_gained_increase_per_level} levels${cp_gain_example}.
 You can spend your CPs to increase your characteristics or pick up new traits.
 
 
@@ -34,7 +36,7 @@ You have the below statistics / characteristics:
   * **Cool**: Dexterity, agility, precision; allows one to consistently execute the skills they learned, and to remain calm and professional even when under pressure.
   Useful for skill-monkeys.
   
-  * **Sharp**: Ability to think logically, rationally and notice tiny details and coming to quick conclusions. Describes your overall intelligence and how well you can read the situation and use their mind. Also affects how many things you can learn (see: Traits).
+  * **Sharp**: Ability to think logically, rationally, noticing tiny details and coming to quick conclusions. Describes your overall intelligence and how well you can read the situation and use your mind. Also affects how many things you can learn (see: Traits).
   Useful for brainy characters (scientists or wizards) and those very vigilant and for jack-of-all trades.
   
   * **Charm**: Charisma and harmony; the strength of your personality, allowing you to influence or seduce others and also resisting influence and remaining who you are. Expresses your spirituality and your ability to lead or empathize with others and read their feelings.
