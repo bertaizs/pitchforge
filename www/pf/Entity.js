@@ -159,6 +159,19 @@ class Entity {
   list_hostiles_here() {
     return this.get_location().list_entities_here().filter( x=>x.is_hostile_to(this) )
   }
+
+  // true if this entity is aware of the other entity (who is assumed to be here)
+  aware_of(entity) {
+    entity = game.entity(entity)
+    return ! (entity.has_status('sneaking'))
+  }
+
+  // called when this entity is revealed while sneaking
+  revealed() {
+    ui.text(this, ` is revealed!`)
+    this.remove_status('sneaking')
+    this.build_threat( rules.threat_build_when_revealed(this) )
+  }
   
   // true if there are hostiles around
   is_in_combat() {  return this.list_hostiles_here().length>0 }
@@ -1277,15 +1290,15 @@ class Entity {
     return result
   }
 
-  Challenge_text( test, perf2, text, params = {} ) {
+  Challenge( test, perf2, text = false, params = {} ) {
     if( perf2 == undefined ) throw `no challenge provided`
     if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
       perf2 = new Value(perf2).explain(`static value: ${perf2}`)
     }
     
     let result = this.Challenge_result(test, perf2, params)
-    ui.text(this, ui.print_expl(result.get_expl(), text), ('who' in perf2 ? perf2.who : ""), `.` )
-    // console.log(result.get_expl())
+    if( text )
+      ui.text(this, ui.print_expl(result.get_expl(), text), ('who' in perf2 ? perf2.who : ""), `.` )
     return result
   }
 
@@ -1315,6 +1328,7 @@ class Entity {
     params.nop_text ??= ` has no target, passes.`
     
     let hostiles = this.list_hostiles_here()  // auto-attack hostiles
+    hostiles = hostiles.filter(x=>this.aware_of(x))
     if( hostiles.length>0 ) {
       let target = hostiles[random(hostiles.length)]
       game.exec(new Cmd({who: this, verb: 'attack', op1: target})) 
@@ -1322,7 +1336,6 @@ class Entity {
     }    
     else {
       ui.text(this, params.nop_text)
-      // ui.add_event({text: `${this} has no target, passes.`, location: this.get_location()})
       return false
     }
   }
@@ -1333,10 +1346,12 @@ class Entity {
     if( !this.is_character() )    // only characters do something by default
       return false
 
+    let acted = false
     if( 'act_fn' in this )
-      game.invoke_fn(this.act_fn)
-    
-    this.autoattack()   // default action is an autoattack
+      acted = game.invoke_fn(this.act_fn)
+
+    if( ! acted )
+      this.autoattack()   // default action is an autoattack
   }
 
   // get list of choices, considering the below command
@@ -1454,6 +1469,7 @@ class Entity {
       
     }
 
+    // ROBOT
     if( this.is('robot') && this.id!=game.get_player().id 
         && game.get_player().has_a_equipped('cyberdeck')
     ) {
@@ -1461,8 +1477,18 @@ class Entity {
         cmd: new Cmd({who: game.get_player(), verb: 'control', op1: this})})                  
     }
 
+    // SELF
     if( game.get_player().id == this.id ) {
-      c.add_verb('recover', cmd, this, {label: `take a breather to recover a bit`})
+
+      if( ! game.get_player().is_in_combat() ) {
+
+        c.add_verb('recover', cmd, this, {label: `take a breather to recover a bit`})
+
+        if( !this.has_status('sneaking'))
+          c.add_verb('sneak', cmd, this, {label: `start sneaking`})
+        else
+          c.add_verb('stop sneak', cmd, this, {label: `stop sneaking`})
+      }
     }
     
     c.add_verb('examine', cmd, this)

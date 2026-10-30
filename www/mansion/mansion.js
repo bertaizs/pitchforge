@@ -509,8 +509,10 @@ let cage = new Entity({
         ui.text(dogmeat, ` comes out of the cage.`)
         dogmeat.move_to(mansion_right)
         // dogmeat.head_towards(mansion_right)
+        return true // no further actions this turn
       }
       ui.text(dogmeat, `barks.`)
+      return false  // continue with default action
     }, 'bark')
     
     game.register_fn(

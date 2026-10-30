@@ -87,6 +87,8 @@ class RuleBook {
     stat += RuleBook.GLOBAL_DIFFICULTY
     return stat
   }
+
+  threat_build_when_revealed(entity) { return 3 }
     
 }
 

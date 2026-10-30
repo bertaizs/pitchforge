@@ -736,7 +736,7 @@ new Verb({
   type: 'action',
   test: 'pickpocket',
   op1: true,
-  reqs: {cool: 1},
+  reqs: {cool: rules.difficulty('MEDIUM')},
   
   difficulty: function(cmd) {
     let owner = cmd.op1.get_location()
@@ -760,19 +760,33 @@ new Verb({
   sortkey: 5,
 })
 
-// new Verb({
-//   name: 'sneak',
-//   icon: '🥷',
-//   text: `Enter sneak mode.`,
-//   type: 'action',
-//   test: false,
-//   reqs: {cool: 1},
-//   on_success: function(cmd) {
-//     ui.add_event(`${cmd.who} starts sneaking.`)
-//     cmd.who.add_status({name: "sneaking", timer: cmd.who.get('cool')})
-//   },
-//   sortkey: 6,
-// })
+new Verb({
+  name: 'sneak',
+  icon: '🥷',
+  text: `Enter sneak mode.`,
+  type: 'action',
+  test: false,
+  reqs: {cool: rules.difficulty('medium')},
+  on_success: function(cmd) {
+    ui.text( cmd.who, `starts sneaking.` )
+    cmd.who.add_status({name: "sneaking", timer: false})
+  },
+  sortkey: 6,
+})
+
+new Verb({
+  name: 'stop sneak',
+  icon: '🥷',
+  text: `Leave sneak mode.`,
+  type: 'action',
+  test: false,
+  reqs: {},
+  on_success: function(cmd) {
+    ui.text( cmd.who, ` stops sneaking.` )
+    cmd.who.remove_status('sneaking')
+  },
+  sortkey: 6,
+})
 
 
 // this is not a real verb; it calls a custom function instead

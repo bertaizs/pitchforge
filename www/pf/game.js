@@ -86,7 +86,9 @@ class Game {
     if( !(tag in this.fn) ) throw `no such custom function: `+fn
 
     options.log_game_fns && console.log(`invoked`, tag, cmd)
-    return this.fn[tag](cmd)    // returns true if action is done, false if default actions will follow
+    let ret = this.fn[tag](cmd)    // returns true if action is done, false if default actions need to follow
+    if( ret === undefined ) ret = false
+    return ret
   }
 
   
@@ -182,7 +184,8 @@ class Game {
 
   perform_move_actions() {
     if( options.log_move_actions ) console.log(`performing move actions...`)
-    
+
+    // followers head the same way as the one they are following
     for(let entity of this.initiative_order) {
       let following = entity.get_following()
       if( following ) {
@@ -193,7 +196,8 @@ class Game {
         }
       }
     }
-    
+
+    // move the characters
     for(let i in this.initiative_order) {
       if('heading' in this.initiative_order[i] && this.initiative_order[i].is_up() ) {
         let destination_entity = game.entity(this.initiative_order[i].heading)
@@ -205,7 +209,20 @@ class Game {
         this.initiative_order[i].move_to(destination_entity)
         delete this.initiative_order[i].heading
       }
-      
+    }
+
+    // spot checks to reveal sneaky stuff
+    for(let entity of this.initiative_order) {
+      if(entity.has_status('sneaking')) {
+        let hostiles = entity.list_hostiles_here()
+        for( let hostile of hostiles ) {
+          let result = hostile.Challenge('spot', 
+              entity.Performance('stealth'),
+            ` attempts to spot ` )
+          if( result>=0 )
+            entity.revealed()
+        }
+      }
     }
   }
   
