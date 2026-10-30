@@ -28,6 +28,10 @@ class Test {
 
     if( test.name in TESTS ) throw `${test.name} already defined`
 
+    for( let t of test.trait ) {
+      CORE_TRAITS.add(t)  // !!!
+    }
+    
     TESTS[test.name] = test
     return test
   }
@@ -42,11 +46,9 @@ class Test {
 } // class Test
 
 
-const TESTS = {
-  // 'lockpicking': new Test({stat: "cool", trait: 'thievery', status: {'progress': -1} }),
+const TESTS = {}
 
-  'social': new Test({stat: "charm", trait: 'social'}),
-};
+const CORE_TRAITS = new Set()
 
 
 // CORE STAT, no traits
@@ -127,9 +129,11 @@ Test.register({name: "leadership power",  trait: 'leadership',  stat: 'tough' })
 Test.register({name: "leadership ingenuity",trait: 'leadership',stat: 'sharp' })
 
 // ???
-Test.register({                           trait: 'influencing', stat: 'charm' })
-Test.register({name: "intimidation",      trait: 'influencing', stat: ['charm', 'tough'] })
-Test.register({                           trait: 'influencing', stat: ['charm', 'cool'] })
+Test.register({                           trait: 'social', stat: 'charm' })
+Test.register({name: "influencing",       trait: 'social', stat: 'charm' })
+Test.register({name: "lying",             trait: 'social', stat: ['charm', 'cool'] })
+Test.register({name: "intimidation",      trait: 'social', stat: ['charm', 'tough'] })
+Test.register({name: "bargaining",        trait: 'social', stat: ['charm', 'sharp'] })
 
 Test.register({                           trait: 'sexuality',   stat: 'charm' })
 Test.register({name: "sexuality endurance",trait: 'sexuality',   stat: 'tough' })
