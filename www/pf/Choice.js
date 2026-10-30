@@ -59,9 +59,6 @@ class ChoiceList {
     if( Array.isArray(values) ) {
       this.arr = values
     }
-    // this.arr ??= values.arr || []
-    // this.hash ??= values.hash || {}
-    // for (let i in value) this[i] = value[i];
   }
 
   add( choice, tag = false ) {

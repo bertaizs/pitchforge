@@ -88,7 +88,7 @@ class RuleBook {
     return stat
   }
 
-  threat_build_when_revealed(entity) { return 3 }
+  threat_built_when_revealed(entity) { return 3 }
 
   attack_from_stealth_bonus(entity) { return 4 }
     

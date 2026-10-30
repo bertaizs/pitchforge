@@ -171,7 +171,7 @@ class Entity {
   revealed() {
     ui.text(this, ` is revealed!`)
     this.remove_status('sneaking')
-    this.build_threat( rules.threat_build_when_revealed(this) )
+    this.build_threat( rules.threat_built_when_revealed(this) )
   }
 
   // if this is sneaking, stop sneaking but no penalties
