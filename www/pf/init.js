@@ -166,7 +166,7 @@ let shield = Entity.spawn( 'shield', gloomy_forest )
 let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
 let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
 
-let droid = Entity.spawn( 'battle droid', gloomy_forest )
+// let droid = Entity.spawn( 'battle droid', gloomy_forest )
 
 
 player.gain_trait("combat")

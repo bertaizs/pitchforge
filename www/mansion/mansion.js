@@ -480,6 +480,8 @@ let cage = new Entity({
   interior_description: 
   `<p>You are inside the dog's cage. You really shouldn't be here.</p>
   `,
+  tough:  3,
+  cool:   2,
 }).move_to(mansion_right)
 
   let dogmeat = new Entity({

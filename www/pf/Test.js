@@ -111,7 +111,8 @@ Test.register({                           trait: 'riding',      stat: ['cool', '
 Test.register({                           trait: 'stealth',     stat: 'cool'})
 Test.register({                           trait: 'climbing',    stat: 'cool' })
 
-Test.register({name: "lockpicking",       trait: 'thievery',    stat: 'cool' })
+Test.register({name: "lockpicking",       trait: 'thievery',    stat: 'cool',   text: ` attempts to pick the lock on ` })
+Test.register({name: "force lock",        trait: 'thievery',    stat: 'tough',  text: ` attempts to force the lock on ` })
 Test.register({name: "pickpocket",        trait: 'thievery',    stat: 'cool' })
 
 Test.register({                           trait: 'crafting',    stat: 'cool' })

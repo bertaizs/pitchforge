@@ -566,8 +566,8 @@ new Verb({
   req: {items: /crowbar/},
   on_success: function(cmd) {
     if( cmd.op1.is('locked') ) {
-      if( cmd.who.test('tough', 
-          cmd.op1.performance('tough')   ) ) {
+      let result = cmd.who.Challenge("force lock", cmd.op1.Performance('tough')) 
+      if( result>= 0 ) {
         cmd.op1.remove_tag('locked')
         cmd.op1.remove_tag('closed')
         cmd.op1.set_tag('open')
@@ -592,8 +592,8 @@ new Verb({
   req: {items: /lockpick/},
   on_success: function(cmd) {
     if( cmd.op1.is('locked') ) {
-      if( cmd.who.test('lockpicking', 
-          cmd.op1.performance('cool')   ) ) {
+      let result = cmd.who.Challenge("lockpicking", cmd.op1.Performance('cool')) 
+      if( result >= 0 ) {
         cmd.op1.remove_tag('locked')
         ui.text(cmd.who, ` has picked the lock on `, cmd.op1)
       } else {
