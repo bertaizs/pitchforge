@@ -1300,31 +1300,49 @@ class Entity {
     return (result>=0)
   }
 
-  Challenge_result( test, perf2, params = {} ) {
-    let perf1 = this.Performance(test, params)
+//   Challenge_result( test, perf2, params = {} ) {
+//     let perf1 = this.Performance(test, params)
+//     if( perf2 == undefined ) throw `no challenge provided`
+//     if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
+//       perf2 = new Value(perf2).explain(`static value: ${perf2}`)
+//     }
+// 
+//     // let result = new Value(perf1-perf2).explain( `<p>`+perf1.get_expl()+ `</p>vs<p>`+ perf2.get_expl()+`</p>`)
+//     let result = new Value(perf1-perf2).explain( 
+//               // this.get_name()+`:<br/>\n`+
+//               perf1.get_expl()+ 
+//               `<br/><br/>\n&nbsp;&nbsp;vs<br/><br/>\n`+ 
+//               perf2.get_expl()+
+//               `<br/>`)
+//     
+//     return result
+//   }
+
+  // test this entity, compare its performance vs perf2
+  // where pref2 can be a number or Value (Performance of another entity or static Value)
+  Challenge( test, perf2, params = {} ) {
+    // validate parameters, convert both this entity's performance and perf2 into a Value
+    if (typeof test == "string" && test in TESTS) test = TESTS[test];
+    test = new Test( test, params )
+
+    let perf1 = this.Performance(test, params)  // perform the test for this entity
+    
     if( perf2 == undefined ) throw `no challenge provided`
     if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
       perf2 = new Value(perf2).explain(`static value: ${perf2}`)
     }
-
-    // let result = new Value(perf1-perf2).explain( `<p>`+perf1.get_expl()+ `</p>vs<p>`+ perf2.get_expl()+`</p>`)
+    
+    // let result = this.Challenge_result(test, perf2, params)
     let result = new Value(perf1-perf2).explain( 
-              // this.get_name()+`:<br/>\n`+
               perf1.get_expl()+ 
               `<br/><br/>\n&nbsp;&nbsp;vs<br/><br/>\n`+ 
               perf2.get_expl()+
               `<br/>`)
-    
-    return result
-  }
 
-  Challenge( test, perf2, text = false, params = {} ) {
-    if( perf2 == undefined ) throw `no challenge provided`
-    if( typeof perf2 == 'number' ) {  // ensuring both perf1 and perf2 are values
-      perf2 = new Value(perf2).explain(`static value: ${perf2}`)
-    }
-    
-    let result = this.Challenge_result(test, perf2, params)
+    // display result via ui.text, if needed
+    let text = test.get_text()
+    if( 'text' in params )
+      text = params.text
     if( text )
       ui.text(this, ui.print_expl(result.get_expl(), text), ('who' in perf2 ? perf2.who : ""), `.` )
     return result

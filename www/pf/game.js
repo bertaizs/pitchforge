@@ -217,8 +217,8 @@ class Game {
         let hostiles = entity.list_hostiles_here()
         for( let hostile of hostiles ) {
           let result = hostile.Challenge('spot', 
-              entity.Performance('stealth'),
-            ` attempts to spot ` )
+              entity.Performance('stealth') )
+            // ` attempts to spot ` )
           if( result>=0 )
             entity.revealed()
         }

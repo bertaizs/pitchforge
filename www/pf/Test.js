@@ -42,6 +42,13 @@ class Test {
     else
       return this.stat[0]
   }
+
+  get_text() {
+    if( 'text' in this )
+      return this.text
+    else
+      return this.get_name()
+  }
   
 } // class Test
 
@@ -83,7 +90,7 @@ Test.register({name: "survival skills",   trait: 'survival', stat: 'cool'})
 Test.register({name: "survival knowledge",trait: 'survival', stat: 'sharp'})
 
 Test.register({                           trait: 'perception', stat: 'sharp'})
-Test.register({name: "spot",              trait: 'perception', stat: 'sharp', randomize: true})
+Test.register({name: "spot",              trait: 'perception', stat: 'sharp', randomize: true, text: ` attempty to spot `})
 
 Test.register({name: "resistance",   stat: 'charm', status: {'threat': -1}})
 
