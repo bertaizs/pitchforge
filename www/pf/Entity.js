@@ -167,10 +167,22 @@ class Entity {
   }
 
   // called when this entity is revealed while sneaking
+  // penalties apply
   revealed() {
     ui.text(this, ` is revealed!`)
     this.remove_status('sneaking')
     this.build_threat( rules.threat_build_when_revealed(this) )
+  }
+
+  // if this is sneaking, stop sneaking but no penalties
+  // if this is not sneaking then nothing happens
+  stop_sneaking() {
+    if( this.has_status('sneaking')) {
+      ui.text(this, ` is no longer sneaking.`)
+      this.remove_status('sneaking')
+      return true
+    }
+    return false
   }
   
   // true if there are hostiles around
@@ -789,12 +801,16 @@ class Entity {
     params.damages ??= false
     params.extra_damage_first ??= 0
     params.extra_damage_all ??= 0
+    params.exit_stealth ??= true
 
     let graze = ((cmd.result == 0) && params.allow_graze)
     console.log( 'graze', graze )
     let damages = params.damages || who.get_damage()
 
     ui.text( who, ` ${params.attack_text} `, whom, ` and ${graze?params.graze_text:params.hit_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
+
+    if( params.exit_stealth )
+      this.stop_sneaking()
     
     let p = {}
     if( graze && params.half_damage_on_graze )
@@ -828,8 +844,12 @@ class Entity {
     params.build_threat ??= 1
     params.attack_text ??= `attacks `
     params.miss_text ??= `but misses`
+    params.exit_stealth ??= true
 
     ui.text( who, ` ${params.attack_text} `, whom, ` ${params.miss_text}.`, ui.print_explanation_tag([cmd.e, cmd.e2]) )
+
+    if( params.exit_stealth )
+      this.stop_sneaking()
     
     if( params.build_threat ) {
       whom.build_threat(params.build_threat)      
@@ -1237,9 +1257,17 @@ class Entity {
     let stats = ['tough']
     if( this.get_stat('cool') > this.get_stat('tough') && this.is_weapon_cool() )
       stats.push(['cool'])
-    let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})
+    let test = new Test({stat: stats, trait: 'combat', randomize: options.randomize_attacks})    
+    
     let result
     result = this.performance(test, params, e)   // TEST for the one taking action
+
+    if( this.has_status('sneaking') ) {
+      result += rules.attack_from_stealth_bonus(this)
+      e.result += rules.attack_from_stealth_bonus(this)
+      e.explain.push({value: rules.attack_from_stealth_bonus(this), label: `attacking from stealth`})
+    }
+    
     e.label = 'attack'
 
     return result

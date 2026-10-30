@@ -782,8 +782,7 @@ new Verb({
   test: false,
   reqs: {},
   on_success: function(cmd) {
-    ui.text( cmd.who, ` stops sneaking.` )
-    cmd.who.remove_status('sneaking')
+    cmd.who.stop_sneaking()
   },
   sortkey: 6,
 })
