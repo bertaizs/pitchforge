@@ -46,10 +46,6 @@ a.verb {
     white-space: nowrap;    
 }
 
-.reqs_not_met {
-    white-space: nowrap;
-    color: red;
-}
 
 a.entity {
     color: lightgreen;
@@ -297,6 +293,13 @@ img.combat_icon {
 .explained {
     text-decoration: underline;
     text-decoration-style: dotted;
+}
+
+.reqs_not_met {
+    white-space: nowrap;
+    color: red;
+    /*text-decoration: underline;
+    text-decoration-style: dotted;*/
 }
 
 

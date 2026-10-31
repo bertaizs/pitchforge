@@ -71,7 +71,7 @@ new Entity({
     description: `A mighty axe forged by the dwarves.`,
     // tier: 2,
     damage: Dmg({value: 3, tier: 2}),
-    reqs: Reqs({tough: 4}),
+    reqs: {tough: 4},
 }, {template: 'greataxe'} )
 
 new Entity({
@@ -110,13 +110,13 @@ new Entity({
 // Entity instances
 // 
 
-new Entity({
-    name: "dagger",
-    tags: ['cool', 'melee', 'weapon', 'tool', 'item'],
-    icon: 'knife.png',
-    description: `A simple knife.`,
-    tier: 1,
-} ).move_to(gloomy_forest)
+// new Entity({
+//     name: "dagger",
+//     tags: ['cool', 'melee', 'weapon', 'tool', 'item'],
+//     icon: 'knife.png',
+//     description: `A simple knife.`,
+//     tier: 1,
+// } ).move_to(gloomy_forest)
 
 let flaming_sword = new Entity({
     name: "flaming sword",
@@ -167,6 +167,6 @@ let greataxe = Entity.spawn( 'greataxe', gloomy_forest )
 let deck = Entity.spawn( 'cyberdeck', gloomy_forest )
 
 // let droid = Entity.spawn( 'battle droid', gloomy_forest )
-
+let dagger = Entity.spawn( 'knife', gloomy_forest, {name: "jeweled dagger", description: "An ornate dagger, with jewels in its hilt."} )
 
 player.gain_trait("combat")

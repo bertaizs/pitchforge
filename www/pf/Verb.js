@@ -297,53 +297,13 @@ new Verb({
     }
     cmd.who.hit( cmd.op1, p, cmd )  
 
-//     if( !cmd.op1.is_character() ) {
-//       return ui.text(`There is no point in attacking `, cmd.op1, `.`)
-//     }
-//     ui.text(cmd.who, ` feints `, cmd.op1, '.', ui.print_explanation_tag([cmd.e, cmd.e2])    )
-// 
-//     let dmg = cmd.who.get_damage()
-//     // damage.value += HEAVY_ATTACK_BONUS_DAMAGE
-//     
-//     // damage that could hurt builds threat
-//     if( dmg.tier>= cmd.op1.get_armor_tier() )
-//       cmd.op1.build_threat(dmg.value)
-//     else 
-//       options.log_threat && console.log(`no threat is built as attack could not damage`)
   },
   on_fail: function(cmd) {
     ui.text(cmd.who, ` feints, but `, cmd.op1, ` does not fall for it.`, ui.print_explanation_tag([cmd.e, cmd.e2])  )
+    cmd.who.stop_sneaking()
   },
 })
 
-
-
-
-// new Verb({
-//   name: 'kick',
-//   icon: '🥋',
-//   text: `Deliver a powerful circle kick`,
-//   type: 'combat',
-//   test: 'attack',
-//   test_vs: 'defense',
-//   op1: true,
-//   reqs: {traits: {'martial arts': true}},
-  
-//   on_success: function(cmd) {
-//     if( !cmd.op1.is_character() ) {
-//       return ui.add_event(`There is no point in attacking ${cmd.op1}.`)
-//     }
-    
-//     // ui.add_event(`${cmd.who} strikes ${cmd.op1} and hits for ${damage} points of damage`)
-//     ui.add_event(`${cmd.who} strikes ${cmd.op1}.`)
-//     let damage = cmd.op1.take_damage({value: 2})
-//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-//   },
-//   on_fail: function(cmd) {
-//     cmd.op1.add_status({name: 'threat', timer: false}, {stack_magnitude: true})
-//     ui.add_event(`${cmd.who} swings at ${cmd.op1} but misses.`)
-//   },
-// })
 
 new Verb({
   name: 'recover',         // prep: 'at',
@@ -377,13 +337,13 @@ new Verb({
       if( (cmd.op1.get_location().id == cmd.who.get_location().id) || 
           cmd.op1.get_location().is_open_container() ) {
         cmd.op1.move_to(cmd.who)
-        ui.text(cmd.who, ` picks up `, cmd.op1)
+        ui.text(cmd.who, ` picks up `, cmd.op1, `.`)
       }
       else
         ui.text(cmd.who, ` cannot pick up `, cmd.op1, ` as it is not on the ground.`)
     } 
     else
-      ui.text(cmd.who, ` cannot pick up `, cmd.op1)
+      ui.text(cmd.who, ` cannot pick up `, cmd.op1, `.`)
   },
   sortkey: 1,
 })
@@ -397,7 +357,7 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     cmd.op1.move_to(cmd.who.get_location())
-    ui.text(cmd.who, ` drops `, cmd.op1)
+    ui.text(cmd.who, ` drops `, cmd.op1, `.`)
   },
   sortkey: 2,
 })
@@ -411,7 +371,7 @@ new Verb({
   op1: true,
   on_success: function(cmd) {
     if( !cmd.who.has( cmd.op1) )
-      return ui.text(cmd.who, ` does not have `, cmd.op1)
+      return ui.text(cmd.who, ` does not have `, cmd.op1, `.`)
     
     let where = cmd.where || 'weapon'
     cmd.who.equip( cmd.op1, where )
@@ -451,7 +411,7 @@ new Verb({
     if( !cmd.op1.is('weapon') )
       return ui.text(cmd.op1, ` is not a weapon.`)
     
-    let original_weapon = cmd.who.get_weapon()
+    let original_weapon = cmd.who.get_weapon({if_reqs_not_met: true})
     let original_location = cmd.op1.get('position')
 
     cmd.who.equip( cmd.op1, 'weapon' )
@@ -480,20 +440,6 @@ new Verb({
 })
 
 
-// new Verb({
-//   name: 'use',
-//   icon: '🔧',
-//   text: `Try to find a way to use an item. Try pushing or pulling it, turning it on. If it can be opened, then try opening it. If not, then try closing it. If it can be eaten, you will eat it.`,
-//   type: 'action',
-//   test: false,
-//   op1: true,    separator: 'and',
-//   op2: true,
-//   on_success: function(cmd) {    
-//     ui.add_event(`This does not seem to work.`)
-//   },
-//   sortkey: 2,
-// })
-
 new Verb({
   name: 'consume',
   icon: '🍔',
@@ -508,25 +454,6 @@ new Verb({
       ui.text(cmd.who, ` consumes `, cmd.op1)
       cmd.op1.consumed_by(cmd.who)
       cmd.op1.destroy()
-    }
-  },
-  sortkey: 6,
-})
-
-// !!! not used at the moment
-new Verb({
-  name: 'process',
-  // icon: '🧪',
-  text: `Use a given item, destroying it in the process.`,
-  type: 'inventory',
-  test: false,
-  op1: true,
-  on_success: function(cmd) {
-    if( 'process' in cmd.op1 ) {
-      cmd.op1.process(cmd)      
-      cmd.op1.destroy()
-    } else {
-      throw `process called for ${cmd.op1} but it has no process() function`
     }
   },
   sortkey: 6,

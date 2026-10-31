@@ -106,6 +106,7 @@ class Entity {
       // creates the same object as the one in the template, also works if it is a class *based on* Entity
       // this does not call its constructor, so we need to do those actions (set, register, moveto manually)
       let entity = Object.create( Object.getPrototypeOf( game.templates[template]) )
+      // let entity = new Entity()
       entity.set( game.templates[template] )
 
       // if epithet is an array, pick one!
@@ -298,8 +299,9 @@ class Entity {
   get_offhand_slot() {return 'item 2'}
 
   // returns equipment equipped as weapon
-  get_weapon() {
-    let weapons = this.get_equipped_items().filter(x=>x.position==this.get_weapon_slot()).filter(x=>this.meets_requirements_for(x, {with_equipment: false}))
+  get_weapon(params = {}) {
+    params.if_reqs_not_met ??= false
+    let weapons = this.get_equipped_items().filter(x=>x.position==this.get_weapon_slot()).filter(x=>(this.meets_requirements_for(x, {with_equipment: false})|| params.if_reqs_not_met))
     if( weapons.length>0 && weapons[0].is('weapon') )
       return weapons[0]
     return false

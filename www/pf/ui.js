@@ -523,7 +523,7 @@ class UI {
         let met = game.get_player().meets_requirements(reqs)
         s+= this.print_sheet_value( UI.keyword("<br/>requirements"), (met ? "" : "<br/><div class='reqs_not_met'>not met</div>") )
         for( let r in reqs ) {
-          if( !isEmpty(reqs[r]) )
+          // if( !isEmpty(reqs[r]) )
             s+= this.print_sheet_value( r, reqs[r] )          
         }
       }
@@ -789,13 +789,21 @@ class UI {
         s+= params.prefix
         if( 'display' in params ) {
           s+= params.display(item)          
-          if( params.show_position )
-            s+= `[${item.get('position')}]`
+          if( params.show_position ) {
+            if(game.get_player().meets_requirements_for(item))
+              s+= `[${item.get('position')}]`
+            else
+              s+= `[<a class="reqs_not_met">${item.get('position')}</a>]`
+          }
         } 
         else if( item instanceof Entity ) {
           s+= this.print_entity(item)
-          if( params.show_position )
-            s+= `[${item.get('position')}]`
+          if( params.show_position ) {
+            if(game.get_player().meets_requirements_for(item))
+              s+= `[${item.get('position')}]`
+            else
+              s+= `[<a class="reqs_not_met">${item.get('position')}</a>]`
+          }
         } 
         else throw `no way to display list`
       }
