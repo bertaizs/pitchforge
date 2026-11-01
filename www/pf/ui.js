@@ -457,7 +457,7 @@ class UI {
       for( let clue of entity.clues ) {
         if( game.get_player().meets_requirements(clue.reqs) && clue.enabled ) {
           s += this.print_clue(clue)
-          player.find_clue(clue)    // TODO: should not be in UI, but in the data model          
+          player.find_clue(clue)    // TODO: should not be in UI, but in the data model
         }
       }
       

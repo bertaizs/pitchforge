@@ -1,7 +1,6 @@
 // name the game
 game.set_title("Secrets of the Mansion - Revamped")
 
-
 game.character_backgrounds = {
   private_eye: {
     label: `private eye`,
@@ -148,7 +147,7 @@ let player = new Entity({
     charm:  0,
     traits: {},
     location: game.chargen,
-    // location: player_ship,
+    // location: player_start_location,
 })
 
 // mark the character to be the player; not needed if the char has the tag 'player'
@@ -164,8 +163,12 @@ let player = new Entity({
     icon: 'mansion_front.png',
     // description: `<p></p>`,
     description: 
-    `<p>A dilapidated mansion in standing on the forest clearing.</p>
+    `<p>A dilapidated mansion in standing on the forest clearing.  Its dark windows eye you suspiciously. You wonder who built it or who lived here.</p>
     `,
+    clues: [
+      new Clue({ text: `There is something very wrong with this place.`, reqs: {'sixth sense': game.medium()} }),
+      new Clue({ text: `You feel the presence of some evil lurking here.`, reqs: {'sixth sense': game.advanced()}, flag: true }),
+    ],
   })
   
   // trees, props
@@ -174,7 +177,7 @@ let player = new Entity({
     icon: 'forest.png',
     // description: `<p></p>`,
     description: 
-    `<p>Sure, the forest contains many trees. They are old, dying, but there is absolutely nothing special about them.</p>
+    `<p>Sure, the forest contains many trees. They are old, dying (or probably even dead), but there is absolutely nothing special about them. Most of them, at least.</p>
     `,
   })
   
@@ -190,7 +193,7 @@ let clearing_edge = new Entity({
   <p>There is absolutely no point in going back into the forest. You would just die there among the trees.
   `,
   location_clues: [
-    new Clue({ text: `Tracks on the ground show something has been dragged into the bushes.`, reqs: {perception: rules.difficulty({type: 'EASY', trait: false})} }),
+    new Clue({ text: `Tracks on the ground show something has been dragged into the bushes.`, reqs: {perception: game.easy()} }),
   ]
 })
 
@@ -283,23 +286,40 @@ let mansion_front = new Entity({
 })
 
 let mansion_back = new Entity({
-  name: "Behind the Mansion",
+  name: "back of the mansion",
   icon: 'mansion_back2.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are standing behind the dilapidated ${ui.print_entity(mansion)}.</p>
+  `<p>You are standing behind the dilapidated ${ui.print_entity(mansion)} Collapsing wooden building lean against the mansion's wall here, both are in rather bad shape, just like everything else. Based on the large door on one of them you reckon it is probably a garage. There is a path arriving at the mansion here, leading to the garage, it is perhaps for vehicles. The smaller one looks like but a shed for storing tools.</p>
   `,
+  location_clues: [
+    new Clue({text: `You spot some very old tracks on the path going into the garage. Whoever lived here has or had a car and used this garage.`, reqs: {'perception': game.easy()}}),
+    new Clue({text: `You spot some mounds under the trees and behind the mansion.`, reqs: {'perception': game.mundane()}}),
+    new Clue({text: `You feel sadness and sorrow coming from the mounds under the trees.`, reqs: {'sixth sense': game.medium()}}),
+  ]
+})
+
+let graveyard = new Entity({
+  name: "graveyard",
+  // icon: 'mansion_back2.png',
+  // description: `<p></p>`,
+  interior_description: 
+  `<p>Three small mounds have been raised under the ${ui.e(trees)}, perhaps in a better world when they were still green and living. Graves. Wooden grave markers stand next to them but you cannot make out any name on them. Wonder who have been buried here?</p>
+  `,
+  location_clues: [
+    new Clue({text: `You feel sadness and sorrow here.`, reqs: {'sixth sense': game.easy()}}),
+  ]
 })
 
 
 
 let mansion_left = new Entity({
-  name: "On the left side of the Mansion",
+  name: "left side of the mansion",
   icon: 'mansion_left.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>You are standing on the left side of the dilapidated ${ui.print_entity(mansion)}.
-  The ${ui.print_entity(trees)} circle the mansion as if the haunted forest was trying to consume it.
+  The ${ui.e(trees)} circle the mansion as if the haunted forest was trying to consume it.
   </p>
   <p>The mansion has stone walls are in better condition here, you can see nothing but darkness through the windows.
   Its ground floor is slightly above your level, while there is a first floor built on it.
@@ -326,7 +346,7 @@ let foggy_road = new Entity({
 })
 
 let mansion_right = new Entity({
-  name: "On the right side of the Mansion",
+  name: "right side of the mansion",
   icon: 'mansion_right.png',
   // description: `<p></p>`,
   interior_description: 
@@ -340,17 +360,17 @@ let mansion_right = new Entity({
 })
 
 let mansion_roof = new Entity({
-  name: "On the Roof of the Mansion",
+  name: "mansion's roof",
   icon: 'mansion_roof.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You have climbed up to the roof of the mansion.</p>
+  `<p>You have climbed up to the roof of the mansion. Looking around you can see the whole clearing, the path where you arrived. Wooden buildings lean to the back of the mansion, and you also see a well nearby. You see three small mounds under the trees behind the mansion, graves perhaps? There is a road from the mansion disappearing in the fog. Dying trees surround everything and they all seem to be consumed by the thick fog surrounding everything you see. The sky is pale gray, while you can't make out any clouds, there seems to be no hope of seeing the sun.</p>
   `,
 })
 
 
 let well = new Entity({
-  name: "the well",
+  name: "bottom of the well",
   interior_icon: 'well_bottom.png',
   interior_description: 
   `<p>Well, you have hit the bottom...</p>
@@ -366,7 +386,7 @@ let well = new Entity({
 })
 
 let well_area = new Entity({
-  name: "At the Well",
+  name: "well",
   icon: 'well.png',
   // description: `<p></p>`,
   interior_description: 
@@ -379,20 +399,23 @@ let well_area = new Entity({
   let dead_woodsman = new Entity({
       name: "dead woodsman",
       tags: ['prop', 'remains'],
-      description: `The dead and partially eaten body of a woodsman. A middle-aged male with a beard. Whatever killed him must have had large teeth and claws, and it has torn the lower part of his body into pieces.`,
+      description: `The dead and partially eaten body of a woodsman. A middle-aged guy with a beard... probably... Not much remains of the face. Whatever killed him must have had large teeth and claws, and it has torn the lower part of his body into pieces.`,
       // location: bushes,
+      clues: [
+        new Clue({text: `The woodsman looks rather muscular, whatever killed him must have been rather strong.`, reqs: {'perception': game.easy()}}),
+      ],
   })
 
 let bushes = new Entity({
-  name: "In the Bushes",
+  name: "bushes",
   icon: 'forest.png',
   // description: `<p></p>`,
   interior_description: 
   `<p>Behind the bushes lies a ${ui.e(dead_woodsman, "dead body")}. There is a lot of blood all over the place, with internal organs spilled out.</p>
+  <p>The bushes themselves are not much better off than the ${ui.e(trees)}</p> surrounding them. Branches and leaves remain, but they seem dead as if something suck all life out of them. Everything is gray.
   `,
 })
   .add(dead_woodsman)
-// dead_woodsman.move_to(bushes)
 
   let car_keys = new Entity({
     name: "car keys",
@@ -454,7 +477,7 @@ let bushes = new Entity({
 
 
 let garage = new Entity({
-  name: "Garage",
+  name: "garage",
   icon: 'garage_interior.png',
   // description: `<p></p>`,
   interior_description: 
@@ -464,7 +487,7 @@ let garage = new Entity({
 })
 
 let shed = new Entity({
-  name: "Shed",
+  name: "shed",
   icon: 'shed.png',
   // description: `<p></p>`,
   interior_description: 
@@ -476,6 +499,7 @@ let cage = new Entity({
   name: "cage with a dog inside",
   tags: ['prop', 'locked', 'closed'],
   icon: 'dog_caged.jpg',
+  keys: [keyring],
   description: `<p>A hungry dog is locked in a cage.</p>`,
   interior_description: 
   `<p>You are inside the dog's cage. You really shouldn't be here.</p>
@@ -695,9 +719,17 @@ let cage = new Entity({
     text: `leave the shed`,  
   })
 
+  new Path({
+    from: mansion_back, 
+    to: graveyard, 
+    text: `check out the mounds under the trees`,
+  }, {
+    text: `go back to the mansion`,  
+  })
+
 
   
-// inside
+// ***inside***
 
 let bell_pull = new Entity({
   name: "servant bell pull",
@@ -1110,8 +1142,18 @@ new Entity({
     tags: ['melee', 'weapon', 'tool', 'item'],
     icon: 'axe.png',
     description: `Chop-chop.`,
-    tier: 2,
+    tier: 1,
 }, {template: 'axe'} )
+
+new Entity({
+    name: "spade",
+    tags: ['melee', 'weapon', 'tool', 'item'],
+    // icon: 'axe.png',
+    description: `You can dig holes into the ground with this one.`,
+    tier: 1,
+}, {template: 'spade'} )
+
+
 
 new Entity({
     name: "knife",
@@ -1152,7 +1194,7 @@ game.add_global_choice({
   entity_regexp: /stick/,
   fn: (cmd)=>{
     ui.text(`You have carved your stick into a stake.`)
-    console.log(`%%%%%%%`, cmd) // !!!!
+    // console.log(`%%%%%%%`, cmd) // !!!!
     cmd.op1.destroy()
     Entity.spawn( 'stake', player )
   },
@@ -1621,7 +1663,7 @@ let woodsmans_knife = Entity.spawn( 'knife', dead_woodsman )
 
 Entity.spawn( 'axe', shed, {name: "axe"} )
 
-let knife_in_tree = Entity.spawn( 'knife', clearing_edge, {position: "A [knife] is stuck in a tree."} )
+let knife_in_tree = Entity.spawn( 'knife', mansion_left, {position: "A [knife] is stuck in a tree."} )
 
 
 
