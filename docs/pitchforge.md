@@ -3,7 +3,7 @@
 
 # Introduction
 
-Pitchforge is a lightweight game engine for building html text based adventure-RPG hybrids.
+Pitchforge is a lightweight game engine for building html text based adventure-RPG hybrids, in JavaScript.
 It also comes with a poor man's RPG system and some sample games.
 
 
