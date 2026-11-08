@@ -785,7 +785,8 @@ let dining_room = new Entity({
   icon: 'mansion_dining_room.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are in the dining room of the mansion.</p>
+  `<p>The mansion' dining room is at the verge of collapse. The large dining table in the middle is the only piece of furniture intact, everything else is broken or torn apart. No one knows how the tapestry on the walls looked like while it was intact, it is nothing but rags now.</p>
+  <p>A large door leads to the mansion's main hall, and a smaller one leads to the kitchen. Back in the old days, this is where servants brought the food in for the master and family.</p>
   <p>A ${ui.e(bell_pull, "purple silk chord")} is hanging from an opening in a wall.</p>
   `,
 })
@@ -804,7 +805,8 @@ let pantry = new Entity({
   icon: 'mansion_pantry.png',
   // description: `<p></p>`,
   interior_description: 
-  `<p>You are in the mansion's pantry.</p>
+  `<p>You are in the mansion's pantry where food was stored. There is still plenty of food here but most have been spoiled. There is a smell of rot in the air.</p>
+  <p>Flies buzz around the rotten meat and sausages hanging from the ceiling. Huge sacks and crates.</p>
   `,
 })
 

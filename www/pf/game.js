@@ -5,7 +5,7 @@ class Game {
     this.templates = {}
     this.entities = []
     this.paths = []
-    this.triggers = []
+    // this.triggers = []
     this.verbs = VERBS
     this.player_id = 1  // default value, modified via Game.select_player
     this.clues = {}     // not all clues, only those we need to refer to later (e.g. for hiding, etc)
@@ -160,7 +160,7 @@ class Game {
     return this.initiative_order[this.current_entity_n]
   }
 
-  end_turn() {    
+    end_turn() {    
     this.perform_move_actions();
 
     options.log_turn_start && console.log(`*** TURN starts ***`);
